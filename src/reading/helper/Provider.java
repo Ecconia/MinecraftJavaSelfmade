@@ -28,7 +28,6 @@ public abstract class Provider
 	 */
 	public int readCInt()
 	{
-//		System.out.println("-Reading CInt:");
 		int ret = 0;
 		int iterations = 0;
 		
@@ -36,7 +35,6 @@ public abstract class Provider
 		do
 		{
 			read = (byte) getByte();
-//			System.out.println(">Read: " + read);
 			ret |= (read & 127) << iterations++ * 7;
 			
 			if(iterations > 5)
@@ -45,8 +43,6 @@ public abstract class Provider
 			}
 		}
 		while((read & 128) == 128);
-		
-//		System.out.println(">Got: " + ret + " iterations: " + iterations);
 		
 		return ret;
 	}
@@ -87,26 +83,5 @@ public abstract class Provider
 	public int readByte()
 	{
 		return getByte();
-	}
-
-	public long readLong()
-	{
-		long i = getByte();
-		i = i << 8;
-		i += getByte();
-		i = i << 8;
-		i += getByte();
-		i = i << 8;
-		i += getByte();
-		i = i << 8;
-		i += getByte();
-		i = i << 8;
-		i += getByte();
-		i = i << 8;
-		i += getByte();
-		i = i << 8;
-		i += getByte();
-		
-		return i;
 	}
 }

@@ -162,15 +162,9 @@ public class PlayReader extends PacketReader
 			
 			mb.prepandCInt(1);
 			mb.prepandSize();
-//			mb.prepandByte(-1);
 			mb.write(os);
 			
 			System.out.println();
-			System.out.println("Sent, awaiting response. Expected message on console UUID confirmation, expected packet: Encrypted compression start.");
-			
-			//From here on everything should be encrypted.
-			
-//			justPrint();
 			
 			try
 			{
@@ -300,19 +294,7 @@ public class PlayReader extends PacketReader
 		if(id == 33)
 		{
 			System.out.println("==> KEEP ALIVE!");
-//			long ping = p.readLong();
 			byte[] ping = p.readBytes(8);
-//			p.reset();
-//			byte[] backplay = p.readBytes(p.remainingBytes());
-//			try
-//			{
-//				os.write(backplay);
-//			}
-//			catch(IOException e)
-//			{
-//				System.out.println("Could not answer Ping.");
-//				e.printStackTrace();
-//			}
 			
 			MessageBuilder mb = new MessageBuilder();
 			mb.addBytes(ping);
@@ -340,10 +322,6 @@ public class PlayReader extends PacketReader
 				mb.write(os);
 			}
 		}
-		
-//		byte[] buffer = p.readBytes(Math.min(10, size));
-//		System.out.print("Sample: ");
-//		printBytes(buffer);
 	}
 	
 	private static void printBytes(byte[] bytes)

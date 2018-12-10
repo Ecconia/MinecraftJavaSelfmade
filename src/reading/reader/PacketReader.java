@@ -47,32 +47,6 @@ public class PacketReader
 		}
 	}
 	
-	public void justPrint2()
-	{
-		System.out.println();
-		System.out.println("Printing everything:");
-		
-		int before;
-		try
-		{
-			before = p.getByte();
-			System.out.println("> " + safe(before) + " (" + before + ")");
-			
-			while(true)
-			{
-				int next = p.getByte();
-				int merged = (before << 8) + next;
-				
-				System.out.println("> " + safe(next) + " " + safe(merged) + " (" + next + " " + merged + ")");
-				before = next;
-			}
-		}
-		catch(DirtyStreamEndException x)
-		{
-			System.out.println(">>> EndOfLine!");
-		}
-	}
-	
 	public static String safe(int i)
 	{
 		if(i == 0)

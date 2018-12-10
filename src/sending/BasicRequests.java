@@ -10,7 +10,6 @@ public class BasicRequests
 	public static void sendPingType0(OutputStream out)
 	{
 		MessageBuilder mb = new MessageBuilder();
-		
 		mb.addByte(254);
 		
 		mb.write(out);
@@ -19,7 +18,6 @@ public class BasicRequests
 	public static void sendPingType1(OutputStream out)
 	{
 		MessageBuilder mb = new MessageBuilder();
-		
 		mb.addByte(254);
 		mb.addByte(1);
 		
@@ -29,7 +27,6 @@ public class BasicRequests
 	public static void sendPingTypeX(OutputStream out)
 	{
 		MessageBuilder mb = new MessageBuilder();
-		
 		mb.addByte(254); //Server Ping List
 		mb.addByte(1); //Always 1
 		

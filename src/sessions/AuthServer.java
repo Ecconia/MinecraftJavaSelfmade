@@ -12,20 +12,8 @@ import cred.Credentials;
 
 public class AuthServer
 {
-//	public static void main(String[] args)
-//	{
-//		join("-xxxx");
-//	}
-	
 	public static void join(String serverHash)
 	{
-		System.out.println("ServerHash: " + serverHash);
-		//TODO: Load from somewhere!°!!!!
-//		String accessToken = "xxx";
-		
-		//TODO: UPDATE!!!
-		
-//		String accessToken = "c5de6b5f-c699-47f4-8803-a2c4a2560fa8";
 		String accessToken = Credentials.ACCESSTOKEN;
 		String uuid = Credentials.UUID;
 		
