@@ -1,4 +1,4 @@
-package sessions;
+package old.sessions;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
-import cred.Credentials;
+import old.cred.Credentials;
 
 public class AuthServer
 {

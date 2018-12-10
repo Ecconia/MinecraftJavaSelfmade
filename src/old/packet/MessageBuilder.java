@@ -1,4 +1,4 @@
-package packet;
+package old.packet;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.zip.Deflater;
 
-import reading.DirtyIOException;
+import old.reading.DirtyIOException;
 
 public class MessageBuilder
 {

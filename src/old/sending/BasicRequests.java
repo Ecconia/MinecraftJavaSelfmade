@@ -1,9 +1,9 @@
-package sending;
+package old.sending;
 
 import java.io.OutputStream;
 
-import cred.Credentials;
-import packet.MessageBuilder;
+import old.cred.Credentials;
+import old.packet.MessageBuilder;
 
 public class BasicRequests
 {

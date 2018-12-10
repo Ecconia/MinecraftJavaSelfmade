@@ -1,4 +1,4 @@
-package reading.reader;
+package old.reading.reader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,12 +21,12 @@ import javax.crypto.SecretKey;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
-import cred.Credentials;
-import packet.MessageBuilder;
-import reading.helper.ArrayProvider;
-import reading.helper.EncrpytionProvider;
-import reading.helper.Provider;
-import sessions.AuthServer;
+import old.cred.Credentials;
+import old.packet.MessageBuilder;
+import old.reading.helper.ArrayProvider;
+import old.reading.helper.EncrpytionProvider;
+import old.reading.helper.Provider;
+import old.sessions.AuthServer;
 
 public class PlayReader extends PacketReader
 {

@@ -1,9 +1,9 @@
-package reading.reader;
+package old.reading.reader;
 
 import java.io.InputStream;
 
-import reading.DirtyStreamEndException;
-import reading.helper.Provider;
+import old.reading.DirtyStreamEndException;
+import old.reading.helper.Provider;
 
 public class NormalPingReader extends PacketReader
 {

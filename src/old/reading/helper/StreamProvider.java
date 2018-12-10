@@ -1,10 +1,10 @@
-package reading.helper;
+package old.reading.helper;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import reading.DirtyIOException;
-import reading.DirtyStreamEndException;
+import old.reading.DirtyIOException;
+import old.reading.DirtyStreamEndException;
 
 public class StreamProvider extends Provider
 {

@@ -1,4 +1,4 @@
-package cred;
+package old.cred;
 
 public class Credentials
 {

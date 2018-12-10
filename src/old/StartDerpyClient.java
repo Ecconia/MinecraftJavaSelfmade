@@ -1,9 +1,11 @@
+package old;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import reading.reader.PlayReader;
-import sending.BasicRequests;
+import old.reading.reader.PlayReader;
+import old.sending.BasicRequests;
 
 public class StartDerpyClient
 {
