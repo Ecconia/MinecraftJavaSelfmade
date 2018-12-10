@@ -46,7 +46,7 @@ public class EncrpytionProvider extends Provider
 	{
 		return decryptByte((byte) p.getByte());
 	}
-
+	
 	@Override
 	public int remainingBytes()
 	{

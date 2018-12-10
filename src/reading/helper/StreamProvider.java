@@ -42,7 +42,7 @@ public class StreamProvider extends Provider
 	{
 		throw new UnsupportedOperationException("It is unsafe to get the remaining bytes from an InputStream.");
 	}
-
+	
 	@Override
 	public void reset()
 	{

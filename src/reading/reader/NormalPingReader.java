@@ -29,7 +29,7 @@ public class NormalPingReader extends PacketReader
 			p.getByte();
 			System.out.println("WARNING: More bytes to be read.");
 		}
-		catch (DirtyStreamEndException e)
+		catch(DirtyStreamEndException e)
 		{
 			System.out.println("Nope.");
 		}

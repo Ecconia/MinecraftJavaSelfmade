@@ -35,7 +35,7 @@ public class BasicRequests
 		
 		String hostname = "localhost";
 		//7 = port(4) + protocol(1) + hostname_length(2)
-		mb.addShort(7 + hostname.length()*2); //Length of "rest of data"
+		mb.addShort(7 + hostname.length() * 2); //Length of "rest of data"
 		
 		mb.addByte(73); //Protocol version
 		mb.addCString(hostname); //Hostname

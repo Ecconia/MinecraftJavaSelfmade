@@ -36,7 +36,7 @@ public class MessageBuilder
 			this.bytes.addLast(b);
 		}
 	}
-
+	
 	public void addCInt(int i)
 	{
 		while((i & -128) != 0)
@@ -82,7 +82,7 @@ public class MessageBuilder
 	{
 		bytes.addAll(message.getBytes());
 	}
-
+	
 	private LinkedList<Byte> getBytes()
 	{
 		return bytes;
@@ -114,7 +114,7 @@ public class MessageBuilder
 		System.out.println("Sending: ");
 		for(byte b : bytes)
 		{
-			System.out.print(" " + Integer.toHexString(b & 0xFF) );//+ "(" + (Byte.toUnsignedInt(b)) + "/" + (b == 0 ? 'Ø' : (char)b) + ")");
+			System.out.print(" " + Integer.toHexString(b & 0xFF));//+ "(" + (Byte.toUnsignedInt(b)) + "/" + (b == 0 ? 'Ø' : (char)b) + ")");
 		}
 		System.out.println(" <");
 		
@@ -130,13 +130,13 @@ public class MessageBuilder
 	
 	//########################################################
 	//Primitive types:
-
+	
 	public void addShort(int i)
 	{
 		bytes.add((byte) ((i >> 8) & 255));
 		bytes.add((byte) (i & 255));
 	}
-
+	
 	public void addInt(int i)
 	{
 		bytes.add((byte) ((i >> 24) & 255));
@@ -148,7 +148,7 @@ public class MessageBuilder
 	//Helpers: TODO: Move to somewhere.
 	private final Deflater deflator = new Deflater();
 	private final byte[] buffer = new byte[8192];
-
+	
 	public void compress(int compressionLevel)
 	{
 		if(bytes.size() < compressionLevel)

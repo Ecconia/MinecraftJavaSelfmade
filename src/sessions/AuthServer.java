@@ -19,9 +19,9 @@ public class AuthServer
 		
 		String link = "https://sessionserver.mojang.com/session/minecraft/join";
 		String message = "{"
-				+ "\"accessToken\":\"" + accessToken + "\","
-				+ "\"selectedProfile\":\"" + uuid.toString().replace("-", "") + "\","
-				+ "\"serverId\":\"" + serverHash + "\""
+			+ "\"accessToken\":\"" + accessToken + "\","
+			+ "\"selectedProfile\":\"" + uuid.toString().replace("-", "") + "\","
+			+ "\"serverId\":\"" + serverHash + "\""
 			+ "}";
 		
 		System.out.println("Link: " + link);
@@ -40,7 +40,8 @@ public class AuthServer
 	{
 		byte[] payload = content.getBytes();
 		
-		try {
+		try
+		{
 			URLConnection con = new URL(url).openConnection();
 			con.setDoInput(true);
 			con.setDoOutput(true);
@@ -54,17 +55,24 @@ public class AuthServer
 			
 			BufferedReader inStream;
 			int responseCode = ((HttpURLConnection) con).getResponseCode();
-			if(responseCode == 200) {
+			if(responseCode == 200)
+			{
 				inStream = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-			} else if(responseCode == 204) { // 204 No content.
+			}
+			else if(responseCode == 204)
+			{ // 204 No content.
 				return "";
-			} else {
+			}
+			else
+			{
 				inStream = new BufferedReader(new InputStreamReader(((HttpURLConnection) con).getErrorStream(), "UTF-8"));
 			}
 			String res = inStream.readLine();
 			inStream.close();
 			return res;
-		} catch (IOException e) {
+		}
+		catch(IOException e)
+		{
 			e.printStackTrace();
 			return null;
 		}

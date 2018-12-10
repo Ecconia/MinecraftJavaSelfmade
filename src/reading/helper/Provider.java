@@ -79,7 +79,7 @@ public abstract class Provider
 		
 		return i;
 	}
-
+	
 	public int readByte()
 	{
 		return getByte();
