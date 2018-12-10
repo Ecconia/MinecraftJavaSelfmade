@@ -216,29 +216,28 @@ public class PlayReader extends PacketReader
 	
 	private Provider uncompress(Provider readPacket)
 	{
-		int packetCompression = readPacket.readCInt();
-		if(packetCompression == 0)
+		int originalSize = readPacket.readCInt();
+		if(originalSize == 0)
 		{
 			return readPacket;
 		}
 		else
 		{
-			if(packetCompression < compressionLevel)
+			if(originalSize < compressionLevel)
 			{
 				System.out.println("Error: packet has malformed compression (too small).");
 			}
-			else if(packetCompression > 2097152)
+			else if(originalSize > 2097152)
 			{
 				System.out.println("Error: packet has malformed compression (too big for packet).");
 			}
 			else
 			{
-				int packetSize = readPacket.remainingBytes();
-				byte[] content = readPacket.readBytes(packetSize);
-				inflater.setInput(content);
-				byte[] output = new byte[packetCompression];
+				inflater.setInput(readPacket.readBytes(readPacket.remainingBytes()));
+				
 				try
 				{
+					byte[] output = new byte[originalSize];
 					inflater.inflate(output);
 					inflater.reset();
 					
@@ -262,8 +261,8 @@ public class PlayReader extends PacketReader
 	{
 		try
 		{
-			byte[] bytes = mb.asBytes();
-			int size = bytes.length;
+			byte[] inputBytes = mb.asBytes();
+			int size = inputBytes.length;
 			
 			int outputSize = encrypter.getOutputSize(size);
 			
@@ -272,10 +271,12 @@ public class PlayReader extends PacketReader
 				this.outputBuffer = new byte[outputSize];
 			}
 			
-			int newSize = encrypter.update(bytes, 0, size, this.outputBuffer);
-			byte[] buffer2 = new byte[newSize];
-			System.arraycopy(outputBuffer, 0, buffer2, 0, newSize);
-			mb.fromBytes(buffer2);
+			int newSize = encrypter.update(inputBytes, 0, size, this.outputBuffer);
+			//TODO: TBI: Investigation if following code is garbage:
+			System.out.println("Size of encrypted before after. Equals: " + (newSize == outputSize));
+			byte[] outputBytes = new byte[newSize];
+			System.arraycopy(outputBuffer, 0, outputBytes, 0, newSize);
+			mb.fromBytes(outputBytes);
 		}
 		catch(ShortBufferException e)
 		{
