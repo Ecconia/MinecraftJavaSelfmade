@@ -1,0 +1,33 @@
+Incomming/Outcomming byte stream:
+
+1. Normal packet structure:
+<size><packetID><content>
+> <size> and <packetID> are compressed Integers.
+> Content can be anything.
+
+2. With encryption (streamed):
+Encry:[<size><packetID><content>]
+> The encryption will be started at some point and streamed then.
+> Either decrypt byte for byte or use buffering.
+
+3. With compression:
+Encry:[<size><compression>Comp:[<packetID><content>]]
+> <compression> is a compressed Integer.
+> The compression may be 0 as indicator for no compression.
+> If the compression is not 0, it is the original size in bytes.
+
+Encryption:
+	1. Write the packet content.
+	2. Prepand the PacketID.
+	3. Compress the packet and prepand the original size.
+	4. Prepand the size of the packet.
+	5. Encrpyt the packet.
+	6. Send the packet as byte stream.
+	
+Decryption:
+	1. Read the byte stream.
+	2. Decrypt the byte stream.
+	3. Read the size of a packet and collect this packet.
+	4. Read the original size and decompress the packet if needed.
+	5. Read the packet ID.
+	6. Read the content depending on the packet ID.
