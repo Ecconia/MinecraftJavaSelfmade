@@ -16,11 +16,10 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.ShortBufferException;
-import javax.crypto.spec.IvParameterSpec;
 
 import de.ecconia.mc.jclient.PrintUtils;
 import de.ecconia.mc.jclient.compressing.Compressor;
+import de.ecconia.mc.jclient.encryption.SyncCryptUnit;
 import old.cred.Credentials;
 import old.packet.MessageBuilder;
 import old.reading.helper.ArrayProvider;
@@ -31,7 +30,9 @@ import old.sessions.AuthServer;
 public class PlayReader extends PacketReader
 {
 	private final OutputStream os;
+	
 	private Compressor c;
+	private SyncCryptUnit cryptUnit;
 	
 	public PlayReader(InputStream is, OutputStream os) throws IOException
 	{
@@ -164,19 +165,8 @@ public class PlayReader extends PacketReader
 			
 			System.out.println();
 			
-			try
-			{
-				encrypter = Cipher.getInstance("AES/CFB8/NoPadding");
-				encrypter.init(Cipher.ENCRYPT_MODE, sharedKey, new IvParameterSpec(sharedKey.getEncoded()));
-				
-				this.p = new EncrpytionProvider(sharedKey, p);
-			}
-			catch(InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException e1)
-			{
-				System.out.println("Error initing encryption. KMS.");
-				e1.printStackTrace();
-				return;
-			}
+			cryptUnit = new SyncCryptUnit(sharedKey);
+			p = new EncrpytionProvider(cryptUnit, p);
 			
 			int compressionLevel;
 			
@@ -219,37 +209,6 @@ public class PlayReader extends PacketReader
 		}
 	}
 	
-	private Cipher encrypter;
-	private byte[] outputBuffer = new byte[0];
-	
-	private void encrypt(MessageBuilder mb)
-	{
-		try
-		{
-			byte[] inputBytes = mb.asBytes();
-			int size = inputBytes.length;
-			
-			int outputSize = encrypter.getOutputSize(size);
-			
-			if(this.outputBuffer.length < outputSize)
-			{
-				this.outputBuffer = new byte[outputSize];
-			}
-			
-			int newSize = encrypter.update(inputBytes, 0, size, this.outputBuffer);
-			//TODO: TBI: Investigation if following code is garbage:
-			System.out.println("Size of encrypted before after. Equals: " + (newSize == outputSize));
-			byte[] outputBytes = new byte[newSize];
-			System.arraycopy(outputBuffer, 0, outputBytes, 0, newSize);
-			mb.fromBytes(outputBytes);
-		}
-		catch(ShortBufferException e)
-		{
-			System.out.println("Could not encrypt packet.");
-			e.printStackTrace();
-		}
-	}
-	
 	private void debugPacket(Provider p)
 	{
 		int size = p.remainingBytes();
@@ -267,7 +226,7 @@ public class PlayReader extends PacketReader
 			mb.prepandCInt(14);
 			mb.compress(c);
 			mb.prepandSize();
-			encrypt(mb);
+			mb.fromBytes(cryptUnit.encryptBytes(mb.asBytes()));
 			mb.write(os);
 		}
 		else if(id == 14)
@@ -284,7 +243,7 @@ public class PlayReader extends PacketReader
 				mb.prepandCInt(2);
 				mb.compress(c);
 				mb.prepandSize();
-				encrypt(mb);
+				mb.fromBytes(cryptUnit.encryptBytes(mb.asBytes()));
 				mb.write(os);
 			}
 		}
