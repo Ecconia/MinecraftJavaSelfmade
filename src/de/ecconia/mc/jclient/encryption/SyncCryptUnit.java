@@ -5,6 +5,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.ShortBufferException;
@@ -72,6 +73,22 @@ public class SyncCryptUnit
 		catch(ShortBufferException e)
 		{
 			throw new CipherException("Exception encrypting bytes.", e);
+		}
+	}
+	
+	public static SecretKey generateKey()
+	{
+		KeyGenerator gen;
+		try
+		{
+			gen = KeyGenerator.getInstance("AES");
+			gen.init(128);
+			return gen.generateKey();
+		}
+		catch(NoSuchAlgorithmException e)
+		{
+			//Do not capture this, terminate everything.
+			throw new Error("ERROR: Exception while gnerating synced encryption key: " + e.getClass().getSimpleName() + " - " + e.getMessage());
 		}
 	}
 }

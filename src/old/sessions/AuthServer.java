@@ -24,8 +24,8 @@ public class AuthServer
 			+ "\"serverId\":\"" + serverHash + "\""
 			+ "}";
 		
-		System.out.println("Link: " + link);
-		System.out.println("Message: " + message);
+//		System.out.println("Link: " + link);
+//		System.out.println("Message: " + message);
 		
 		String response = request(link, message);
 		if(!response.isEmpty())

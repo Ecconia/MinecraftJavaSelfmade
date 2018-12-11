@@ -1,17 +1,13 @@
 package de.ecconia.mc.jclient;
 
-import java.math.BigInteger;
-import java.security.KeyFactory;
-import java.security.MessageDigest;
 import java.security.PublicKey;
-import java.security.spec.X509EncodedKeySpec;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import de.ecconia.mc.jclient.connection.Connector;
 import de.ecconia.mc.jclient.connection.PacketHandler;
+import de.ecconia.mc.jclient.encryption.AsyncCryptTools;
+import de.ecconia.mc.jclient.encryption.SyncCryptUnit;
 import old.packet.MessageBuilder;
 import old.reading.helper.ArrayProvider;
 import old.reading.helper.Provider;
@@ -51,92 +47,33 @@ public class LoginPacketHandler implements PacketHandler
 				byte[] verifyToken;
 				{
 					serverCode = p.readString();
-					System.out.println("ServerID: >" + serverCode + "<");
+					System.out.println("> ServerID: >" + serverCode + "<");
 					
 					int lengthPubKey = p.readCInt();
-					System.out.println("Pubkey (" + lengthPubKey + "):");
+					System.out.println("> Pubkey (" + lengthPubKey + "):");
 					pubkeyBytes = p.readBytes(lengthPubKey);
 					PrintUtils.printBytes(pubkeyBytes);
 					
 					int lengthVerifyToken = p.readCInt();
-					System.out.println("Verify token (" + lengthVerifyToken + "):");
+					System.out.println("> Verify token (" + lengthVerifyToken + "):");
 					verifyToken = p.readBytes(lengthVerifyToken);
 					PrintUtils.printBytes(verifyToken);
-					
-					if(p.remainingBytes() > 0)
-					{
-						System.out.print("Remaining content: ");
-						PrintUtils.printBytes(p.readBytes(p.remainingBytes()));
-					}
 				}
 				
-				System.out.println("Generating encryption things 1...");
-				
-				SecretKey sharedKey;
-				try
-				{
-					KeyGenerator gen = KeyGenerator.getInstance("AES");
-					gen.init(128);
-					sharedKey = gen.generateKey();
-				}
-				catch(Exception e)
-				{
-					throw new RuntimeException("Cannot generate shared secret: " + e.getMessage());
-				}
-				
-				PublicKey serverPublicKey;
-				try
-				{
-					serverPublicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(pubkeyBytes));
-				}
-				catch(Exception e)
-				{
-					throw new RuntimeException("Could not convert public server key: " + e.getMessage());
-				}
-				
-				String serverHash;
-				try
-				{
-					MessageDigest digest = MessageDigest.getInstance("SHA-1");
-					digest.update(serverCode.getBytes("ISO_8859_1"));
-					digest.update(sharedKey.getEncoded());
-					digest.update(serverPublicKey.getEncoded());
-					serverHash = new BigInteger(digest.digest()).toString(16);
-				}
-				catch(Exception e)
-				{
-					throw new RuntimeException("Could not generate server hash: " + e.getMessage());
-				}
+				SecretKey sharedKey = SyncCryptUnit.generateKey();
+				PublicKey serverPublicKey = AsyncCryptTools.bytesToPublicKey(pubkeyBytes);
+				String serverHash = AsyncCryptTools.generateHashFromBytes(serverCode, sharedKey.getEncoded(), serverPublicKey.getEncoded());
 				
 				//Auth-Server request.
-				System.out.println("Contacting Auth-Servers...");
+				System.out.println();
+				System.out.println(">>Contacting auth server...");
 				AuthServer.join(serverHash);
+				System.out.println(">>Done.");
 				
-				System.out.println("Generating encryption things 2...");
+				byte[] sharedSecret = AsyncCryptTools.encryptBytes(serverPublicKey, sharedKey.getEncoded());
+				byte[] clientVerifyToken = AsyncCryptTools.encryptBytes(serverPublicKey, verifyToken);
 				
-				byte[] sharedSecret;
-				try
-				{
-					Cipher cipher = Cipher.getInstance(serverPublicKey.getAlgorithm().equals("RSA") ? "RSA/ECB/PKCS1Padding" : "AES/CFB8/NoPadding");
-					cipher.init(Cipher.ENCRYPT_MODE, serverPublicKey);
-					sharedSecret = cipher.doFinal(sharedKey.getEncoded());
-				}
-				catch(Exception e)
-				{
-					throw new RuntimeException("Could not encrypt server encryption data: " + e.getMessage());
-				}
-				
-				byte[] clientVerifyToken;
-				try
-				{
-					Cipher cipher = Cipher.getInstance(serverPublicKey.getAlgorithm().equals("RSA") ? "RSA/ECB/PKCS1Padding" : "AES/CFB8/NoPadding");
-					cipher.init(Cipher.ENCRYPT_MODE, serverPublicKey);
-					clientVerifyToken = cipher.doFinal(verifyToken);
-				}
-				catch(Exception e)
-				{
-					throw new RuntimeException("Could not encrypt server encryption data: " + e.getMessage());
-				}
+				//##########################################
 				
 				MessageBuilder mb = new MessageBuilder();
 				mb.addCInt(sharedSecret.length);
@@ -146,10 +83,14 @@ public class LoginPacketHandler implements PacketHandler
 				
 				mb.prepandCInt(1);
 				con.sendPacket(mb.asBytes());
-				System.out.println("Sent answer to server.");
-				System.out.println("Enabling encryption...");
 				
 				con.enableEncryption(sharedKey);
+				
+				System.out.println();
+				System.out.println("Established connection, logged in.");
+				System.out.println("Now switching to Play protocol.");
+				System.out.println();
+				System.out.println("-----------------------------------------");
 				
 				con.setHandler(new PlayPacketHandler(con));
 			}
