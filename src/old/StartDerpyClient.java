@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import old.reading.reader.PlayReader;
 import old.sending.BasicRequests;
 
 public class StartDerpyClient
@@ -35,7 +34,7 @@ public class StartDerpyClient
 			
 //			new LegacyPingReader(is);
 //			new NormalPingReader(is);
-			new PlayReader(is, os);
+//			new PlayReader(is, os);
 			
 			System.out.println();
 			connection.close();
