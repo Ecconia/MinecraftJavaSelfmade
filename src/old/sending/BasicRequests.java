@@ -2,7 +2,6 @@ package old.sending;
 
 import java.io.OutputStream;
 
-import old.cred.Credentials;
 import old.packet.MessageBuilder;
 
 public class BasicRequests
@@ -41,49 +40,6 @@ public class BasicRequests
 		mb.addCString(hostname); //Hostname
 		mb.addInt(25565); //Port
 		
-		mb.write(out);
-	}
-	
-	public static void sendPingTypeNormal(OutputStream out)
-	{
-		//Send Handshake packet:
-		MessageBuilder mb = new MessageBuilder();
-		mb.addCInt(404); //Protocol Version. (404)
-		mb.addString("localhost"); //Domain/IP
-		mb.addShort(25565); //Port
-		mb.addCInt(1); //1 - Type Status
-		
-		mb.prepandCInt(0);
-		mb.prepandSize();
-		mb.write(out);
-		
-		//Send Response packet:
-		mb = new MessageBuilder();
-		
-		mb.prepandCInt(0);
-		mb.prepandSize();
-		mb.write(out);
-	}
-	
-	public static void tryLogin(OutputStream out)
-	{
-		//Send Handshake packet:
-		MessageBuilder mb = new MessageBuilder();
-		mb.addCInt(404); //Protocol Version. (404)
-		mb.addString("localhost"); //Domain/IP
-		mb.addShort(25565); //Port
-		mb.addCInt(2); //2 - Type Login
-		
-		mb.prepandCInt(0); //Packet ID
-		mb.prepandSize();
-		mb.write(out);
-		
-		//Send login packet:
-		mb = new MessageBuilder();
-		mb.addString(Credentials.USERNAME);
-		
-		mb.prepandCInt(0); //Packet ID
-		mb.prepandSize();
 		mb.write(out);
 	}
 }

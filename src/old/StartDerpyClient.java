@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import old.reading.reader.LegacyPingReader;
 import old.sending.BasicRequests;
 
 public class StartDerpyClient
@@ -25,16 +26,12 @@ public class StartDerpyClient
 			OutputStream os = connection.getOutputStream();
 			
 //			BasicRequests.sendPingType0(os);
-//			BasicRequests.sendPingType1(os);
+			BasicRequests.sendPingType1(os);
 //			BasicRequests.sendPingTypeX(os);
-//			BasicRequests.sendPingTypeNormal(os);
-			BasicRequests.tryLogin(os);
 			
 			System.out.println();
 			
-//			new LegacyPingReader(is);
-//			new NormalPingReader(is);
-//			new PlayReader(is, os);
+			new LegacyPingReader(is);
 			
 			System.out.println();
 			connection.close();
