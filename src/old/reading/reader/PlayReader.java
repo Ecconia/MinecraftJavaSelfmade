@@ -21,6 +21,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
+import de.ecconia.mc.jclient.PrintUtils;
 import old.cred.Credentials;
 import old.packet.MessageBuilder;
 import old.reading.helper.ArrayProvider;
@@ -69,18 +70,18 @@ public class PlayReader extends PacketReader
 				System.out.println("Pubkey length: " + lengthPubKey);
 				pubkeyBytes = packet.readBytes(lengthPubKey);
 				System.out.println("Pubkey:");
-				printBytes(pubkeyBytes);
+				PrintUtils.printBytes(pubkeyBytes);
 				
 				int lengthVerifyToken = packet.readCInt();
 				System.out.println("Verify token length: " + lengthVerifyToken);
 				verifyToken = packet.readBytes(lengthVerifyToken);
 				System.out.println("Veryfy token: ");
-				printBytes(verifyToken);
+				PrintUtils.printBytes(verifyToken);
 				
 				if(packet.remainingBytes() > 0)
 				{
 					System.out.print("Remaining content: ");
-					printBytes(packet.readBytes(packet.remainingBytes()));
+					PrintUtils.printBytes(packet.readBytes(packet.remainingBytes()));
 				}
 				else
 				{
@@ -325,21 +326,5 @@ public class PlayReader extends PacketReader
 		}
 	}
 	
-	private static void printBytes(byte[] bytes)
-	{
-		for(int i = 0; i < bytes.length; i++)
-		{
-			int b = bytes[i];
-			int lower = b & 15;
-			int upper = (b >> 4) & 15;
-			System.out.print(" " + makeNibble(upper) + makeNibble(lower));
-		}
-		System.out.println();
-	}
 	
-	private static char makeNibble(int i)
-	{
-		String letters = "0123456789ABCDEF";
-		return letters.charAt(i);
-	}
 }
