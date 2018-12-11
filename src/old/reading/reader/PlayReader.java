@@ -11,8 +11,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.zip.DataFormatException;
-import java.util.zip.Inflater;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -22,6 +20,7 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
 import de.ecconia.mc.jclient.PrintUtils;
+import de.ecconia.mc.jclient.compressing.Compressor;
 import old.cred.Credentials;
 import old.packet.MessageBuilder;
 import old.reading.helper.ArrayProvider;
@@ -31,10 +30,8 @@ import old.sessions.AuthServer;
 
 public class PlayReader extends PacketReader
 {
-	private Integer compressionLevel = null;
-	private Inflater inflater = new Inflater();
-	
 	private final OutputStream os;
+	private Compressor c;
 	
 	public PlayReader(InputStream is, OutputStream os) throws IOException
 	{
@@ -181,6 +178,8 @@ public class PlayReader extends PacketReader
 				return;
 			}
 			
+			int compressionLevel;
+			
 			//Read uncompressed packets.
 			while(true)
 			{
@@ -204,55 +203,20 @@ public class PlayReader extends PacketReader
 				}
 			}
 			
+			c = new Compressor(compressionLevel);
+			
 			while(true)
 			{
-				debugPacket(uncompress(readPacket()));
+				//TODO: Finally remove, overcomplicated uncomression call, at least here.
+				packet = readPacket();
+				int originalSize = packet.readCInt();
+				debugPacket(new ArrayProvider(c.uncompress(originalSize, packet.readBytes(packet.remainingBytes()))));
 			}
 		}
 		else
 		{
 			System.out.println("Unknown packet ID");
 		}
-	}
-	
-	private Provider uncompress(Provider readPacket)
-	{
-		int originalSize = readPacket.readCInt();
-		if(originalSize == 0)
-		{
-			return readPacket;
-		}
-		else
-		{
-			if(originalSize < compressionLevel)
-			{
-				System.out.println("Error: packet has malformed compression (too small).");
-			}
-			else if(originalSize > 2097152)
-			{
-				System.out.println("Error: packet has malformed compression (too big for packet).");
-			}
-			else
-			{
-				inflater.setInput(readPacket.readBytes(readPacket.remainingBytes()));
-				
-				try
-				{
-					byte[] output = new byte[originalSize];
-					inflater.inflate(output);
-					inflater.reset();
-					
-					return new ArrayProvider(output);
-				}
-				catch(DataFormatException e)
-				{
-					System.out.println("ERROR: Uncompressing packet.");
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		return null;
 	}
 	
 	private Cipher encrypter;
@@ -301,7 +265,7 @@ public class PlayReader extends PacketReader
 			MessageBuilder mb = new MessageBuilder();
 			mb.addBytes(ping);
 			mb.prepandCInt(14);
-			mb.compress(compressionLevel);
+			mb.compress(c);
 			mb.prepandSize();
 			encrypt(mb);
 			mb.write(os);
@@ -318,13 +282,11 @@ public class PlayReader extends PacketReader
 				MessageBuilder mb = new MessageBuilder();
 				mb.addString("Yes? (Automated message)");
 				mb.prepandCInt(2);
-				mb.compress(compressionLevel);
+				mb.compress(c);
 				mb.prepandSize();
 				encrypt(mb);
 				mb.write(os);
 			}
 		}
 	}
-	
-	
 }

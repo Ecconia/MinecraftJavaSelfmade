@@ -146,17 +146,9 @@ public class MessageBuilder
 		bytes.add((byte) (i & 255));
 	}
 	
-	//TODO: Remove finally.
-	private Compressor c;
-	
 	@Deprecated
-	public void compress(int compressionLevel)
+	public void compress(Compressor c)
 	{
-		if(c == null)
-		{
-			c = new Compressor(compressionLevel);
-		}
-		
 		IntBytes ret = c.compress(asBytes());
 		if(ret.getInt() == 0)
 		{
