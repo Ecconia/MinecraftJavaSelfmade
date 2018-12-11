@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.zip.Deflater;
 
+import de.ecconia.mc.jclient.compressing.Compressor;
+import de.ecconia.mc.jclient.data.IntBytes;
 import old.reading.DirtyIOException;
 
 public class MessageBuilder
@@ -145,37 +146,27 @@ public class MessageBuilder
 		bytes.add((byte) (i & 255));
 	}
 	
-	//Helpers: TODO: Move to somewhere.
-	private final Deflater deflator = new Deflater();
-	private final byte[] buffer = new byte[8192];
+	//TODO: Remove finally.
+	private Compressor c;
 	
+	@Deprecated
 	public void compress(int compressionLevel)
 	{
-		if(bytes.size() < compressionLevel)
+		if(c == null)
+		{
+			c = new Compressor(compressionLevel);
+		}
+		
+		IntBytes ret = c.compress(asBytes());
+		if(ret.getInt() == 0)
 		{
 			prepandCInt(0);
 		}
 		else
 		{
-			byte[] content = asBytes();
-			int size = content.length;
-			
-			deflator.setInput(content, 0, size);
-			deflator.finish();
-			
 			bytes.clear();
-			addCInt(size);
-			
-			while(!deflator.finished())
-			{
-				int newSize = deflator.deflate(buffer);
-				
-				byte[] buffer2 = new byte[newSize];
-				System.arraycopy(buffer, 0, buffer2, 0, newSize);
-				addBytes(buffer2);
-			}
-			
-			deflator.reset();
+			addCInt(ret.getInt());
+			addBytes(ret.getBytes());
 		}
 	}
 }
