@@ -1,5 +1,6 @@
 package de.ecconia.mc.jclient;
 
+import de.ecconia.mc.jclient.chat.SimpleChatParser;
 import de.ecconia.mc.jclient.connection.Connector;
 import de.ecconia.mc.jclient.connection.PacketHandler;
 import old.cred.Credentials;
@@ -19,7 +20,8 @@ public class PlayPacketHandler implements PacketHandler
 	@Override
 	public void onPacketReceive(byte[] bytes)
 	{
-		try {
+		try
+		{
 			Provider p = new ArrayProvider(bytes);
 			int id = p.readCInt();
 			System.out.println(">>> Packet with ID:" + id + " Size:" + p.remainingBytes());
@@ -58,14 +60,41 @@ public class PlayPacketHandler implements PacketHandler
 				String jsonMessage = p.readString();
 				System.out.println("Json: " + jsonMessage);
 				System.out.println("Loc: " + p.readByte());
-				
-				if(jsonMessage.contains(Credentials.USERNAME) && !jsonMessage.contains("joined the game") && !jsonMessage.contains("Discord"))
+				String message = null;
+				try
 				{
-					System.out.println("Answering...");
-					MessageBuilder mb = new MessageBuilder();
-					mb.addString("Yes? (Automated message)");
-					mb.prepandCInt(2);
-					con.sendPacket(mb.asBytes());
+					message = SimpleChatParser.parseString(jsonMessage);
+				}
+				catch(Exception e)
+				{
+					System.out.println("Exception while parsing json message.");
+					e.printStackTrace(System.out);
+				}
+				
+				if(message != null)
+				{
+					System.out.println("Formatted:");
+					System.out.println(message);
+					
+					if(message.contains("runcolorcommand"))
+					{
+						System.out.println("Answering...");
+						MessageBuilder mb = new MessageBuilder();
+						mb.addString("/colors");
+						mb.prepandCInt(2);
+						con.sendPacket(mb.asBytes());
+					}
+					else if(!message.contains("Welcome " + Credentials.USERNAME) &&
+						message.contains(Credentials.USERNAME) &&
+						!message.contains(Credentials.USERNAME + " joined the game") &&
+						!message.contains(Credentials.USERNAME + ":"))
+					{
+						System.out.println("Answering...");
+						MessageBuilder mb = new MessageBuilder();
+						mb.addString("Yes? (Automated message)");
+						mb.prepandCInt(2);
+						con.sendPacket(mb.asBytes());
+					}
 				}
 			}
 		}
