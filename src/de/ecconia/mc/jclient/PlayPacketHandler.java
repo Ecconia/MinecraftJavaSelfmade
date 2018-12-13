@@ -1,9 +1,7 @@
 package de.ecconia.mc.jclient;
 
-import de.ecconia.mc.jclient.chat.SimpleChatParser;
 import de.ecconia.mc.jclient.connection.Connector;
 import de.ecconia.mc.jclient.connection.PacketHandler;
-import old.cred.Credentials;
 import old.packet.MessageBuilder;
 import old.reading.helper.ArrayProvider;
 import old.reading.helper.Provider;
@@ -11,10 +9,12 @@ import old.reading.helper.Provider;
 public class PlayPacketHandler implements PacketHandler
 {
 	private final Connector con;
+	private final PrimitiveDataDude dataDude;
 	
-	public PlayPacketHandler(Connector con)
+	public PlayPacketHandler(Connector con, PrimitiveDataDude dataDude)
 	{
 		this.con = con;
+		this.dataDude = dataDude;
 	}
 	
 	@Override
@@ -60,42 +60,8 @@ public class PlayPacketHandler implements PacketHandler
 				String jsonMessage = p.readString();
 				System.out.println("Json: " + jsonMessage);
 				System.out.println("Loc: " + p.readByte());
-				String message = null;
-				try
-				{
-					message = SimpleChatParser.parseString(jsonMessage);
-				}
-				catch(Exception e)
-				{
-					System.out.println("Exception while parsing json message.");
-					e.printStackTrace(System.out);
-				}
 				
-				if(message != null)
-				{
-					System.out.println("Formatted:");
-					System.out.println(message);
-					
-					if(message.contains("runcolorcommand"))
-					{
-						System.out.println("Answering...");
-						MessageBuilder mb = new MessageBuilder();
-						mb.addString("/colors");
-						mb.prepandCInt(2);
-						con.sendPacket(mb.asBytes());
-					}
-					else if(!message.contains("Welcome " + Credentials.USERNAME) &&
-						message.contains(Credentials.USERNAME) &&
-						!message.contains(Credentials.USERNAME + " joined the game") &&
-						!message.contains(Credentials.USERNAME + ":"))
-					{
-						System.out.println("Answering...");
-						MessageBuilder mb = new MessageBuilder();
-						mb.addString("Yes? (Automated message)");
-						mb.prepandCInt(2);
-						con.sendPacket(mb.asBytes());
-					}
-				}
+				dataDude.newChatJSON(jsonMessage);
 			}
 		}
 		catch(Exception e)

@@ -10,7 +10,9 @@ public class StartMCClient
 	{
 		Connector con = new Connector("s.redstone-server.info", 25565);
 		
-		con.setHandler(new LoginPacketHandler(con));
+		PrimitiveDataDude dataDude = new PrimitiveDataDude(con);
+		
+		con.setHandler(new LoginPacketHandler(con, dataDude));
 		
 		//Send Login packets:
 		new Thread(() -> {

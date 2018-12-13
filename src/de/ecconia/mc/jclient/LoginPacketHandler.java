@@ -16,10 +16,12 @@ import old.sessions.AuthServer;
 public class LoginPacketHandler implements PacketHandler
 {
 	private final Connector con;
+	private final PrimitiveDataDude dataDude;
 	
-	public LoginPacketHandler(Connector con)
+	public LoginPacketHandler(Connector con, PrimitiveDataDude dataDude)
 	{
 		this.con = con;
+		this.dataDude = dataDude;
 	}
 	
 	@Override
@@ -92,7 +94,8 @@ public class LoginPacketHandler implements PacketHandler
 				System.out.println();
 				System.out.println("-----------------------------------------");
 				
-				con.setHandler(new PlayPacketHandler(con));
+				dataDude.connectedToServer();
+				con.setHandler(new PlayPacketHandler(con, dataDude));
 			}
 		}
 		catch(Exception e)
