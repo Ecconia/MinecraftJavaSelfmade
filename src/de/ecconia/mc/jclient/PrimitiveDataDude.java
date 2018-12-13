@@ -2,12 +2,14 @@ package de.ecconia.mc.jclient;
 
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
 import de.ecconia.mc.jclient.connection.Connector;
+import de.ecconia.mc.jclient.gui.chatwindow.ChatWindow;
 import old.cred.Credentials;
 import old.packet.MessageBuilder;
 
 public class PrimitiveDataDude
 {
 	private final Connector con;
+	private ChatWindow chatWindow;
 	
 	public PrimitiveDataDude(Connector con)
 	{
@@ -16,11 +18,14 @@ public class PrimitiveDataDude
 	
 	public void connectedToServer()
 	{
+		chatWindow = new ChatWindow(this);
 	}
 	
 	public void newChatJSON(String json)
 	{
 		ParsedMessageContainer messageContainer = new ParsedMessageContainer(json);
+		
+		chatWindow.addJSONLine(messageContainer);
 		
 		String plainMessage = null;
 		try
