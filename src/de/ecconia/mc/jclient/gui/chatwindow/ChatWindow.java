@@ -11,10 +11,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.ScrollBarUI;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
 import de.ecconia.mc.jclient.gui.chatwindow.ctf.ColoredTextPane;
+import de.ecconia.mc.jclient.gui.chatwindow.ctf.CustomScrollbarUI;
 
 public class ChatWindow
 {
@@ -68,6 +70,9 @@ public class ChatWindow
 		history.setBorder(new EmptyBorder(1, 1, 1, 1));
 		
 		scrollpane.setBorder(new EmptyBorder(0, 0, 0, 0));
+		
+		ScrollBarUI scrollbarUI = new CustomScrollbarUI();
+		scrollpane.getVerticalScrollBar().setUI(scrollbarUI);
 		
 		//Adding:
 		content.add(inputLine, BorderLayout.SOUTH);
