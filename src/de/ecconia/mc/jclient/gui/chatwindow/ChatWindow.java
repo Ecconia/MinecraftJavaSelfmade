@@ -15,8 +15,8 @@ import javax.swing.plaf.ScrollBarUI;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
-import de.ecconia.mc.jclient.gui.chatwindow.ctf.ColoredTextPane;
-import de.ecconia.mc.jclient.gui.chatwindow.ctf.CustomScrollbarUI;
+import de.ecconia.mc.jclient.gui.chatwindow.elements.ColoredTextPane;
+import de.ecconia.mc.jclient.gui.chatwindow.elements.CustomScrollbarUI;
 
 public class ChatWindow
 {

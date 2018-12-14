@@ -1,9 +1,9 @@
 package de.ecconia.mc.jclient.chat;
 
-import de.ecconia.mc.jclient.chat.json.JSONObject;
-import de.ecconia.mc.jclient.chat.json.parser.JSONParser;
 import de.ecconia.mc.jclient.chat.parser.ChatParser;
 import de.ecconia.mc.jclient.chat.parser.ChatSegment;
+import de.ecconia.mc.jclient.tools.json.JSONObject;
+import de.ecconia.mc.jclient.tools.json.JSONParser;
 
 public class ParsedMessageContainer
 {

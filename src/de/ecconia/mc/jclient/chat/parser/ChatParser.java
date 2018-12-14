@@ -8,8 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.ecconia.mc.jclient.chat.ChatFormatException;
-import de.ecconia.mc.jclient.chat.json.JSONArray;
-import de.ecconia.mc.jclient.chat.json.JSONObject;
+import de.ecconia.mc.jclient.tools.json.JSONArray;
+import de.ecconia.mc.jclient.tools.json.JSONObject;
 
 public class ChatParser
 {

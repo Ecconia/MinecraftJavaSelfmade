@@ -1,6 +1,6 @@
 package de.ecconia.mc.jclient;
 
-import de.ecconia.mc.jclient.connection.Connector;
+import de.ecconia.mc.jclient.network.connector.Connector;
 import old.packet.MessageBuilder;
 import old.reading.helper.ArrayProvider;
 import old.reading.helper.Provider;

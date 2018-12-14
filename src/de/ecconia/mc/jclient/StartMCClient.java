@@ -1,7 +1,7 @@
 package de.ecconia.mc.jclient;
 
-import de.ecconia.mc.jclient.connection.Connector;
-import old.cred.Credentials;
+import de.ecconia.mc.jclient.network.LoginPacketHandler;
+import de.ecconia.mc.jclient.network.connector.Connector;
 import old.packet.MessageBuilder;
 
 public class StartMCClient

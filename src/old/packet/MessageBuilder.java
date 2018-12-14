@@ -5,8 +5,8 @@ import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import de.ecconia.mc.jclient.compressing.Compressor;
 import de.ecconia.mc.jclient.data.IntBytes;
+import de.ecconia.mc.jclient.network.tools.compression.Compressor;
 import old.reading.DirtyIOException;
 
 public class MessageBuilder

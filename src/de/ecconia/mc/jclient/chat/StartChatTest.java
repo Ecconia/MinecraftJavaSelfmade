@@ -1,8 +1,8 @@
 package de.ecconia.mc.jclient.chat;
 
-import de.ecconia.mc.jclient.chat.json.JSONException;
-import de.ecconia.mc.jclient.chat.json.JSONObject;
-import de.ecconia.mc.jclient.chat.json.parser.JSONParser;
+import de.ecconia.mc.jclient.tools.json.JSONException;
+import de.ecconia.mc.jclient.tools.json.JSONObject;
+import de.ecconia.mc.jclient.tools.json.JSONParser;
 
 public class StartChatTest
 {

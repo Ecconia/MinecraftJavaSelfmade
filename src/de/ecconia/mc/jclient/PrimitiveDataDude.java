@@ -1,9 +1,8 @@
 package de.ecconia.mc.jclient;
 
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
-import de.ecconia.mc.jclient.connection.Connector;
 import de.ecconia.mc.jclient.gui.chatwindow.ChatWindow;
-import old.cred.Credentials;
+import de.ecconia.mc.jclient.network.connector.Connector;
 import old.packet.MessageBuilder;
 
 public class PrimitiveDataDude
