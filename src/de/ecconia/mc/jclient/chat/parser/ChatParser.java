@@ -91,7 +91,7 @@ public class ChatParser
 		
 		return new ChatSegment(deunicode(text), color, extraList);
 	}
-
+	
 	public static ChatSegment parse(String text)
 	{
 		//TODO: Test!!! (Does split do as it should... its a b* most of the time.

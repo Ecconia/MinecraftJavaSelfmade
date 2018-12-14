@@ -50,20 +50,20 @@ public class CustomScrollbarUI extends BasicScrollBarUI
 //		g.fillOval(0, 0, w, w-1);
 //		g.fillOval(0, h-w, w, w-1);
 		
-		int halfWidth = w/2;
+		int halfWidth = w / 2;
 		int left = 0;
-		int right = w-1;
+		int right = w - 1;
 		for(int i = 0; i < halfWidth; i++)
 		{
-			g.drawLine(left, halfWidth-i, right, halfWidth-i);
-			g.drawLine(left, h-halfWidth+i, right, h-halfWidth+i);
+			g.drawLine(left, halfWidth - i, right, halfWidth - i);
+			g.drawLine(left, h - halfWidth + i, right, h - halfWidth + i);
 			
 			left++;
 			right--;
 		}
 		
 //		g.setColor(new Color(255, 0, 0));
-		g.fillRect(0, halfWidth+1, w, h - w);
+		g.fillRect(0, halfWidth + 1, w, h - w);
 		
 //		g.setColor(new Color(30, 30, 30));
 //		g.fillRect(0, h+1, w, 500);

@@ -67,7 +67,7 @@ public class PrimitiveDataDude
 			}
 		}
 	}
-
+	
 	public void sendChat(String text)
 	{
 		MessageBuilder mb = new MessageBuilder();

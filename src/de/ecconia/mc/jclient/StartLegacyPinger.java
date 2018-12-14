@@ -18,7 +18,7 @@ public class StartLegacyPinger
 //		sendPingType0(os);
 		sendPingType1(os);
 //		sendPingTypeX(os);
-
+		
 		InputStream is = connection.getInputStream();
 		
 		int init = getByte(is);

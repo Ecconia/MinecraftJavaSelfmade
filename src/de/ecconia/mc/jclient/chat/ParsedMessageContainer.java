@@ -27,7 +27,7 @@ public class ParsedMessageContainer
 		
 		return jsonObject;
 	}
-
+	
 	public String getPlainMessage()
 	{
 		if(plainMessage == null)

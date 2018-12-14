@@ -29,7 +29,8 @@ public class LoginPacketHandler implements PacketHandler
 	@Override
 	public void onPacketReceive(byte[] bytes)
 	{
-		try {
+		try
+		{
 			Provider p = new ArrayProvider(bytes);
 			int id = p.readCInt();
 			System.out.println(">>> Packet with ID:" + id + " Size:" + p.remainingBytes());

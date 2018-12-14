@@ -22,7 +22,7 @@ public class DecryptionReader implements Reader
 	{
 		return cripter.decryptByte(r.readByte());
 	}
-
+	
 	@Override
 	public byte[] readBytes(int amount)
 	{

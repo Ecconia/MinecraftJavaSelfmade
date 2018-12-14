@@ -32,7 +32,7 @@ public class JSONToken
 	@Override
 	public String toString()
 	{
-		return type.name() + (content != null ? "<" + content + ">": "");
+		return type.name() + (content != null ? "<" + content + ">" : "");
 	}
 	
 	//### Parser ###
@@ -161,7 +161,7 @@ public class JSONToken
 		{
 			return debug;
 		}
-
+		
 		public void undo()
 		{
 			debug += "undo";

@@ -85,7 +85,7 @@ public class ChatWindow
 		
 		history.addChatLine(message);
 		
-		if (scrolled)
+		if(scrolled)
 		{
 			//TBI: Why two?
 			EventQueue.invokeLater(new Runnable()
@@ -103,7 +103,7 @@ public class ChatWindow
 			});
 		}
 	}
-
+	
 	public void addSystemMessage(String message)
 	{
 		history.addSystemMessage(message);

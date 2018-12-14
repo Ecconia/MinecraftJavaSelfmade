@@ -99,7 +99,7 @@ public class ColoredTextPane extends WarpTextPane
 			writeChatSegment(seg);
 		}
 	}
-
+	
 	public void addSystemMessage(String message)
 	{
 		MutableAttributeSet set = new SimpleAttributeSet();

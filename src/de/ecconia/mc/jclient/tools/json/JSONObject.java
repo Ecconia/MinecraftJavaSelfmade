@@ -36,7 +36,7 @@ public class JSONObject extends JSONNode
 		}
 		System.out.println(prefix + "}");
 	}
-
+	
 	public Map<String, Object> getEntries()
 	{
 		return entries;

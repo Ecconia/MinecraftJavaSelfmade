@@ -46,7 +46,7 @@ public class AsyncCryptTools
 			throw new Error("ERROR: Exception while creating server-hash: " + e.getClass().getSimpleName() + " - " + e.getMessage());
 		}
 	}
-
+	
 	public static byte[] encryptBytes(PublicKey serverPublicKey, byte[] encoded)
 	{
 		try
