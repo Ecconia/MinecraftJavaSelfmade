@@ -28,7 +28,7 @@ public class PlayPacketHandler implements PacketHandler
 			//State for play packet.
 			if(id == 3)
 			{
-				System.out.println(">>> Packet: Compression request");
+				System.out.println(">>> Compression request");
 				int compressionLevel = p.readCInt();
 				System.out.println("> Compression above " + compressionLevel + " bytes.");
 				if(p.remainingBytes() > 0)
@@ -40,12 +40,12 @@ public class PlayPacketHandler implements PacketHandler
 			}
 			else if(id == 27)
 			{
-				System.out.println(">>> Packet: Disconnected by server");
+				System.out.println(">>> Disconnected by server");
 				System.out.println("> Message: " + p.readString());
 			}
 			else if(id == 33)
 			{
-				System.out.println(">>> Packet: Ping");
+				System.out.println(">>> Ping");
 				byte[] ping = p.readBytes(8);
 				
 				MessageBuilder mb = new MessageBuilder();
@@ -55,7 +55,7 @@ public class PlayPacketHandler implements PacketHandler
 			}
 			else if(id == 14)
 			{
-				System.out.println(">>> Packet: Chat");
+				System.out.println(">>> Chat");
 				String jsonMessage = p.readString();
 				System.out.println("> Json: " + jsonMessage);
 				System.out.println("> Loc: " + p.readByte());
@@ -64,28 +64,28 @@ public class PlayPacketHandler implements PacketHandler
 			}
 			else if(id == 74)
 			{
-				System.out.println(">>> Packet: WorldTime");
+				System.out.println(">>> WorldTime");
 				
 			}
 			else if(id == 13)
 			{
-				System.out.println(">>> Packet: Server difficulty");
+				System.out.println(">>> Server difficulty");
 				//UByte -> difficulty
 			}
 			else if(id == 0x2e)
 			{
-				System.out.println(">>> Packet: Player abilities");
+				System.out.println(">>> Player abilities");
 				//Byte -> Invunerable/Flying/AllowFlying/InstaBreak
 				//Float -> Fly speed
 				//Float -> FOV (movement speed)
 			}
 			else if(id == 0x3d)
 			{
-				System.out.println(">>> Packet: Inventory Slot selected");
+				System.out.println(">>> Inventory Slot selected");
 			}
 			else if(id == 0x54)
 			{
-				System.out.println(">>> Packet: Declare Receipts (big packet)");
+				System.out.println(">>> Declare Receipts (big packet)");
 				//CInt -> Amount
 				//[
 				//String -> Identifier
@@ -95,45 +95,45 @@ public class PlayPacketHandler implements PacketHandler
 			}
 			else if(id == 0x55)
 			{
-				System.out.println(">>> Packet: \"Tags\"");
+				System.out.println(">>> \"Tags\"");
 				//Mapping for BlockID <-> BlockIdentifier?
 			}
 			else if(id == 0x1c)
 			{
-				System.out.println(">>> Packet: Entity status");
+				System.out.println(">>> Entity status");
 			}
 			else if(id == 0x11)
 			{
-				System.out.println(">>> Packet: Declare command (:@)");
+				System.out.println(">>> Declare command (:@)");
 			}
 			else if(id == 0x34)
 			{
-				System.out.println(">>> Packet: Unlock receipts");
+				System.out.println(">>> Unlock receipts");
 			}
 			else if(id == 0x47)
 			{
-				System.out.println(">>> Packet: Teams");
+				System.out.println(">>> Teams");
 			}
 			else if(id == 0x4e)
 			{
-				System.out.println(">>> Packet: Header/Footer PlayerList");
+				System.out.println(">>> Header/Footer PlayerList");
 			}
 			else if(id == 0x30)
 			{
-				System.out.println(">>> Packet: Player entry");
+				System.out.println(">>> Player entry");
 			}
 			else if(id == 0x3F)
 			{
-				System.out.println(">>> Packet: Entity metadata");
+				System.out.println(">>> Entity metadata");
 			}
 			else if(id == 0x22)
 			{
-//				System.out.println(">>> Packet: Chunk Data");
+//				System.out.println(">>> Chunk Data");
 				//Obmitted, cause faster boot.
 			}
 			else if(id == 0x02)
 			{
-				System.out.println(">>> Packet: Spawn entity (thunderbolt)???");
+				System.out.println(">>> Spawn entity (thunderbolt)???");
 				//CInt -> EntityID
 				//Byte -> Type
 				//Double -> x
@@ -150,7 +150,7 @@ public class PlayPacketHandler implements PacketHandler
 			}
 			else if(id == 25)
 			{
-				System.out.println(">>> Packet: \"Plugin\" Message");
+				System.out.println(">>> \"Plugin\" Message");
 				//String -> channel
 				//Byte[] -> data
 			}
@@ -185,7 +185,7 @@ public class PlayPacketHandler implements PacketHandler
 			}
 			else if(id == 37)
 			{
-				System.out.println(">>> Packet: JoinPlayerState");
+				System.out.println(">>> JoinPlayerState");
 				//Int -> ID
 				//UByte -> Gamemode
 				//Int -> Dimension Type
