@@ -13,7 +13,7 @@ import de.ecconia.mc.jclient.chat.json.JSONObject;
 
 public class ChatParser
 {
-	private final static Pattern p = Pattern.compile("(\\\\\\\\|\\\\u[0-9a-fA-F]{4})|\\\\n");
+	private final static Pattern p = Pattern.compile("(\\\\\\\\|\\\\u[0-9a-fA-F]{4})|\\\\n|\\\\\"");
 	
 	public static String deunicode(String in)
 	{
@@ -41,6 +41,10 @@ public class ChatParser
 			else if(part.equals("\\n"))
 			{
 				out = "\n";
+			}
+			else if(part.equals("\\\""))
+			{
+				out = "\"";
 			}
 			
 			m.appendReplacement(sb, Matcher.quoteReplacement(out));
@@ -86,5 +90,27 @@ public class ChatParser
 		}
 		
 		return new ChatSegment(deunicode(text), color, extraList);
+	}
+
+	public static ChatSegment parse(String text)
+	{
+		//TODO: Test!!! (Does split do as it should... its a b* most of the time.
+		String[] parts = text.split("§");
+		
+		List<ChatSegment> extra = new ArrayList<>(parts.length);
+		extra.add(new ChatSegment(parts[0]));
+		
+		for(int i = 1; i < parts.length; i++)
+		{
+			ChatColor color = ChatColor.getColorByChar(parts[i].charAt(0));
+			if(color == null && "klmnor".indexOf(parts[i].charAt(0)) == -1)
+			{
+				System.out.println("WARNING: color char '" + parts[i].charAt(0) + "' not found.");
+				throw new ChatFormatException("WARNING: color char '" + parts[i].charAt(0) + "' not found.");
+			}
+			extra.add(new ChatSegment(parts[i].substring(1), color));
+		}
+		
+		return new ChatSegment(extra);
 	}
 }

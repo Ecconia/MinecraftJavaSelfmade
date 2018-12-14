@@ -10,6 +10,7 @@ import javax.swing.text.StyleConstants;
 
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
 import de.ecconia.mc.jclient.chat.parser.ChatColor;
+import de.ecconia.mc.jclient.chat.parser.ChatParser;
 import de.ecconia.mc.jclient.chat.parser.ChatSegment;
 
 @SuppressWarnings("serial")
@@ -75,12 +76,23 @@ public class ColoredTextPane extends WarpTextPane
 	{
 		MutableAttributeSet set = new SimpleAttributeSet();
 		
-		if(segment.getColor() != null)
+		if(!segment.getText().isEmpty())
 		{
-			StyleConstants.setForeground(set, segment.getColor().getColor());
+			if(segment.isDirty())
+			{
+				//TBI: Ignore color, when text with color?
+				writeChatSegment(ChatParser.parse(segment.getText()));
+			}
+			else
+			{
+				if(segment.getColor() != null)
+				{
+					StyleConstants.setForeground(set, segment.getColor().getColor());
+				}
+				
+				insertWithAttSet(segment.getText(), set);
+			}
 		}
-		
-		insertWithAttSet(segment.getText(), set);
 		
 		for(ChatSegment seg : segment.getExtra())
 		{

@@ -9,28 +9,36 @@ public class ChatSegment
 	private ChatColor color;
 	private List<ChatSegment> extra = new ArrayList<>();
 	
+	private boolean dirty;
+	
 	public ChatSegment(String text)
 	{
-		this.text = text;
+		this(text, null, null);
 	}
 	
 	public ChatSegment(String text, ChatColor color)
 	{
-		this.text = text;
-		this.color = color;
+		this(text, color, null);
 	}
 	
 	public ChatSegment(String text, List<ChatSegment> extra)
 	{
-		this.text = text;
-		this.extra = extra;
+		this(text, null, extra);
+	}
+	
+	public ChatSegment(List<ChatSegment> extra)
+	{
+		this.text = "";
+		this.extra = extra == null ? new ArrayList<>() : extra;
 	}
 	
 	public ChatSegment(String text, ChatColor color, List<ChatSegment> extra)
 	{
 		this.text = text;
 		this.color = color;
-		this.extra = extra;
+		this.extra = extra == null ? new ArrayList<>() : extra;
+		
+		dirty = text.indexOf('§') != -1;
 	}
 	
 	public ChatColor getColor()
@@ -46,5 +54,10 @@ public class ChatSegment
 	public String getText()
 	{
 		return text;
+	}
+	
+	public boolean isDirty()
+	{
+		return dirty;
 	}
 }
