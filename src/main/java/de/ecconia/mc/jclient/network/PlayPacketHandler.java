@@ -1,6 +1,7 @@
 package de.ecconia.mc.jclient.network;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.network.connector.PacketHandler;
 import old.packet.MessageBuilder;
@@ -29,24 +30,24 @@ public class PlayPacketHandler implements PacketHandler
 			//State for play packet.
 			if(id == 3)
 			{
-				System.out.println(">>> Compression request");
+				logPacket("Compression request");
 				int compressionLevel = p.readCInt();
-				System.out.println("> Compression above " + compressionLevel + " bytes.");
+				logData("> Compression above " + compressionLevel + " bytes.");
 				if(p.remainingBytes() > 0)
 				{
-					System.out.println("> WARNING: Compression package had more content.");
+					logData("> WARNING: Compression package had more content.");
 				}
 				
 				con.setCompression(compressionLevel);
 			}
 			else if(id == 27)
 			{
-				System.out.println(">>> Disconnected by server");
-				System.out.println("> Message: " + p.readString());
+				logPacket("Disconnected by server");
+				logData("Disconnected by Server: " + p.readString());
 			}
 			else if(id == 33)
 			{
-				System.out.println(">>> Ping");
+				logPacket("Ping");
 				byte[] ping = p.readBytes(8);
 				
 				MessageBuilder mb = new MessageBuilder();
@@ -56,37 +57,36 @@ public class PlayPacketHandler implements PacketHandler
 			}
 			else if(id == 14)
 			{
-				System.out.println(">>> Chat");
+				logPacket("Chat");
 				String jsonMessage = p.readString();
-				System.out.println("> Json: " + jsonMessage);
-				System.out.println("> Loc: " + p.readByte());
+				logData("Message in " + p.readByte() + ": " + jsonMessage);
 				
 				dataDude.newChatJSON(jsonMessage);
 			}
 			else if(id == 74)
 			{
-				System.out.println(">>> WorldTime");
+				logPacket("WorldTime");
 				
 			}
 			else if(id == 13)
 			{
-				System.out.println(">>> Server difficulty");
+				logPacket("Server difficulty");
 				//UByte -> difficulty
 			}
 			else if(id == 0x2e)
 			{
-				System.out.println(">>> Player abilities");
+				logPacket("Player abilities");
 				//Byte -> Invunerable/Flying/AllowFlying/InstaBreak
 				//Float -> Fly speed
 				//Float -> FOV (movement speed)
 			}
 			else if(id == 0x3d)
 			{
-				System.out.println(">>> Inventory Slot selected");
+				logPacket("Inventory Slot selected");
 			}
 			else if(id == 0x54)
 			{
-				System.out.println(">>> Declare Receipts (big packet)");
+				logPacket("Declare Receipts (big packet)");
 				//CInt -> Amount
 				//[
 				//String -> Identifier
@@ -96,45 +96,44 @@ public class PlayPacketHandler implements PacketHandler
 			}
 			else if(id == 0x55)
 			{
-				System.out.println(">>> \"Tags\"");
+				logPacket("\"Tags\"");
 				//Mapping for BlockID <-> BlockIdentifier?
 			}
 			else if(id == 0x1c)
 			{
-				System.out.println(">>> Entity status");
+				logPacket("Entity status");
 			}
 			else if(id == 0x11)
 			{
-				System.out.println(">>> Declare command (:@)");
+				logPacket("Declare command (:@)");
 			}
 			else if(id == 0x34)
 			{
-				System.out.println(">>> Unlock receipts");
+				logPacket("Unlock receipts");
 			}
 			else if(id == 0x47)
 			{
-				System.out.println(">>> Teams");
+				logPacket("Teams");
 			}
 			else if(id == 0x4e)
 			{
-				System.out.println(">>> Header/Footer PlayerList");
+				logPacket("Header/Footer PlayerList");
 			}
 			else if(id == 0x30)
 			{
-				System.out.println(">>> Player entry");
+				logPacket("Player entry");
 			}
 			else if(id == 0x3F)
 			{
-				System.out.println(">>> Entity metadata");
+				logPacket("Entity metadata");
 			}
 			else if(id == 0x22)
 			{
-//				System.out.println(">>> Chunk Data");
-				//Obmitted, cause faster boot.
+				logPacket("Chunk Data");
 			}
 			else if(id == 0x02)
 			{
-				System.out.println(">>> Spawn entity (thunderbolt)???");
+				logPacket("Spawn entity (thunderbolt)???");
 				//CInt -> EntityID
 				//Byte -> Type
 				//Double -> x
@@ -143,50 +142,50 @@ public class PlayPacketHandler implements PacketHandler
 			}
 			else if(id == 0x44)
 			{
-				System.out.println(">>> Update health");
+				logPacket("Update health");
 			}
 			else if(id == 0x43)
 			{
-				System.out.println(">>> Set XP");
+				logPacket("Set XP");
 			}
 			else if(id == 25)
 			{
-				System.out.println(">>> \"Plugin\" Message");
+				logPacket("\"Plugin\" Message");
 				//String -> channel
 				//Byte[] -> data
 			}
 			else if(id == 0x51)
 			{
-				System.out.println(">>> Advancements");
+				logPacket("Advancements");
 				//Dough - big one
 			}
 			else if(id == 0x52)
 			{
-				System.out.println(">>> Entity Properties");
+				logPacket("Entity Properties");
 			}
 			else if(id == 0x15)
 			{
-				System.out.println(">>> Window item update");
+				logPacket("Window item update");
 			}
 			else if(id == 0x17)
 			{
-				System.out.println(">>> Set Inventory Slot");
+				logPacket("Set Inventory Slot");
 			}
 			else if(id == 0x49)
 			{
-				System.out.println(">>> Spawn Position");
+				logPacket("Spawn Position");
 			}
 			else if(id == 0x32)
 			{
-				System.out.println(">>> Player Location/Head");
+				logPacket("Player Location/Head");
 			}
 			else if(id == 0x3b)
 			{
-				System.out.println(">>> World Border");
+				logPacket("World Border");
 			}
 			else if(id == 37)
 			{
-				System.out.println(">>> JoinPlayerState");
+				logPacket("JoinPlayerState");
 				//Int -> ID
 				//UByte -> Gamemode
 				//Int -> Dimension Type
@@ -197,7 +196,7 @@ public class PlayPacketHandler implements PacketHandler
 			}
 			else
 			{
-				System.out.println("||> Packet: ID:" + id + "(0x" + (Integer.toHexString(id)) + ")" + " Size:" + p.remainingBytes());
+				logPacket("||> Packet: ID:" + id + "(0x" + (Integer.toHexString(id)) + ")" + " Size:" + p.remainingBytes());
 			}
 		}
 		catch(Exception e)
@@ -205,5 +204,16 @@ public class PlayPacketHandler implements PacketHandler
 			System.out.println("> ERROR: Exception while reading packet: " + e.getClass().getSimpleName() + " - " + e.getMessage());
 			e.printStackTrace(System.out);
 		}
+	}
+	
+	private void logPacket(String name)
+	{
+//		System.out.println(">>> P: " + name);
+		L.writeLineOnChannel("Packets", name);
+	}
+	
+	private void logData(String message)
+	{
+		L.writeLineOnChannel("Content", message);
 	}
 }

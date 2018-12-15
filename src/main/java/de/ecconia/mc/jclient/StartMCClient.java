@@ -1,5 +1,6 @@
 package de.ecconia.mc.jclient;
 
+import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.LoginPacketHandler;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import old.packet.MessageBuilder;
@@ -8,6 +9,8 @@ public class StartMCClient
 {
 	public static void main(String[] args)
 	{
+		L.init();
+		
 		Connector con = new Connector("s.redstone-server.info", 25565);
 		
 		PrimitiveDataDude dataDude = new PrimitiveDataDude(con);
