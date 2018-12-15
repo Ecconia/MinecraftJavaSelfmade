@@ -26,11 +26,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import org.sexydock.tabs.BasicTabUI;
 import org.sexydock.tabs.Tab;
 import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 

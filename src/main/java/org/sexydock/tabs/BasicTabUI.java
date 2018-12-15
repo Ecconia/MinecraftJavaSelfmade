@@ -41,8 +41,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import org.sexydock.SwingUtils;
-import org.sexydock.tabs.demos.SexyTabsDemos;
-import org.sexydock.tabs.event.TabbedPaneEvent;
 import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 
 /**

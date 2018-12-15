@@ -23,8 +23,6 @@ import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
 import java.awt.Window;
-import java.awt.event.ContainerAdapter;
-import java.awt.event.ContainerEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;

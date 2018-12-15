@@ -60,6 +60,7 @@ public class GettingStarted implements ISexyTabsDemo
 		// Not so fast! The new tab button won't work yet. You have to define how the
 		// content of new tabs is created. Here's how:
 		
+		@SuppressWarnings("serial")
 		class MyContent extends JPanel
 		{
 			public MyContent( )
@@ -123,6 +124,7 @@ public class GettingStarted implements ISexyTabsDemo
 		// Implementing ITabbedPaneWindow is not necessary, but it allows you to
 		// let Jhrome do some of the work for you.
 		
+		@SuppressWarnings("serial")
 		class MyFrame extends JFrame implements ITabbedPaneWindow
 		{
 			public MyFrame( JTabbedPane tabbedPane )

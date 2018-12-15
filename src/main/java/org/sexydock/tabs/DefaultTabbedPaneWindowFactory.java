@@ -19,8 +19,6 @@ along with Jhrome.  If not, see <http://www.gnu.org/licenses/>.
 
 package org.sexydock.tabs;
 
-import javax.swing.JComponent;
-
 import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 
 /**

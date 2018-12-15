@@ -33,6 +33,7 @@ import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 
 import com.sun.awt.AWTUtilities;
 
+@SuppressWarnings("restriction")
 public class DefaultFloatingTabHandler implements IFloatingTabHandler
 {
 	private Window	dragImageWindow	= null;

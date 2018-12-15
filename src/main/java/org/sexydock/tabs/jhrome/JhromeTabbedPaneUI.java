@@ -127,7 +127,7 @@ import sun.swing.DefaultLookup;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "restriction"})
 public class JhromeTabbedPaneUI extends TabbedPaneUI
 {
 	public static final String TAB_CLOSE_BUTTONS_VISIBLE = "sexydock.tabbedPane.tabCloseButtonsVisible";
@@ -1193,6 +1193,7 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void setContentInternal(Component newContent)
 	{
 		checkEDT();
@@ -2739,6 +2740,7 @@ public class JhromeTabbedPaneUI extends TabbedPaneUI
 		return SwingUtilities2.tabbedPaneChangeFocusTo(currentContent);
 	}
 	
+	@SuppressWarnings("unused")
 	private void navigateSelectedTab(int next)
 	{
 		int currentIndex = tabbedPane.getSelectedIndex();

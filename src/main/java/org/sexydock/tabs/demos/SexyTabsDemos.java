@@ -39,21 +39,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.sexydock.SwingUtils;
 import org.sexydock.tabs.BasicTabUI;
-import org.sexydock.tabs.DefaultFloatingTabHandler;
-import org.sexydock.tabs.DefaultTabDropFailureHandler;
 import org.sexydock.tabs.DefaultTabbedPaneWindow;
-import org.sexydock.tabs.DefaultTabbedPaneWindowFactory;
 import org.sexydock.tabs.DefaultWindowsClosedHandler;
 import org.sexydock.tabs.ITabbedPaneDndPolicy;
-import org.sexydock.tabs.ITabbedPaneWindow;
 import org.sexydock.tabs.Tab;
-import org.sexydock.tabs.TestTabFactory;
 import org.sexydock.tabs.jhrome.JhromeTabUI;
 import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 

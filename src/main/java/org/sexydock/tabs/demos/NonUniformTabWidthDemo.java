@@ -19,13 +19,7 @@ along with Jhrome.  If not, see <http://www.gnu.org/licenses/>.
 
 package org.sexydock.tabs.demos;
 
-import java.awt.Window;
-
-import javax.swing.JPanel;
-
 import org.sexydock.tabs.DefaultTabbedPaneWindow;
-import org.sexydock.tabs.DefaultTabbedPaneWindowFactory;
-import org.sexydock.tabs.ITabbedPaneWindow;
 import org.sexydock.tabs.Tab;
 import org.sexydock.tabs.TestTabFactory;
 import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
