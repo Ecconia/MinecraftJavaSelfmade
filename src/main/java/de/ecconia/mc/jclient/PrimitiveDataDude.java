@@ -1,14 +1,15 @@
 package de.ecconia.mc.jclient;
 
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
-import de.ecconia.mc.jclient.gui.chatwindow.ChatWindow;
+import de.ecconia.mc.jclient.gui.chatwindow.ChatPane;
+import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import old.packet.MessageBuilder;
 
 public class PrimitiveDataDude
 {
 	private final Connector con;
-	private ChatWindow chatWindow;
+	private ChatPane chatWindow;
 	
 	public PrimitiveDataDude(Connector con)
 	{
@@ -17,7 +18,8 @@ public class PrimitiveDataDude
 	
 	public void connectedToServer()
 	{
-		chatWindow = new ChatWindow(this);
+		chatWindow = new ChatPane(this);
+		L.addCustomPanel("Chat", chatWindow);
 	}
 	
 	public void newChatJSON(String json)
