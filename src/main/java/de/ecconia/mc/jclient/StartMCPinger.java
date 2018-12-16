@@ -38,12 +38,12 @@ public class StartMCPinger
 			mb.addShort(25565);
 			mb.addCInt(1);
 			
-			mb.prepandCInt(0);
+			mb.prependCInt(0);
 			con.sendPacket(mb.asBytes());
 			
 			mb = new MessageBuilder();
 			
-			mb.prepandCInt(0);
+			mb.prependCInt(0);
 			con.sendPacket(mb.asBytes());
 		}).start();
 		

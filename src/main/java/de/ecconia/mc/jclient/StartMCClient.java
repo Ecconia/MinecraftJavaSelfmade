@@ -21,7 +21,7 @@ public class StartMCClient
 		new Thread(() -> {
 			try
 			{
-				//TODO: Imrpove somehow?
+				//TODO: Improve somehow?
 				Thread.sleep(800);
 			}
 			catch(InterruptedException e)
@@ -35,13 +35,13 @@ public class StartMCClient
 			mb.addShort(25565);
 			mb.addCInt(2);
 			
-			mb.prepandCInt(0);
+			mb.prependCInt(0);
 			con.sendPacket(mb.asBytes());
 			
 			mb = new MessageBuilder();
 			mb.addString(Credentials.USERNAME);
 			
-			mb.prepandCInt(0);
+			mb.prependCInt(0);
 			con.sendPacket(mb.asBytes());
 		}).start();
 		

@@ -18,9 +18,9 @@ Encry:[<size><compression>Comp:[<packetID><content>]]
 
 Encryption:
 	1. Write the packet content.
-	2. Prepand the PacketID.
-	3. Compress the packet and prepand the original size.
-	4. Prepand the size of the packet.
+	2. Prepend the PacketID.
+	3. Compress the packet and prepend the original size.
+	4. Prepend the size of the packet.
 	5. Encrpyt the packet.
 	6. Send the packet as byte stream.
 	

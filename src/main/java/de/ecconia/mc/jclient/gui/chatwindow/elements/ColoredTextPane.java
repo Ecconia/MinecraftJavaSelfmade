@@ -14,7 +14,7 @@ import de.ecconia.mc.jclient.chat.parser.ChatParser;
 import de.ecconia.mc.jclient.chat.parser.ChatSegment;
 
 @SuppressWarnings("serial")
-public class ColoredTextPane extends WarpTextPane
+public class ColoredTextPane extends WrapTextPane
 {
 	public ColoredTextPane()
 	{

@@ -15,9 +15,9 @@ import javax.swing.text.ViewFactory;
 
 //Class from: http://stackoverflow.com/questions/30590031/jtextpane-line-wrap-behavior
 @SuppressWarnings("serial")
-public class WarpTextPane extends JTextPane
+public class WrapTextPane extends JTextPane
 {
-	public WarpTextPane()
+	public WrapTextPane()
 	{
 		setEditorKit(new WrapEditorKit());
 	}

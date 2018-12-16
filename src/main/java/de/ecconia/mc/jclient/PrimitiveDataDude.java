@@ -74,7 +74,7 @@ public class PrimitiveDataDude
 	{
 		MessageBuilder mb = new MessageBuilder();
 		mb.addString(text);
-		mb.prepandCInt(2);
+		mb.prependCInt(2);
 		con.sendPacket(mb.asBytes());
 	}
 }

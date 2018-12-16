@@ -54,19 +54,19 @@ public class MessageBuilder
 		bytes.addLast((byte) b);
 	}
 	
-	public void prepandByte(int i)
+	public void prependByte(int i)
 	{
 		bytes.addFirst((byte) i);
 	}
 	
-	public void prepandSize()
+	public void prependSize()
 	{
 		int size = bytes.size();
 		System.out.println("Size: " + size);
-		prepandCInt(size);
+		prependCInt(size);
 	}
 	
-	public void prepandCInt(int i)
+	public void prependCInt(int i)
 	{
 		int c = 0;
 		
@@ -152,7 +152,7 @@ public class MessageBuilder
 		IntBytes ret = c.compress(asBytes());
 		if(ret.getInt() == 0)
 		{
-			prepandCInt(0);
+			prependCInt(0);
 		}
 		else
 		{

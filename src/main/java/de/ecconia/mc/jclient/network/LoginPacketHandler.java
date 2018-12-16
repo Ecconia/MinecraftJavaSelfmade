@@ -86,7 +86,7 @@ public class LoginPacketHandler implements PacketHandler
 				mb.addCInt(clientVerifyToken.length);
 				mb.addBytes(clientVerifyToken);
 				
-				mb.prepandCInt(1);
+				mb.prependCInt(1);
 				con.sendPacket(mb.asBytes());
 				
 				con.enableEncryption(sharedKey);

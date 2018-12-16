@@ -52,7 +52,7 @@ public class PlayPacketHandler implements PacketHandler
 				
 				MessageBuilder mb = new MessageBuilder();
 				mb.addBytes(ping);
-				mb.prepandCInt(14);
+				mb.prependCInt(14);
 				con.sendPacket(mb.asBytes());
 			}
 			else if(id == 14)
