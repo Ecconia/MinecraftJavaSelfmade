@@ -9,6 +9,8 @@ public class StartMCClient
 {
 	public static void main(String[] args)
 	{
+		Credentials.load();
+		
 		L.init();
 		
 		Connector con = new Connector("s.redstone-server.info", 25565);
@@ -39,7 +41,7 @@ public class StartMCClient
 			con.sendPacket(mb.asBytes());
 			
 			mb = new MessageBuilder();
-			mb.addString(Credentials.USERNAME);
+			mb.addString(Credentials.username);
 			
 			mb.prependCInt(0);
 			con.sendPacket(mb.asBytes());

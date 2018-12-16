@@ -49,7 +49,7 @@ public class PrimitiveDataDude
 				return;
 			}
 			
-			if(parts[0].contains(Credentials.USERNAME))
+			if(parts[0].contains(Credentials.username))
 			{
 				//You are the author, ignore the message.
 				return;
@@ -62,7 +62,7 @@ public class PrimitiveDataDude
 				System.out.println("Answering...");
 				sendChat("/colors");
 			}
-			else if(plainMessage.contains(Credentials.USERNAME))
+			else if(plainMessage.contains(Credentials.username))
 			{
 				System.out.println("Answering...");
 				sendChat("Yes? (Automated message)");

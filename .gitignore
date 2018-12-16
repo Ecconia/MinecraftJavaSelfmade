@@ -6,3 +6,6 @@
 
 #Maven:
 /target/
+
+#Project
+/user.json

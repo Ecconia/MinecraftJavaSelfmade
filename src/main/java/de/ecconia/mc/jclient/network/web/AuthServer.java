@@ -14,8 +14,8 @@ public class AuthServer
 {
 	public static void join(String serverHash)
 	{
-		String accessToken = Credentials.ACCESSTOKEN;
-		String uuid = Credentials.UUID;
+		String accessToken = Credentials.accessToken;
+		String uuid = Credentials.uuid;
 		
 		String link = "https://sessionserver.mojang.com/session/minecraft/join";
 		String message = "{"
