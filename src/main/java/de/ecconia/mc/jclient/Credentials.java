@@ -68,7 +68,17 @@ public class Credentials
 			System.exit(1);
 		}
 		
-		JSONNode node = JSONParser.parse(content);
+		JSONNode node = null;
+		try
+		{
+			node = JSONParser.parse(content);
+		}
+		catch(Exception e)
+		{
+			System.out.println("user.json could not be parsed, please delete to create a new file on start.");
+			System.exit(1);
+		}
+		
 		if(!(node instanceof JSONObject))
 		{
 			System.out.println("user.json does not contain a JSON object, please delete to create a new file on start.");
@@ -129,6 +139,12 @@ public class Credentials
 				Credentials.accessToken = accessToken;
 			}
 			//Else ignore.
+		}
+		
+		if(uuid == null || accessToken == null || username == null)
+		{
+			System.out.println("user.json does not contain username/accessToken/uuid please add or delete the file for a new copy.");
+			System.exit(1);
 		}
 	}
 }
