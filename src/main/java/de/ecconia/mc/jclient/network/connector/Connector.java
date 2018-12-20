@@ -115,6 +115,8 @@ public class Connector
 	 * Will compress and prepend size and encrypt the packet.
 	 * @param packet - the content of the packet which will be sent
 	 */
+	//TODO: THREADSAFE!
+	//Just one Thread should be able to access this method, all others should talk to that thread.
 	public void sendPacket(byte[] packet)
 	{
 		if(compressor != null)

@@ -77,4 +77,9 @@ public class PrimitiveDataDude
 		mb.prependCInt(2);
 		con.sendPacket(mb.asBytes());
 	}
+	
+	public Connector getCon()
+	{
+		return con;
+	}
 }
