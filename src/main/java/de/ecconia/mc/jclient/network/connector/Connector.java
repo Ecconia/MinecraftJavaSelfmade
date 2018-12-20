@@ -3,6 +3,8 @@ package de.ecconia.mc.jclient.network.connector;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.crypto.SecretKey;
 
@@ -17,6 +19,8 @@ import old.reading.DirtyIOException;
 
 public class Connector
 {
+	private final BlockingQueue<ByteArray> sendQueue = new LinkedBlockingQueue<>();
+	
 	private final String domain;
 	private final int port;
 	
@@ -73,7 +77,24 @@ public class Connector
 			return;
 		}
 		
-		System.out.println(">>> Starting to listen for incomming packets.");
+		Thread sendingThread = new Thread(() -> {
+			while(true)
+			{
+				try
+				{
+					sendPacket(sendQueue.take());
+				}
+				catch(InterruptedException e)
+				{
+					System.out.println("Error while taking packet from sending queue:");
+					e.printStackTrace(System.out);
+				}
+			}
+		}, "SendingThread");
+		sendingThread.start();
+		
+		System.out.println(">>> Starting to listening for incomming packets.");
+		Thread.currentThread().setName("ReadingThread/Main");
 		while(true)
 		{
 			readPacket();
@@ -115,10 +136,25 @@ public class Connector
 	 * Will compress and prepend size and encrypt the packet.
 	 * @param packet - the content of the packet which will be sent
 	 */
-	//TODO: THREADSAFE!
-	//Just one Thread should be able to access this method, all others should talk to that thread.
 	public void sendPacket(byte[] packet)
 	{
+		try
+		{
+			sendQueue.put(new ByteArray(packet));
+		}
+		catch(InterruptedException e)
+		{
+			System.out.println("Error putting a packet into sending queue:");
+			e.printStackTrace(System.out);
+		}
+	}
+	
+	//### Internal ###
+	
+	private void sendPacket(ByteArray bArray)
+	{
+		byte[] packet = bArray.getArray();
+		
 		if(compressor != null)
 		{
 			//Compress packet
@@ -148,8 +184,6 @@ public class Connector
 		}
 	}
 	
-	//### Internal ###
-	
 	private void readPacket()
 	{
 		int packetSize = readCInt();
@@ -160,9 +194,6 @@ public class Connector
 			IntBytes ret = CIntUntils.readCInt(packet);
 			packet = compressor.uncompress(ret.getInt(), ret.getBytes());
 		}
-		
-//		System.out.println(">> Received Packet:");
-//		PrintUtils.printBytes(packet);
 		
 		handler.onPacketReceive(packet);
 	}
@@ -186,5 +217,20 @@ public class Connector
 		while((read & 128) == 128);
 		
 		return value;
+	}
+	
+	private static class ByteArray
+	{
+		byte[] array;
+		
+		public ByteArray(byte[] array)
+		{
+			this.array = array;
+		}
+		
+		public byte[] getArray()
+		{
+			return array;
+		}
 	}
 }
