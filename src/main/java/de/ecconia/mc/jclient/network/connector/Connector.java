@@ -21,6 +21,7 @@ public class Connector
 {
 	private final BlockingQueue<ByteArray> sendQueue = new LinkedBlockingQueue<>();
 	
+	private final ConnectionEstablishedHandler connectedHandler;
 	private final String domain;
 	private final int port;
 	
@@ -32,8 +33,9 @@ public class Connector
 	private Compressor compressor;
 	
 	//TODO: Add issue/error handling.
-	public Connector(String domain, int port)
+	public Connector(String domain, int port, ConnectionEstablishedHandler connectedHandler)
 	{
+		this.connectedHandler = connectedHandler;
 		this.domain = domain;
 		this.port = port;
 	}
@@ -93,12 +95,16 @@ public class Connector
 		}, "SendingThread");
 		sendingThread.start();
 		
-		System.out.println(">>> Starting to listening for incomming packets.");
-		Thread.currentThread().setName("ReadingThread/Main");
-		while(true)
-		{
-			readPacket();
-		}
+		Thread readingThread = new Thread(() -> {
+			System.out.println(">>> Starting to listening for incomming packets.");
+			while(true)
+			{
+				readPacket();
+			}
+		}, "ReadingThread");
+		readingThread.start();
+		
+		connectedHandler.connected(this);
 	}
 	
 	/**
