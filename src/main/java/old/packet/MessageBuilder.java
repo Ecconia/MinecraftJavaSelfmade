@@ -161,4 +161,51 @@ public class MessageBuilder
 			addBytes(ret.getBytes());
 		}
 	}
+	
+	public void addBoolean(boolean b)
+	{
+		addByte(b ? 1 : 0);
+	}
+	
+	public void addDouble(double d)
+	{
+		long bits = Double.doubleToRawLongBits(d);
+		addLong(bits);
+	}
+	
+	public void addLong(long value)
+	{
+		addByte((byte) (value & 255));
+		value >>>= 8;
+		addByte((byte) (value & 255));
+		value >>>= 8;
+		addByte((byte) (value & 255));
+		value >>>= 8;
+		addByte((byte) (value & 255));
+		value >>>= 8;
+		addByte((byte) (value & 255));
+		value >>>= 8;
+		addByte((byte) (value & 255));
+		value >>>= 8;
+		addByte((byte) (value & 255));
+		value >>>= 8;
+		addByte((byte) (value & 255));
+		value >>>= 8;
+	}
+	
+	public void addCLong(long value)
+	{
+		do
+		{
+			byte temp = (byte) (value & 0b01111111);
+			// Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
+			value >>>= 7;
+			if(value != 0)
+			{
+				temp |= 0b10000000;
+			}
+			addByte(temp);
+		}
+		while(value != 0);
+	}
 }

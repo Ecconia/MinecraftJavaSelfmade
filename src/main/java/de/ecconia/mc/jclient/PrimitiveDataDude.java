@@ -4,6 +4,7 @@ import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
 import de.ecconia.mc.jclient.gui.chatwindow.ChatPane;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.connector.Connector;
+import de.ecconia.mc.jclient.tools.PrintUtils;
 import old.packet.MessageBuilder;
 
 public class PrimitiveDataDude
@@ -72,10 +73,27 @@ public class PrimitiveDataDude
 	
 	public void sendChat(String text)
 	{
-		MessageBuilder mb = new MessageBuilder();
-		mb.addString(text);
-		mb.prependCInt(2);
-		con.sendPacket(mb.asBytes());
+		if(text.charAt(0) == '%')
+		{
+			if(text.equals("%move"))
+			{
+				MessageBuilder mb = new MessageBuilder();
+				mb.addDouble(2.0D);
+				mb.addDouble(0.0D);
+				mb.addDouble(0.0D);
+				mb.addBoolean(false);
+				mb.prependCInt(0x10);
+				PrintUtils.printBytes(mb.asBytes());
+				con.sendPacket(mb.asBytes());
+			}
+		}
+		else
+		{
+			MessageBuilder mb = new MessageBuilder();
+			mb.addString(text);
+			mb.prependCInt(2);
+			con.sendPacket(mb.asBytes());
+		}
 	}
 	
 	public Connector getCon()
