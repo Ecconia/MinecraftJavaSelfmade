@@ -9,9 +9,9 @@ import old.reading.helper.Provider;
 
 public class GenericPacketProcessor extends PacketThread
 {
-	public GenericPacketProcessor(String name, PrimitiveDataDude dataDude)
+	public GenericPacketProcessor(PrimitiveDataDude dataDude)
 	{
-		super(name, dataDude);
+		super("GenericPacketThread", dataDude);
 	}
 
 	@Override
@@ -194,7 +194,6 @@ public class GenericPacketProcessor extends PacketThread
 	
 	private void logPacket(String name)
 	{
-//		System.out.println(">>> P: " + name);
 		L.writeLineOnChannel("Gen: Packets", name);
 	}
 	

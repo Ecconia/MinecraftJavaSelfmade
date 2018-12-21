@@ -18,8 +18,8 @@ public class PlayPacketHandler implements PacketHandler
 	public PlayPacketHandler(Connector con, PrimitiveDataDude dataDude)
 	{
 		this.con = dataDude.getCon();
-		this.pingThread = new PingPacketProcessor("PinfPacketThread", dataDude);
-		this.genericThread = new GenericPacketProcessor("GenericPacketThread", dataDude);
+		this.pingThread = new PingPacketProcessor(dataDude);
+		this.genericThread = new GenericPacketProcessor(dataDude);
 	}
 	
 	@Override

@@ -9,9 +9,9 @@ import old.reading.helper.Provider;
 
 public class PingPacketProcessor extends PacketThread
 {
-	public PingPacketProcessor(String name, PrimitiveDataDude dataDude)
+	public PingPacketProcessor(PrimitiveDataDude dataDude)
 	{
-		super(name, dataDude);
+		super("PingPacketThread", dataDude);
 	}
 
 	@Override
@@ -39,6 +39,6 @@ public class PingPacketProcessor extends PacketThread
 	private void logPacket(String name)
 	{
 //		System.out.println(">>> P: " + name);
-		L.writeLineOnChannel("Packets", name);
+		L.writeLineOnChannel("Ping: Packets", name);
 	}
 }
