@@ -32,11 +32,19 @@ public abstract class PacketThread extends Thread
 			try
 			{
 				GenericPacket packet = queue.take();
-				process(packet);
+				try
+				{
+					process(packet);
+				}
+				catch (Exception e)
+				{
+					System.out.println("Error while parsing packet with ID: " + packet.getId() + " on " + getName());
+					e.printStackTrace(System.out);
+				}
 			}
 			catch(InterruptedException e)
 			{
-				System.out.println("Could not handle packet...");
+				System.out.println("Could not take packet from queue ...?");
 				e.printStackTrace(System.out);
 			}
 		}
