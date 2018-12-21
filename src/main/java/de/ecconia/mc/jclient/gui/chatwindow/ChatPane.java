@@ -43,6 +43,7 @@ public class ChatPane extends JPanel
 		inputLine.setForeground(new Color(200, 200, 200));
 		inputLine.setPreferredSize(new Dimension(0, 30));
 		inputLine.setFont(new Font("hack", Font.PLAIN, 20));
+		inputLine.setCaretColor(new Color(200, 200, 200));
 		
 		history.setBackground(new Color(30, 30, 30));
 		history.setForeground(Color.white);
