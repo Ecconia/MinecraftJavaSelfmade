@@ -32,6 +32,38 @@ public class GenericPacketProcessor extends PacketThread
 			
 			con.setCompression(compressionLevel);
 		}
+		else if(id == 0x23)
+		{
+			logPacket("Effect");
+		}
+		else if(id == 0x28)
+		{
+			logPacket("Entity movement relative");
+		}
+		else if(id == 0x26)
+		{
+			logPacket("Map \"data\"");
+		}
+		else if(id == 0x42)
+		{
+			logPacket("Entity equip");
+		}
+		else if(id == 0x41)
+		{
+			logPacket("Entity velocity");
+		}
+		else if(id == 0x00)
+		{
+			logPacket("Spawn object");
+		}
+		else if(id == 0x39)
+		{
+			logPacket("Entity head look");
+		}
+		else if(id == 0x0A)
+		{
+			logPacket("Block action");
+		}
 		else if(id == 27)
 		{
 			logPacket("Disconnected by server");
