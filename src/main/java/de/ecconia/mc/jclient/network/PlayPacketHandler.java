@@ -12,6 +12,7 @@ import old.reading.helper.Provider;
 public class PlayPacketHandler implements PacketHandler
 {
 	private final PacketThread genericThread;
+	private final PacketThread worldThread;
 	private final PacketThread pingThread;
 	private final Connector con;
 	
@@ -19,6 +20,7 @@ public class PlayPacketHandler implements PacketHandler
 	{
 		this.con = dataDude.getCon();
 		this.pingThread = new PingPacketProcessor(dataDude);
+		this.worldThread = new WorldPacketProcessor(dataDude);
 		this.genericThread = new GenericPacketProcessor(dataDude);
 	}
 	
@@ -48,6 +50,11 @@ public class PlayPacketHandler implements PacketHandler
 			{
 				//Priority packet, has to be handled as fast as possible without anything in the way.
 				pingThread.handle(packet);
+			}
+			else if(id == 0x22 || id == 0x0B || id == 0x0F || id == 0x1F)
+			{
+				//Chunk/Block packets.
+				worldThread.handle(packet);
 			}
 			else
 			{

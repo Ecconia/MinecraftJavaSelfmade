@@ -119,10 +119,6 @@ public class GenericPacketProcessor extends PacketThread
 		{
 			logPacket("Entity metadata");
 		}
-		else if(id == 0x22)
-		{
-			logPacket("Chunk Data");
-		}
 		else if(id == 0x02)
 		{
 			logPacket("Spawn entity (thunderbolt)???");
