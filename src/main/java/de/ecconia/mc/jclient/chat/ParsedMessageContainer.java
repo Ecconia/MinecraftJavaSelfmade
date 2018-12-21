@@ -18,6 +18,11 @@ public class ParsedMessageContainer
 		this.json = json;
 	}
 	
+	public String getRawJson()
+	{
+		return json;
+	}
+	
 	public JSONObject getJSONObject()
 	{
 		if(jsonObject == null)

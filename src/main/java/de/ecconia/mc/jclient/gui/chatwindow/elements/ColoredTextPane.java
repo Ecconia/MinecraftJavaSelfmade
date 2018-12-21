@@ -8,10 +8,12 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
+import de.ecconia.mc.jclient.chat.ChatFormatException;
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
 import de.ecconia.mc.jclient.chat.parser.ChatColor;
 import de.ecconia.mc.jclient.chat.parser.ChatParser;
 import de.ecconia.mc.jclient.chat.parser.ChatSegment;
+import de.ecconia.mc.jclient.tools.json.JSONException;
 
 @SuppressWarnings("serial")
 public class ColoredTextPane extends WrapTextPane
@@ -38,36 +40,20 @@ public class ColoredTextPane extends WrapTextPane
 		MutableAttributeSet set = new SimpleAttributeSet();
 		StyleConstants.setFontFamily(set, "Hack");
 		
-//		String plainMessage;
-//		try
-//		{
-//			plainMessage = messageContainer.getPlainMessage();
-//		}
-//		catch(Exception e)
-//		{
-//			//TODO: Ehm console won't print. Lets hack it in. (Clean up this...)
-//			insertWithAttSet("Error parsing, see console!\n", set);
-//			e.printStackTrace(System.out);
-//			return;
-//		}
-		
-//		if(plainMessage.indexOf('\n') != -1)
-//		{
-//			String[] parts = plainMessage.split("\n");
-//			insertWithAttSet("P:\n", set);
-//			for(String s : parts)
-//			{
-//				insertWithAttSet(" : " + s + "\n", set);
-//			}
-//		}
-//		else
-//		{
-//			insertWithAttSet("P: " + plainMessage + "\n", set);
-//		}
-		
-		ChatSegment segment = messageContainer.getChatSegment();
-		writeChatSegment(segment);
-		insertWithAttSet("\n", set);
+		try
+		{
+			ChatSegment segment = messageContainer.getChatSegment();
+			writeChatSegment(segment);
+			insertWithAttSet("\n", set);
+		}
+		catch(JSONException | ChatFormatException e)
+		{
+			//TODO: Ehm console won't print. Lets hack it in. (Clean up this...)
+			//TBI: Whats that TODO about? :P Probably cause thats no good place for error reporting.
+			insertWithAttSet("Error parsing, see console!\n", set);
+			System.out.println("Original JSON: " + messageContainer.getRawJson());
+			e.printStackTrace(System.out);
+		}
 	}
 	
 	//TODO: Ensure inheritance.
@@ -113,6 +99,7 @@ public class ColoredTextPane extends WrapTextPane
 		insertWithAttSet(message + "\n", set);
 	}
 	
+	//TODO: Support for chat formatting.
 //	private void reset(MutableAttributeSet set)
 //	{
 //		set.removeAttribute(StyleConstants.Bold);
