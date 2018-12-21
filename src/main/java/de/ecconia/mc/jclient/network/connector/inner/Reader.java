@@ -16,4 +16,10 @@ public interface Reader
 	 * @return bytes - read from InputStream
 	 */
 	public byte[] readBytes(int amount);
+
+	/**
+	 * Debug method to get the total amount of bytes read from the InputStream.
+	 * @return long - bytes read
+	 */
+	public long getBytesRead();
 }

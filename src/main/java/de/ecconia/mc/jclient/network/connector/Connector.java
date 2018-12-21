@@ -103,6 +103,9 @@ public class Connector
 			}
 		}, "ReadingThread");
 		readingThread.start();
+		readingThread.setUncaughtExceptionHandler((t, ex) -> {
+			System.out.println("Total amount of bytes read: " + r.getBytesRead());
+		});
 		
 		connectedHandler.connected(this);
 	}

@@ -10,6 +10,8 @@ public class NormalReader implements Reader
 {
 	private final InputStream in;
 	
+	private long bytesRead = 0;
+	
 	public NormalReader(InputStream in)
 	{
 		this.in = in;
@@ -27,6 +29,7 @@ public class NormalReader implements Reader
 				throw new DirtyStreamEndException();
 			}
 			
+			bytesRead++;
 			return (byte) i;
 		}
 		catch(IOException e)
@@ -57,6 +60,7 @@ public class NormalReader implements Reader
 				pointer += amountRead;
 			}
 			
+			bytesRead += amount;
 			return bytes;
 		}
 		catch(IOException e)
@@ -65,4 +69,9 @@ public class NormalReader implements Reader
 		}
 	}
 	
+	@Override
+	public long getBytesRead()
+	{
+		return bytesRead;
+	}
 }

@@ -29,4 +29,9 @@ public class DecryptionReader implements Reader
 		return cripter.decryptBytes(r.readBytes(amount));
 	}
 	
+	@Override
+	public long getBytesRead()
+	{
+		return r.getBytesRead();
+	}
 }
