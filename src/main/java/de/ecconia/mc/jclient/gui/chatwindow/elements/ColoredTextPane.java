@@ -24,7 +24,7 @@ public class ColoredTextPane extends WrapTextPane
 		setFont(new Font("Hack", Font.PLAIN, 18));
 	}
 	
-	private void insertWithAttSet(String text, AttributeSet set)
+	private void insertWithAttSet(AttributeSet set, String text)
 	{
 		try
 		{
@@ -44,13 +44,13 @@ public class ColoredTextPane extends WrapTextPane
 		{
 			ChatSegment segment = messageContainer.getChatSegment();
 			writeChatSegment(segment);
-			insertWithAttSet("\n", set);
+			insertWithAttSet(set, "\n");
 		}
 		catch(JSONException | ChatFormatException e)
 		{
 			//TODO: Ehm console won't print. Lets hack it in. (Clean up this...)
 			//TBI: Whats that TODO about? :P Probably cause thats no good place for error reporting.
-			insertWithAttSet("Error parsing, see console!\n", set);
+			addSystemMessage("Error parsing chat message, see console!");
 			System.out.println("Original JSON: " + messageContainer.getRawJson());
 			e.printStackTrace(System.out);
 		}
@@ -76,7 +76,7 @@ public class ColoredTextPane extends WrapTextPane
 					StyleConstants.setForeground(set, segment.getColor().getColor());
 				}
 				
-				insertWithAttSet(segment.getText(), set);
+				insertWithAttSet(set, segment.getText());
 			}
 		}
 		
@@ -89,14 +89,22 @@ public class ColoredTextPane extends WrapTextPane
 	public void addSystemMessage(String message)
 	{
 		MutableAttributeSet set = new SimpleAttributeSet();
-		StyleConstants.setForeground(set, ChatColor.WHITE.getColor());
-		insertWithAttSet("<[", set);
-		StyleConstants.setForeground(set, ChatColor.YELLOW.getColor());
-		insertWithAttSet("System", set);
-		StyleConstants.setForeground(set, ChatColor.WHITE.getColor());
-		insertWithAttSet("]> ", set);
-		StyleConstants.setForeground(set, ChatColor.GRAY.getColor());
-		insertWithAttSet(message + "\n", set);
+		setColor(set, ChatColor.WHITE);
+		insertWithAttSet(set, "<[");
+		setColor(set, ChatColor.YELLOW);
+		insertWithAttSet(set, "System");
+		setColor(set, ChatColor.WHITE);
+		insertWithAttSet(set, "]> ");
+		setColor(set, ChatColor.GRAY);
+		insertWithAttSet(set, message + "\n");
+	}
+	
+	/**
+	 * Method for setting the color in a more easy way.
+	 */
+	private void setColor(MutableAttributeSet set, ChatColor color)
+	{
+		StyleConstants.setForeground(set, color.getColor());
 	}
 	
 	//TODO: Support for chat formatting.
