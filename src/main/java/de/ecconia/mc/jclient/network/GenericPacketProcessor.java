@@ -1,9 +1,12 @@
 package de.ecconia.mc.jclient.network;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.chat.ChatFormatException;
+import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
+import de.ecconia.mc.jclient.tools.json.JSONException;
 import old.packet.MessageBuilder;
 import old.reading.helper.Provider;
 
@@ -67,7 +70,18 @@ public class GenericPacketProcessor extends PacketThread
 		else if(id == 27)
 		{
 			logPacket("Disconnected by server");
-			logData("Disconnected by Server: " + p.readString());
+			ParsedMessageContainer message = new ParsedMessageContainer(p.readString());
+			try
+			{
+				System.out.println(message.getRawJson());
+				logData("Disconnected by Server: " + message.getRawJson());
+				dataDude.systemMessage("Disconnected by server: " + message.getRawJson());
+			}
+			catch(JSONException | ChatFormatException e)
+			{
+				System.out.println("Disconnected by server, original JSON: " + message.getRawJson());
+				e.printStackTrace(System.out);
+			}
 		}
 		else if(id == 33)
 		{

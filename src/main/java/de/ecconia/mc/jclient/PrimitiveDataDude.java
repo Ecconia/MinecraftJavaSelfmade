@@ -96,6 +96,11 @@ public class PrimitiveDataDude
 		}
 	}
 	
+	public void systemMessage(String text)
+	{
+		chatWindow.addSystemMessage(text);
+	}
+	
 	public Connector getCon()
 	{
 		return con;
