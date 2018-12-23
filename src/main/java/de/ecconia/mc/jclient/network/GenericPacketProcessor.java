@@ -222,7 +222,7 @@ public class GenericPacketProcessor extends PacketThread
 	
 	private void logPacket(String name)
 	{
-		L.writeLineOnChannel("Gen: Packets", name);
+		L.writeLineOnChannel("Packets", name);
 	}
 	
 	private void logData(String message)

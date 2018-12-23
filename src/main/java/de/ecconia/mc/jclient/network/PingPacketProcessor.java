@@ -13,7 +13,7 @@ public class PingPacketProcessor extends PacketThread
 	{
 		super("PingPacketThread", dataDude);
 	}
-
+	
 	@Override
 	protected void process(GenericPacket packet)
 	{
@@ -38,7 +38,6 @@ public class PingPacketProcessor extends PacketThread
 	
 	private void logPacket(String name)
 	{
-//		System.out.println(">>> P: " + name);
-		L.writeLineOnChannel("Ping: Packets", name);
+		L.writeLineOnChannel("Packets", name);
 	}
 }

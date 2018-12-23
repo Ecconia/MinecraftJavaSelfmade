@@ -76,11 +76,11 @@ public class WorldPacketProcessor extends PacketThread
 	
 	private void logPacket(String name)
 	{
-		L.writeLineOnChannel("World: Packets", name);
+		L.writeLineOnChannel("P: World", name);
 	}
 	
 	private void logData(String message)
 	{
-		L.writeLineOnChannel("Content", message);
+		L.writeLineOnChannel("C: World", message);
 	}
 }

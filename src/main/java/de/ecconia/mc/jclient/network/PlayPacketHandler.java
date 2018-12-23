@@ -72,7 +72,7 @@ public class PlayPacketHandler implements PacketHandler
 	private void logPacket(String name)
 	{
 //		System.out.println(">>> P: " + name);
-		L.writeLineOnChannel("Gen: Packets", name);
+		L.writeLineOnChannel("Packets", name);
 	}
 	
 	private void logData(String message)
