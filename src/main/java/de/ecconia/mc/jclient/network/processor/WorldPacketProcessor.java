@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient.network;
+package de.ecconia.mc.jclient.network.processor;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.gui.chunkmap.ChunkMap;

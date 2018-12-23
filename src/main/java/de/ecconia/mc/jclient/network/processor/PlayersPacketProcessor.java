@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient.network;
+package de.ecconia.mc.jclient.network.processor;
 
 import java.util.ArrayList;
 import java.util.List;

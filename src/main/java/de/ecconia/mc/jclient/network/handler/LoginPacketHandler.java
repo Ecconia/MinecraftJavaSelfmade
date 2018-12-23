@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient.network;
+package de.ecconia.mc.jclient.network.handler;
 
 import java.security.PublicKey;
 

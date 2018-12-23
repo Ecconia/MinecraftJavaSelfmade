@@ -1,8 +1,8 @@
 package de.ecconia.mc.jclient;
 
 import de.ecconia.mc.jclient.gui.monitor.L;
-import de.ecconia.mc.jclient.network.LoginPacketHandler;
 import de.ecconia.mc.jclient.network.connector.Connector;
+import de.ecconia.mc.jclient.network.handler.LoginPacketHandler;
 import old.packet.MessageBuilder;
 
 public class StartMCClient

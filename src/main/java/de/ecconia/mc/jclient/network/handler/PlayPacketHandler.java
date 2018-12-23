@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient.network;
+package de.ecconia.mc.jclient.network.handler;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.gui.monitor.L;
@@ -6,6 +6,10 @@ import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.network.connector.PacketHandler;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
+import de.ecconia.mc.jclient.network.processor.GenericPacketProcessor;
+import de.ecconia.mc.jclient.network.processor.PingPacketProcessor;
+import de.ecconia.mc.jclient.network.processor.PlayersPacketProcessor;
+import de.ecconia.mc.jclient.network.processor.WorldPacketProcessor;
 import old.reading.helper.ArrayProvider;
 import old.reading.helper.Provider;
 
