@@ -70,14 +70,48 @@ public class PlayersPacketProcessor extends PacketThread
 			else if(mode == 2)
 			{
 				logData("> OP: update");
+				
+				String displayNameJson = reader.readString();
+				int friendlyFlags = reader.readUByte();
+				String nameTagVisibility = reader.readString();
+				String collisionRule = reader.readString();
+				int formatting = reader.readCInt();
+				String prefixJson = reader.readString();
+				String suffixJson = reader.readString();
+				
+				logData("> Display: " + displayNameJson);
+				logData("> FriendlyFlag: 0b" + Integer.toBinaryString(friendlyFlags));
+				logData("> NameTagVisibility: " + nameTagVisibility);
+				logData("> Collision: " + collisionRule);
+				logData("> Formatting: " + formatting);
+				logData("> Prefix Json: " + prefixJson);
+				logData("> Suffix Json: " + suffixJson);
 			}
 			else if(mode == 3)
 			{
 				logData("> OP: add player(s)");
+				
+				int memberCount = reader.readCInt();
+				List<String> members = new ArrayList<>();
+				for(int i = 0; i < memberCount; i++)
+				{
+					members.add(reader.readString());
+				}
+				
+				logData("> Players: " + (memberCount == 0 ? "-none-" : String.join(", ", members)));
 			}
 			else if(mode == 4)
 			{
 				logData("> OP: remove player(s)");
+				
+				int memberCount = reader.readCInt();
+				List<String> members = new ArrayList<>();
+				for(int i = 0; i < memberCount; i++)
+				{
+					members.add(reader.readString());
+				}
+				
+				logData("> Players: " + (memberCount == 0 ? "-none-" : String.join(", ", members)));
 			}
 			else
 			{
