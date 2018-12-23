@@ -12,6 +12,7 @@ import old.reading.helper.Provider;
 public class PlayPacketHandler implements PacketHandler
 {
 	private final PacketThread genericThread;
+	private final PacketThread playersThread;
 	private final PacketThread worldThread;
 	private final PacketThread pingThread;
 	private final Connector con;
@@ -21,6 +22,7 @@ public class PlayPacketHandler implements PacketHandler
 		this.con = dataDude.getCon();
 		this.pingThread = new PingPacketProcessor(dataDude);
 		this.worldThread = new WorldPacketProcessor(dataDude);
+		this.playersThread = new PlayersPacketProcessor(dataDude);
 		this.genericThread = new GenericPacketProcessor(dataDude);
 	}
 	
@@ -55,6 +57,10 @@ public class PlayPacketHandler implements PacketHandler
 			{
 				//Chunk/Block packets.
 				worldThread.handle(packet);
+			}
+			else if(id == 0x47 || id == 0x30)
+			{
+				playersThread.handle(packet);
 			}
 			else
 			{

@@ -149,17 +149,9 @@ public class GenericPacketProcessor extends PacketThread
 		{
 			logPacket("Unlock receipts");
 		}
-		else if(id == 0x47)
-		{
-			logPacket("Teams");
-		}
 		else if(id == 0x4e)
 		{
 			logPacket("Header/Footer PlayerList");
-		}
-		else if(id == 0x30)
-		{
-			logPacket("Player entry");
 		}
 		else if(id == 0x3F)
 		{

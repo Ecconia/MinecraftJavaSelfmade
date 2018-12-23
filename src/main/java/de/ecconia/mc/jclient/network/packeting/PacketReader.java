@@ -10,6 +10,11 @@ public class PacketReader
 		this.data = data;
 	}
 	
+	public int remaining()
+	{
+		return data.length - offset;
+	}
+	
 	private int next()
 	{
 		return data[offset++] & 255;
@@ -20,8 +25,23 @@ public class PacketReader
 		return data[offset++] & 255;
 	}
 	
+	public byte[] readBytes(int amount)
+	{
+		byte[] bytes = new byte[amount];
+		
+		System.arraycopy(data, offset, bytes, 0, amount);
+		offset += amount;
+		
+		return bytes;
+	}
+	
 	//Normal data type readers:
-
+	
+	public String readString()
+	{
+		return new String(readBytes(readCInt()));
+	}
+	
 	public int readInt()
 	{
 		int i = next();
@@ -84,8 +104,8 @@ public class PacketReader
 		return ret;
 	}
 
-	public int remaining()
+	public int readUByte()
 	{
-		return data.length - offset;
+		return nextUnsigned();
 	}
 }
