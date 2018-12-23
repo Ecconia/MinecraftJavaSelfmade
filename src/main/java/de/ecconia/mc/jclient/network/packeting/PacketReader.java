@@ -1,5 +1,7 @@
 package de.ecconia.mc.jclient.network.packeting;
 
+import java.util.UUID;
+
 public class PacketReader
 {
 	private final byte[] data;
@@ -107,5 +109,10 @@ public class PacketReader
 	public int readUByte()
 	{
 		return nextUnsigned();
+	}
+
+	public UUID readUUID()
+	{
+		return new UUID(readLong(), readLong());
 	}
 }

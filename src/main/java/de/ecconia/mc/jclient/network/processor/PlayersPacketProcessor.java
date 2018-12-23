@@ -2,6 +2,7 @@ package de.ecconia.mc.jclient.network.processor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.gui.monitor.L;
@@ -122,6 +123,90 @@ public class PlayersPacketProcessor extends PacketThread
 		else if(id == 0x30)
 		{
 			logPacket("Player entry");
+			
+			int mode = reader.readCInt();
+			if(mode < 0 || mode > 4)
+			{
+				logData("WARNING: PlayerList operation unkown: " + mode);
+				System.out.println("WARNING: PlayerList operation unkown: " + mode);
+				return;
+			}
+			
+			if(mode == 0)
+			{
+				logData("Add player(s) to registry:");
+			}
+			else if(mode == 1)
+			{
+				logData("Update gamemode for player(s):");
+			}
+			else if(mode == 2)
+			{
+				logData("Update ping for player(s):");
+			}
+			else if(mode == 3)
+			{
+				logData("Update display name for player(s):");
+			}
+			else if(mode == 4)
+			{
+				logData("Remove player(s) from registry:");
+			}
+			
+			int playerAmount = reader.readCInt();
+			for(int i = 0; i < playerAmount; i++)
+			{
+				UUID uuid = reader.readUUID();
+				logData("> Player: " + uuid);
+				if(mode == 0)
+				{
+					String name = reader.readString();
+					logData("> -Name: " + name);
+					int propertyAmount = reader.readCInt();
+					for(int j = 0; j < propertyAmount; j++)
+					{
+						String pName = reader.readString();
+						String pValue = reader.readString();
+						boolean isSigned = reader.readBoolean();
+						String signature = null;
+						if(isSigned)
+						{
+							signature = reader.readString();
+						}
+						logData("> -Prop: " + pName + " = " + pValue + " :: " + signature);
+					}
+					
+					int gamemode = reader.readCInt();
+					logData("> -Gamemode: " + gamemode);
+					
+					int ping = reader.readCInt();
+					logData("> -Ping: " + ping);
+					
+					boolean hasDisplayName = reader.readBoolean();
+					String displayname = hasDisplayName ? reader.readString() : null;
+					logData("> -Display: " + displayname);
+				}
+				else if(mode == 1)
+				{
+					int gamemode = reader.readCInt();
+					logData("> -Gamemode: " + gamemode);
+				}
+				else if(mode == 2)
+				{
+					int ping = reader.readCInt();
+					logData("> -Ping: " + ping);
+				}
+				else if(mode == 3)
+				{
+					boolean hasDisplayName = reader.readBoolean();
+					String displayname = hasDisplayName ? reader.readString() : null;
+					logData("> -Display: " + displayname);
+				}
+				else if(mode == 4)
+				{
+					//Remove.
+				}
+			}
 		}
 	}
 	
