@@ -55,14 +55,14 @@ public class PlayersPacketProcessor extends PacketThread
 					members.add(reader.readString());
 				}
 				
-				logData("> Display: " + displayNameJson);
-				logData("> FriendlyFlag: 0b" + Integer.toBinaryString(friendlyFlags));
-				logData("> NameTagVisibility: " + nameTagVisibility);
-				logData("> Collision: " + collisionRule);
-				logData("> Formatting: " + formatting);
-				logData("> Prefix Json: " + prefixJson);
-				logData("> Suffix Json: " + suffixJson);
-				logData("> Members: " + (memberCount == 0 ? "-none-" : String.join(", ", members)));
+				logData("> - Display: " + displayNameJson);
+				logData("> - FriendlyFlag: 0b" + Integer.toBinaryString(friendlyFlags));
+				logData("> - NameTagVisibility: " + nameTagVisibility);
+				logData("> - Collision: " + collisionRule);
+				logData("> - Formatting: " + formatting);
+				logData("> - Prefix Json: " + prefixJson);
+				logData("> - Suffix Json: " + suffixJson);
+				logData("> - Members: " + (memberCount == 0 ? "-none-" : String.join(", ", members)));
 			}
 			else if(mode == 1)
 			{
@@ -80,13 +80,13 @@ public class PlayersPacketProcessor extends PacketThread
 				String prefixJson = reader.readString();
 				String suffixJson = reader.readString();
 				
-				logData("> Display: " + displayNameJson);
-				logData("> FriendlyFlag: 0b" + Integer.toBinaryString(friendlyFlags));
-				logData("> NameTagVisibility: " + nameTagVisibility);
-				logData("> Collision: " + collisionRule);
-				logData("> Formatting: " + formatting);
-				logData("> Prefix Json: " + prefixJson);
-				logData("> Suffix Json: " + suffixJson);
+				logData("> - Display: " + displayNameJson);
+				logData("> - FriendlyFlag: 0b" + Integer.toBinaryString(friendlyFlags));
+				logData("> - NameTagVisibility: " + nameTagVisibility);
+				logData("> - Collision: " + collisionRule);
+				logData("> - Formatting: " + formatting);
+				logData("> - Prefix Json: " + prefixJson);
+				logData("> - Suffix Json: " + suffixJson);
 			}
 			else if(mode == 3)
 			{
@@ -99,7 +99,7 @@ public class PlayersPacketProcessor extends PacketThread
 					members.add(reader.readString());
 				}
 				
-				logData("> Players: " + (memberCount == 0 ? "-none-" : String.join(", ", members)));
+				logData("> - Players: " + (memberCount == 0 ? "-none-" : String.join(", ", members)));
 			}
 			else if(mode == 4)
 			{
@@ -112,7 +112,7 @@ public class PlayersPacketProcessor extends PacketThread
 					members.add(reader.readString());
 				}
 				
-				logData("> Players: " + (memberCount == 0 ? "-none-" : String.join(", ", members)));
+				logData("> - Players: " + (memberCount == 0 ? "-none-" : String.join(", ", members)));
 			}
 			else
 			{
@@ -161,7 +161,7 @@ public class PlayersPacketProcessor extends PacketThread
 				if(mode == 0)
 				{
 					String name = reader.readString();
-					logData("> -Name: " + name);
+					logData("> - Name: " + name);
 					int propertyAmount = reader.readCInt();
 					for(int j = 0; j < propertyAmount; j++)
 					{
@@ -173,34 +173,34 @@ public class PlayersPacketProcessor extends PacketThread
 						{
 							signature = reader.readString();
 						}
-						logData("> -Prop: " + pName + " = " + pValue + " :: " + signature);
+						logData("> - Prop: " + pName + " = " + pValue + " :: " + signature);
 					}
 					
 					int gamemode = reader.readCInt();
-					logData("> -Gamemode: " + gamemode);
+					logData("> - Gamemode: " + gamemode);
 					
 					int ping = reader.readCInt();
-					logData("> -Ping: " + ping);
+					logData("> - Ping: " + ping);
 					
 					boolean hasDisplayName = reader.readBoolean();
 					String displayname = hasDisplayName ? reader.readString() : null;
-					logData("> -Display: " + displayname);
+					logData("> - Display: " + displayname);
 				}
 				else if(mode == 1)
 				{
 					int gamemode = reader.readCInt();
-					logData("> -Gamemode: " + gamemode);
+					logData("> - Gamemode: " + gamemode);
 				}
 				else if(mode == 2)
 				{
 					int ping = reader.readCInt();
-					logData("> -Ping: " + ping);
+					logData("> - Ping: " + ping);
 				}
 				else if(mode == 3)
 				{
 					boolean hasDisplayName = reader.readBoolean();
 					String displayname = hasDisplayName ? reader.readString() : null;
-					logData("> -Display: " + displayname);
+					logData("> - Display: " + displayname);
 				}
 				else if(mode == 4)
 				{
