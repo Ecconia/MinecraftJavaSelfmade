@@ -66,7 +66,5 @@ public class StartMonitor
 		logger.writeLineOnChannel("test22", "grrr grrr grr ");
 		logger.writeLineOnChannel("test22", "grrr grrr grr ");
 		logger.writeLineOnChannel("test22", "grrr grrr grr ");
-		
-		
 	}
 }

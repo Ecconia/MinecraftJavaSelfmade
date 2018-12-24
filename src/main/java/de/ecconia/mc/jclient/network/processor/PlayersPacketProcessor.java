@@ -6,15 +6,20 @@ import java.util.UUID;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.gui.monitor.L;
+import de.ecconia.mc.jclient.gui.statscreen.Statscreen;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
 
 public class PlayersPacketProcessor extends PacketThread
 {
+	private final Statscreen screen = new Statscreen();
+	
 	public PlayersPacketProcessor(PrimitiveDataDude dataDude)
 	{
 		super("PlayersThread", dataDude);
+		
+		L.addCustomPanel("PlayerList", screen);
 	}
 	
 	@Override
@@ -160,6 +165,10 @@ public class PlayersPacketProcessor extends PacketThread
 				{
 					String name = reader.readString();
 					logData("> - Name: " + name);
+					
+					screen.addKey("player." + uuid, "", uuid + " - " + name);
+					
+					//TODO: Debug screen this info here:
 					int propertyAmount = reader.readCInt();
 					for(int j = 0; j < propertyAmount; j++)
 					{
@@ -176,33 +185,43 @@ public class PlayersPacketProcessor extends PacketThread
 					
 					int gamemode = reader.readCInt();
 					logData("> - Gamemode: " + gamemode);
+					screen.addKey("playergm." + uuid, "GM: ", gamemode);
 					
 					int ping = reader.readCInt();
 					logData("> - Ping: " + ping);
+					screen.addKey("playerping." + uuid, "Ping: ", ping);
 					
 					boolean hasDisplayName = reader.readBoolean();
 					String displayname = hasDisplayName ? reader.readString() : null;
 					logData("> - Display: " + displayname);
+					screen.addKey("playerdisplay." + uuid, "Name: ", displayname);
 				}
 				else if(mode == 1)
 				{
 					int gamemode = reader.readCInt();
 					logData("> - Gamemode: " + gamemode);
+					screen.updateKey("playergm." + uuid, gamemode);
 				}
 				else if(mode == 2)
 				{
 					int ping = reader.readCInt();
 					logData("> - Ping: " + ping);
+					screen.updateKey("playerping." + uuid, ping);
 				}
 				else if(mode == 3)
 				{
 					boolean hasDisplayName = reader.readBoolean();
 					String displayname = hasDisplayName ? reader.readString() : null;
 					logData("> - Display: " + displayname);
+					screen.updateKey("playerdisplay." + uuid, displayname);
 				}
 				else if(mode == 4)
 				{
 					//Remove.
+					screen.removeKey("player." + uuid);
+					screen.removeKey("playerping." + uuid);
+					screen.removeKey("playergm." + uuid);
+					screen.removeKey("playerdisplay." + uuid);
 				}
 			}
 		}
