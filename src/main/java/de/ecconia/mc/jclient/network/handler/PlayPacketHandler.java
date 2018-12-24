@@ -65,7 +65,7 @@ public class PlayPacketHandler implements PacketHandler
 				//Chunk/Block packets.
 				worldThread.handle(packet);
 			}
-			else if(id == 0x47 || id == 0x30)
+			else if(id == 0x47 || id == 0x30 || id == 0x4e)
 			{
 				//Team/PlayerList entries
 				playersThread.handle(packet);

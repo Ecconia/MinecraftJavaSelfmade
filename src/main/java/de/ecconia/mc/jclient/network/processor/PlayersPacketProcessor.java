@@ -225,6 +225,18 @@ public class PlayersPacketProcessor extends PacketThread
 				}
 			}
 		}
+		else if(id == 0x4e)
+		{
+			logPacket("Header/Footer update");
+			
+			String header = reader.readString();
+			logData("Setting Header to: " + header);
+			String footer = reader.readString();
+			logData("Setting Footer to: " + footer);
+			
+			screen.addKey("header", "Header: ", header);
+			screen.addKey("footer", "Footer: ", footer);
+		}
 		else
 		{
 			System.out.println(Thread.currentThread().getName() + " received packet it was not surposed to get: " + id);
