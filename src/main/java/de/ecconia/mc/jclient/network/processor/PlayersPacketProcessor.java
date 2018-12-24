@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.gui.monitor.L;
-import de.ecconia.mc.jclient.gui.statscreen.Statscreen;
+import de.ecconia.mc.jclient.gui.tabs.Statscreen;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;

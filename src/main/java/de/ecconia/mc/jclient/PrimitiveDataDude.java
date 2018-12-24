@@ -1,8 +1,8 @@
 package de.ecconia.mc.jclient;
 
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
-import de.ecconia.mc.jclient.gui.chatwindow.ChatPane;
 import de.ecconia.mc.jclient.gui.monitor.L;
+import de.ecconia.mc.jclient.gui.tabs.ChatPane;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.tools.PrintUtils;
 import old.packet.MessageBuilder;

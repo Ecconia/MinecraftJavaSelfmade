@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient.gui.chatwindow.elements;
+package de.ecconia.mc.jclient.gui.elements;
 
 import javax.swing.JTextPane;
 import javax.swing.text.AbstractDocument;

@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient.gui.chunkmap;
+package de.ecconia.mc.jclient.gui.tabs;
 
 import java.awt.Color;
 import java.awt.Graphics;

@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient.gui.chatwindow;
+package de.ecconia.mc.jclient.gui.tabs;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,16 +13,19 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ScrollBarUI;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.chat.ChatFormatException;
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
-import de.ecconia.mc.jclient.gui.chatwindow.elements.ColoredTextPane;
-import de.ecconia.mc.jclient.gui.chatwindow.elements.CustomScrollbarUI;
+import de.ecconia.mc.jclient.chat.parser.ChatSegment;
+import de.ecconia.mc.jclient.gui.elements.ColorTypeArea;
+import de.ecconia.mc.jclient.gui.elements.CustomScrollbarUI;
+import de.ecconia.mc.jclient.tools.json.JSONException;
 
 @SuppressWarnings("serial")
 public class ChatPane extends JPanel
 {
 	private final JTextField inputLine;
 	private final JScrollPane scrollpane;
-	private final ColoredTextPane history;
+	private final ColorTypeArea history;
 	
 	public ChatPane(PrimitiveDataDude dataDude)
 	{
@@ -34,7 +37,7 @@ public class ChatPane extends JPanel
 			dataDude.sendChat(inputLine.getText());
 			inputLine.setText("");
 		});
-		history = new ColoredTextPane();
+		history = new ColorTypeArea();
 		scrollpane = new JScrollPane(history);
 		
 		//Style:
@@ -63,7 +66,20 @@ public class ChatPane extends JPanel
 	{
 		boolean scrolled = scrollpane.getVerticalScrollBar().getValue() + scrollpane.getVerticalScrollBar().getVisibleAmount() == scrollpane.getVerticalScrollBar().getMaximum();
 		
-		history.addChatLine(message);
+		try
+		{
+			ChatSegment segment = message.getChatSegment();
+			history.addSegment(segment);
+			history.addContent("\n");
+		}
+		catch(JSONException | ChatFormatException e)
+		{
+			//TODO: Ehm console won't print. Lets hack it in. (Clean up this...)
+			//TBI: Whats that TODO about? :P Probably cause thats no good place for error reporting.
+			addSystemMessage("Error parsing chat message, see console!");
+			System.out.println("Original JSON: " + message.getRawJson());
+			e.printStackTrace(System.out);
+		}
 		
 		if(scrolled)
 		{
@@ -86,6 +102,6 @@ public class ChatPane extends JPanel
 	
 	public void addSystemMessage(String message)
 	{
-		history.addSystemMessage(message);
+		history.addSegment(new ChatSegment("§f<[§eSystem§f]> §7" + message + "\n"));
 	}
 }

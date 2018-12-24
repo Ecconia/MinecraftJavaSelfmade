@@ -1,8 +1,8 @@
 package de.ecconia.mc.jclient.network.processor;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
-import de.ecconia.mc.jclient.gui.chunkmap.ChunkMap;
 import de.ecconia.mc.jclient.gui.monitor.L;
+import de.ecconia.mc.jclient.gui.tabs.ChunkMap;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;

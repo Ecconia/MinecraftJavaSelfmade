@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient.gui.statscreen;
+package de.ecconia.mc.jclient.gui.tabs;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -12,7 +12,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ScrollBarUI;
 
 import de.ecconia.mc.jclient.chat.parser.ChatSegment;
-import de.ecconia.mc.jclient.gui.chatwindow.elements.CustomScrollbarUI;
+import de.ecconia.mc.jclient.gui.elements.ColorTypeArea;
+import de.ecconia.mc.jclient.gui.elements.CustomScrollbarUI;
 
 @SuppressWarnings("serial")
 public class Statscreen extends JPanel

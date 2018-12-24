@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient.gui.statscreen;
+package de.ecconia.mc.jclient.gui.elements;
 
 import java.awt.Font;
 
@@ -10,7 +10,6 @@ import javax.swing.text.StyleConstants;
 import de.ecconia.mc.jclient.chat.parser.ChatColor;
 import de.ecconia.mc.jclient.chat.parser.ChatParser;
 import de.ecconia.mc.jclient.chat.parser.ChatSegment;
-import de.ecconia.mc.jclient.gui.chatwindow.elements.WrapTextPane;
 
 @SuppressWarnings("serial")
 public class ColorTypeArea extends WrapTextPane
@@ -57,6 +56,7 @@ public class ColorTypeArea extends WrapTextPane
 		insert(new SimpleAttributeSet(), text);
 	}
 	
+	//TODO: Ensure inheritance.
 	public void addSegment(ChatSegment segment)
 	{
 		MutableAttributeSet set = new SimpleAttributeSet();
@@ -84,4 +84,15 @@ public class ColorTypeArea extends WrapTextPane
 			addSegment(seg);
 		}
 	}
+	
+	//#########################################################################
+	
+	//TODO: Support for chat formatting.
+//	private void reset(MutableAttributeSet set)
+//	{
+//		set.removeAttribute(StyleConstants.Bold);
+//		set.removeAttribute(StyleConstants.Italic);
+//		set.removeAttribute(StyleConstants.Underline);
+//		set.removeAttribute(StyleConstants.StrikeThrough);
+//	}
 }
