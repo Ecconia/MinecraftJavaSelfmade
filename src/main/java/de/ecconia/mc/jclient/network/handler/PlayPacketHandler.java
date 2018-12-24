@@ -1,17 +1,18 @@
 package de.ecconia.mc.jclient.network.handler;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.data.IntBytes;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.network.connector.PacketHandler;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
+import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
 import de.ecconia.mc.jclient.network.processor.GenericPacketProcessor;
 import de.ecconia.mc.jclient.network.processor.PingPacketProcessor;
 import de.ecconia.mc.jclient.network.processor.PlayersPacketProcessor;
 import de.ecconia.mc.jclient.network.processor.WorldPacketProcessor;
-import old.reading.helper.ArrayProvider;
-import old.reading.helper.Provider;
+import de.ecconia.mc.jclient.tools.CIntUntils;
 
 public class PlayPacketHandler implements PacketHandler
 {
@@ -35,17 +36,19 @@ public class PlayPacketHandler implements PacketHandler
 	{
 		try
 		{
-			Provider p = new ArrayProvider(bytes);
-			int id = p.readCInt();
+			IntBytes ret = CIntUntils.readCInt(bytes);
+			int id = ret.getInt();
+			bytes = ret.getBytes();
 			
-			GenericPacket packet = new GenericPacket(id, p);
+			GenericPacket packet = new GenericPacket(id, bytes);
 			
 			if(id == 0x03)
 			{
+				PacketReader reader = new PacketReader(bytes);
 				logPacket("Compression request");
-				int compressionLevel = p.readCInt();
+				int compressionLevel = reader.readCInt();
 				logData("> Compression above " + compressionLevel + " bytes.");
-				if(p.remainingBytes() > 0)
+				if(reader.remaining() > 0)
 				{
 					logData("> WARNING: Compression package had more content.");
 				}
@@ -82,7 +85,6 @@ public class PlayPacketHandler implements PacketHandler
 	
 	private void logPacket(String name)
 	{
-//		System.out.println(">>> P: " + name);
 		L.writeLineOnChannel("Packets", name);
 	}
 	

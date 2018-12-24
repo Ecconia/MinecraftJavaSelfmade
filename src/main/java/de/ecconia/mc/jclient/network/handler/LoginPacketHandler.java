@@ -7,13 +7,12 @@ import javax.crypto.SecretKey;
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.network.connector.PacketHandler;
+import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.tools.encryption.AsyncCryptTools;
 import de.ecconia.mc.jclient.network.tools.encryption.SyncCryptUnit;
 import de.ecconia.mc.jclient.network.web.AuthServer;
 import de.ecconia.mc.jclient.tools.PrintUtils;
 import old.packet.MessageBuilder;
-import old.reading.helper.ArrayProvider;
-import old.reading.helper.Provider;
 
 public class LoginPacketHandler implements PacketHandler
 {
@@ -31,16 +30,16 @@ public class LoginPacketHandler implements PacketHandler
 	{
 		try
 		{
-			Provider p = new ArrayProvider(bytes);
-			int id = p.readCInt();
-			System.out.println(">>> Packet with ID:" + id + " Size:" + p.remainingBytes());
+			PacketReader reader = new PacketReader(bytes);
+			int id = reader.readCInt();
+			System.out.println(">>> Packet with ID:" + id + " Size:" + reader.remaining());
 			
 			//State for login packets
 			if(id == 0)
 			{
 				//Error packet!
 				System.out.println("Packet: Error");
-				System.out.println("String: " + p.readString());
+				System.out.println("String: " + reader.readString());
 			}
 			else if(id == 1)
 			{
@@ -51,17 +50,17 @@ public class LoginPacketHandler implements PacketHandler
 				byte[] pubkeyBytes;
 				byte[] verifyToken;
 				{
-					serverCode = p.readString();
+					serverCode = reader.readString();
 					System.out.println("> ServerID: >" + serverCode + "<");
 					
-					int lengthPubKey = p.readCInt();
+					int lengthPubKey = reader.readCInt();
 					System.out.println("> Pubkey (" + lengthPubKey + "):");
-					pubkeyBytes = p.readBytes(lengthPubKey);
+					pubkeyBytes = reader.readBytes(lengthPubKey);
 					PrintUtils.printBytes(pubkeyBytes);
 					
-					int lengthVerifyToken = p.readCInt();
+					int lengthVerifyToken = reader.readCInt();
 					System.out.println("> Verify token (" + lengthVerifyToken + "):");
-					verifyToken = p.readBytes(lengthVerifyToken);
+					verifyToken = reader.readBytes(lengthVerifyToken);
 					PrintUtils.printBytes(verifyToken);
 				}
 				

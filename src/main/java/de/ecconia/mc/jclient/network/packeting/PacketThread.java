@@ -5,6 +5,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.network.connector.Connector;
+import de.ecconia.mc.jclient.tools.PrintUtils;
 
 public abstract class PacketThread extends Thread
 {
@@ -39,6 +40,8 @@ public abstract class PacketThread extends Thread
 				catch (Exception e)
 				{
 					System.out.println("Error while parsing packet with ID: " + packet.getId() + " on " + getName());
+					System.out.println("Content:");
+					PrintUtils.printBytes(packet.getBytes());
 					e.printStackTrace(System.out);
 				}
 			}

@@ -5,9 +5,9 @@ import de.ecconia.mc.jclient.chat.ChatFormatException;
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
+import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
 import de.ecconia.mc.jclient.tools.json.JSONException;
-import old.reading.helper.Provider;
 
 public class GenericPacketProcessor extends PacketThread
 {
@@ -19,17 +19,17 @@ public class GenericPacketProcessor extends PacketThread
 	@Override
 	protected void process(GenericPacket packet)
 	{
-		Provider p = packet.getProvider();
+		PacketReader reader = new PacketReader(packet.getBytes());
 		int id = packet.getId();
 		
 		if(id == 3)
 		{
 			logPacket("Compression request");
-			int compressionLevel = p.readCInt();
+			int compressionLevel = reader.readCInt();
 			logData("> Compression above " + compressionLevel + " bytes.");
-			if(p.remainingBytes() > 0)
 			
 			//TODO: add for every packet!
+			if(reader.remaining() > 0)
 			{
 				logData("> WARNING: Compression package had more content.");
 			}
@@ -71,7 +71,7 @@ public class GenericPacketProcessor extends PacketThread
 		else if(id == 27)
 		{
 			logPacket("Disconnected by server");
-			ParsedMessageContainer message = new ParsedMessageContainer(p.readString());
+			ParsedMessageContainer message = new ParsedMessageContainer(reader.readString());
 			try
 			{
 				System.out.println(message.getRawJson());
@@ -87,7 +87,8 @@ public class GenericPacketProcessor extends PacketThread
 		else if(id == 14)
 		{
 			logPacket("Chat");
-			logData("Message in " + p.readByte() + ": " + jsonMessage);
+			String jsonMessage = reader.readString();
+			logData("Message in " + reader.readUByte() + ": " + jsonMessage);
 			
 			dataDude.newChatJSON(jsonMessage);
 		}
@@ -212,7 +213,7 @@ public class GenericPacketProcessor extends PacketThread
 		}
 		else
 		{
-			logPacket("||> Packet: ID:" + id + "(0x" + (Integer.toHexString(id)) + ")" + " Size:" + p.remainingBytes());
+			logPacket("||> Packet: ID:" + id + "(0x" + (Integer.toHexString(id)) + ")" + " Size:" + reader.remaining());
 		}
 	}
 	

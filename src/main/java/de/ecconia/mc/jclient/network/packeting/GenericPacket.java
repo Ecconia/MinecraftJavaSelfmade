@@ -1,17 +1,14 @@
 package de.ecconia.mc.jclient.network.packeting;
 
-import old.reading.helper.Provider;
-
 public class GenericPacket
 {
 	private final int id;
-	//TODO: Get rid of provider.
-	private final Provider provider;
+	private final byte[] bytes;
 	
-	public GenericPacket(int id, Provider provider)
+	public GenericPacket(int id, byte[] bytes)
 	{
 		this.id = id;
-		this.provider = provider;
+		this.bytes = bytes;
 	}
 	
 	public int getId()
@@ -19,8 +16,8 @@ public class GenericPacket
 		return id;
 	}
 	
-	public Provider getProvider()
+	public byte[] getBytes()
 	{
-		return provider;
+		return bytes;
 	}
 }

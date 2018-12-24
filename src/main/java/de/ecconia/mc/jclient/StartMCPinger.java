@@ -1,9 +1,8 @@
 package de.ecconia.mc.jclient;
 
 import de.ecconia.mc.jclient.network.connector.Connector;
+import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import old.packet.MessageBuilder;
-import old.reading.helper.ArrayProvider;
-import old.reading.helper.Provider;
 
 public class StartMCPinger
 {
@@ -27,11 +26,11 @@ public class StartMCPinger
 		});
 		
 		con.setHandler(bytes -> {
-			Provider p = new ArrayProvider(bytes);
-			int id = p.readCInt();
-			System.out.println(">>> Packet with ID:" + id + " Size:" + p.remainingBytes());
+			PacketReader reader = new PacketReader(bytes);
+			int id = reader.readCInt();
+			System.out.println(">>> Packet with ID:" + id + " Size:" + reader.remaining());
 			
-			System.out.println("JsonResponse: " + p.readString());
+			System.out.println("JsonResponse: " + reader.readString());
 			
 			System.out.println("Quit.");
 			System.exit(0);

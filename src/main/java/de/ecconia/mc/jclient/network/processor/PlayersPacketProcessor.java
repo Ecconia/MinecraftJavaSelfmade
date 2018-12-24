@@ -9,7 +9,6 @@ import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
-import old.reading.helper.Provider;
 
 public class PlayersPacketProcessor extends PacketThread
 {
@@ -21,8 +20,7 @@ public class PlayersPacketProcessor extends PacketThread
 	@Override
 	protected void process(GenericPacket packet)
 	{
-		Provider p = packet.getProvider();
-		PacketReader reader = new PacketReader(p.readBytes(p.remainingBytes()));
+		PacketReader reader = new PacketReader(packet.getBytes());
 		int id = packet.getId();
 		
 		if(id == 0x47)
