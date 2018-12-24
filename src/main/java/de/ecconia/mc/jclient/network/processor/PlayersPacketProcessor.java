@@ -208,6 +208,10 @@ public class PlayersPacketProcessor extends PacketThread
 				}
 			}
 		}
+		else
+		{
+			System.out.println(Thread.currentThread().getName() + " received packet it was not surposed to get: " + id);
+		}
 	}
 	
 	private void logPacket(String name)

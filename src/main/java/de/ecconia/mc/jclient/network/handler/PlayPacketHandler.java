@@ -40,7 +40,7 @@ public class PlayPacketHandler implements PacketHandler
 			
 			GenericPacket packet = new GenericPacket(id, p);
 			
-			if(id == 3)
+			if(id == 0x03)
 			{
 				logPacket("Compression request");
 				int compressionLevel = p.readCInt();
@@ -52,7 +52,7 @@ public class PlayPacketHandler implements PacketHandler
 				
 				con.setCompression(compressionLevel);
 			}
-			else if(id == 33)
+			else if(id == 0x21)
 			{
 				//Priority packet, has to be handled as fast as possible without anything in the way.
 				pingThread.handle(packet);
@@ -64,6 +64,7 @@ public class PlayPacketHandler implements PacketHandler
 			}
 			else if(id == 0x47 || id == 0x30)
 			{
+				//Team/PlayerList entries
 				playersThread.handle(packet);
 			}
 			else
@@ -74,7 +75,7 @@ public class PlayPacketHandler implements PacketHandler
 		}
 		catch(Exception e)
 		{
-			System.out.println("> ERROR: Exception while reading packet: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+			System.out.println("> ERROR: Exception while reading/enqueuing packet: " + e.getClass().getSimpleName() + " - " + e.getMessage());
 			e.printStackTrace(System.out);
 		}
 	}

@@ -1,5 +1,6 @@
 package old.reading.helper;
 
+@Deprecated
 public abstract class Provider
 {
 	public abstract void reset();

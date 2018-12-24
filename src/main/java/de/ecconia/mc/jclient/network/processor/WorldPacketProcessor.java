@@ -24,8 +24,8 @@ public class WorldPacketProcessor extends PacketThread
 	protected void process(GenericPacket packet)
 	{
 		Provider p = packet.getProvider();
-		int id = packet.getId();
 		PacketReader reader = new PacketReader(p.readBytes(p.remainingBytes()));
+		int id = packet.getId();
 		
 		if(id == 0x22)
 		{
@@ -59,6 +59,10 @@ public class WorldPacketProcessor extends PacketThread
 			
 			logData("Unloaded chunk:");
 			logData("> X: " + reader.readInt() + " Y: " + reader.readInt());
+		}
+		else
+		{
+			System.out.println(Thread.currentThread().getName() + " received packet it was not surposed to get: " + id);
 		}
 	}
 	

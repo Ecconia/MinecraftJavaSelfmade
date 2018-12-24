@@ -20,7 +20,7 @@ public class PingPacketProcessor extends PacketThread
 		Provider p = packet.getProvider();
 		int id = packet.getId();
 		
-		if(id == 33)
+		if(id == 0x21)
 		{
 			logPacket("Ping");
 			byte[] ping = p.readBytes(8);

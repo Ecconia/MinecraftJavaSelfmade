@@ -44,6 +44,21 @@ public class PacketReader
 		return new String(readBytes(readCInt()));
 	}
 	
+	//TODO: Use...
+	public int readByte()
+	{
+		return next();
+	}
+	
+	//TODO: Use...
+	public int readShort()
+	{
+		int i = next();
+		i = i << 8;
+		i += nextUnsigned();
+		return i;
+	}
+	
 	public int readInt()
 	{
 		int i = next();

@@ -7,7 +7,6 @@ import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
 import de.ecconia.mc.jclient.tools.json.JSONException;
-import old.packet.MessageBuilder;
 import old.reading.helper.Provider;
 
 public class GenericPacketProcessor extends PacketThread
@@ -29,6 +28,8 @@ public class GenericPacketProcessor extends PacketThread
 			int compressionLevel = p.readCInt();
 			logData("> Compression above " + compressionLevel + " bytes.");
 			if(p.remainingBytes() > 0)
+			
+			//TODO: add for every packet!
 			{
 				logData("> WARNING: Compression package had more content.");
 			}
@@ -83,20 +84,9 @@ public class GenericPacketProcessor extends PacketThread
 				e.printStackTrace(System.out);
 			}
 		}
-		else if(id == 33)
-		{
-			logPacket("Ping");
-			byte[] ping = p.readBytes(8);
-			
-			MessageBuilder mb = new MessageBuilder();
-			mb.addBytes(ping);
-			mb.prependCInt(14);
-			con.sendPacket(mb.asBytes());
-		}
 		else if(id == 14)
 		{
 			logPacket("Chat");
-			String jsonMessage = p.readString();
 			logData("Message in " + p.readByte() + ": " + jsonMessage);
 			
 			dataDude.newChatJSON(jsonMessage);
