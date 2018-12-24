@@ -96,6 +96,10 @@ public class GenericPacketProcessor extends PacketThread
 		{
 			logPacket("WorldTime");
 			
+			long worldAge = reader.readLong();
+			long dayTime = reader.readLong();
+			
+			logData("AgeOfWorld: " + worldAge + " Time: " + dayTime);
 		}
 		else if(id == 13)
 		{
