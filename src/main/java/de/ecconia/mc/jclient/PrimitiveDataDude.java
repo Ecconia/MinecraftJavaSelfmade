@@ -12,6 +12,10 @@ public class PrimitiveDataDude
 	private final Connector con;
 	private ChatPane chatWindow;
 	
+	private int x;
+	private int y;
+	private int z;
+	
 	public PrimitiveDataDude(Connector con)
 	{
 		this.con = con;
@@ -71,9 +75,51 @@ public class PrimitiveDataDude
 		}
 	}
 	
+	//#########################################################################
+	//Position handler:
+	
+	private int chunkX = Integer.MAX_VALUE;
+	private int chunkZ = Integer.MAX_VALUE;
+	
+	private UpdateChunkPos worldHandler;
+	
+	public void setChunkPosHandler(UpdateChunkPos handler)
+	{
+		this.worldHandler = handler;
+	}
+	
+	public void newPosition(int x, int y, int z)
+	{
+		int newChunkX = x / 16;
+		int newChunkZ = z / 16;
+		
+		if(newChunkX != chunkX || newChunkZ != chunkZ)
+		{
+			chunkX = newChunkX;
+			chunkZ = newChunkZ;
+			
+			System.out.println("New chunk location: " + chunkX + " " + chunkZ);
+			
+			//Event:
+//			worldHandler.updateChunkCoords(newChunkX, newChunkZ);
+		}
+	}
+	
+	public static interface UpdateChunkPos
+	{
+		public void updateChunkCoords(int x, int z);
+	}
+	
 	public void setPosition(int x, int y, int z)
 	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		
+		newPosition(x, y, z);
 	}
+	
+	//#########################################################################
 	
 	public void sendChat(String text)
 	{
@@ -81,14 +127,22 @@ public class PrimitiveDataDude
 		{
 			if(text.equals("%move"))
 			{
+				System.out.println("Sending Position: (" + x + ", " + y + ", " + z + ")");
 				MessageBuilder mb = new MessageBuilder();
-				mb.addDouble(2.0D);
-				mb.addDouble(0.0D);
-				mb.addDouble(0.0D);
-				mb.addBoolean(false);
+				
+				x += 4;
+				
+				mb.addDouble(x);
+				mb.addDouble(y);
+				mb.addDouble(z);
+				mb.addBoolean(true);
 				mb.prependCInt(0x10);
 				PrintUtils.printBytes(mb.asBytes());
 				con.sendPacket(mb.asBytes());
+			}
+			else if(text.equals("%3"))
+			{
+				worldHandler.updateChunkCoords(chunkX, chunkZ);
 			}
 		}
 		else
