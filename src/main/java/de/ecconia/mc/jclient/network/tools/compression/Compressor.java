@@ -4,7 +4,7 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-import de.ecconia.mc.jclient.data.IntBytes;
+import de.ecconia.mc.jclient.tools.IntBytes;
 
 public class Compressor
 {

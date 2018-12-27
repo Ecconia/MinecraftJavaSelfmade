@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient.data;
+package de.ecconia.mc.jclient.tools;
 
 public final class IntBytes
 {

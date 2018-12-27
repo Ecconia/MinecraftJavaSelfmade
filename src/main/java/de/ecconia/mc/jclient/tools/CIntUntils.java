@@ -1,7 +1,5 @@
 package de.ecconia.mc.jclient.tools;
 
-import de.ecconia.mc.jclient.data.IntBytes;
-
 public class CIntUntils
 {
 	public static IntBytes readCInt(byte[] bytes)
