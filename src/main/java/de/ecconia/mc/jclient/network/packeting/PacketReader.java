@@ -44,13 +44,11 @@ public class PacketReader
 		return new String(readBytes(readCInt()));
 	}
 	
-	//TODO: Use...
 	public int readByte()
 	{
 		return next();
 	}
 	
-	//TODO: Use...
 	public int readShort()
 	{
 		int i = next();
@@ -74,7 +72,7 @@ public class PacketReader
 	
 	public long readLong()
 	{
-		long i = next();
+		long i = nextUnsigned();
 		i = i << 8;
 		i += nextUnsigned();
 		i = i << 8;
@@ -96,6 +94,16 @@ public class PacketReader
 	public boolean readBoolean()
 	{
 		return next() == 1;
+	}
+	
+	public double readDouble()
+	{
+		return Double.longBitsToDouble(readLong());
+	}
+	
+	public float readFloat()
+	{
+		return Float.intBitsToFloat(readInt());
 	}
 	
 	//MC custom types:
