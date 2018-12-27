@@ -175,22 +175,14 @@ public class MessageBuilder
 	
 	public void addLong(long value)
 	{
-		addByte((byte) (value & 255));
-		value >>>= 8;
-		addByte((byte) (value & 255));
-		value >>>= 8;
-		addByte((byte) (value & 255));
-		value >>>= 8;
-		addByte((byte) (value & 255));
-		value >>>= 8;
-		addByte((byte) (value & 255));
-		value >>>= 8;
-		addByte((byte) (value & 255));
-		value >>>= 8;
-		addByte((byte) (value & 255));
-		value >>>= 8;
-		addByte((byte) (value & 255));
-		value >>>= 8;
+		bytes.add((byte) ((value >> 56) & 255));
+		bytes.add((byte) ((value >> 48) & 255));
+		bytes.add((byte) ((value >> 40) & 255));
+		bytes.add((byte) ((value >> 32) & 255));
+		bytes.add((byte) ((value >> 24) & 255));
+		bytes.add((byte) ((value >> 16) & 255));
+		bytes.add((byte) ((value >> 8) & 255));
+		bytes.add((byte) (value & 255));
 	}
 	
 	public void addCLong(long value)
