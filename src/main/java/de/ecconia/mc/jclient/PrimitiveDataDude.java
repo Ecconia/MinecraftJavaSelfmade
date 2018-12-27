@@ -71,6 +71,10 @@ public class PrimitiveDataDude
 		}
 	}
 	
+	public void setPosition(int x, int y, int z)
+	{
+	}
+	
 	public void sendChat(String text)
 	{
 		if(text.charAt(0) == '%')

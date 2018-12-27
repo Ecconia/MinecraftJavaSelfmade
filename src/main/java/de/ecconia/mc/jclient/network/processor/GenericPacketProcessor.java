@@ -8,6 +8,7 @@ import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
 import de.ecconia.mc.jclient.tools.json.JSONException;
+import old.packet.MessageBuilder;
 
 public class GenericPacketProcessor extends PacketThread
 {
@@ -22,27 +23,85 @@ public class GenericPacketProcessor extends PacketThread
 		PacketReader reader = new PacketReader(packet.getBytes());
 		int id = packet.getId();
 		
-		if(id == 3)
-		{
-			logPacket("Compression request");
-			int compressionLevel = reader.readCInt();
-			logData("> Compression above " + compressionLevel + " bytes.");
-			
-			//TODO: add for every packet!
-			if(reader.remaining() > 0)
-			{
-				logData("> WARNING: Compression package had more content.");
-			}
-			
-			con.setCompression(compressionLevel);
-		}
-		else if(id == 0x23)
+		if(id == 0x23)
 		{
 			logPacket("Effect");
+		}
+		else if(id == 0x32)
+		{
+			logPacket("Player teleport");
+			
+			double x = reader.readDouble();
+			double y = reader.readDouble();
+			double z = reader.readDouble();
+			float yaw = reader.readFloat();
+			float pitch = reader.readFloat();
+			
+			int flags = reader.readByte();
+			
+			int tpID = reader.readCInt();
+			
+			logData("Player Teleport: (" + x + ", " + y + ", " + z + " | " + yaw + ", " + pitch + ") Masq: " + Integer.toBinaryString(flags) + " ID: " + tpID);
+			
+			dataDude.setPosition((int) x, (int) y, (int) z);
+			
+			MessageBuilder mb = new MessageBuilder();
+			mb.addCInt(tpID);
+			mb.prependCInt(0x00); //Teleport confirm packet.
+			dataDude.getCon().sendPacket(mb.asBytes());
 		}
 		else if(id == 0x28)
 		{
 			logPacket("Entity movement relative");
+			
+			int entityID = reader.readCInt();
+			int xMovement = reader.readShort();
+			int yMovement = reader.readShort();
+			int zMovement = reader.readShort();
+			boolean onGround = reader.readBoolean();
+			
+			logData("Entity " + entityID + " moved (" + xMovement + ", " + yMovement + ", " + zMovement + ") is " + (onGround ? "" : " not") + " on ground.");
+		}
+		else if(id == 0x29)
+		{
+			logPacket("Entity movement relative and looks");
+			
+			int entityID = reader.readCInt();
+			int xMovement = reader.readShort();
+			int yMovement = reader.readShort();
+			int zMovement = reader.readShort();
+			boolean onGround = reader.readBoolean();
+			
+			int yawAngle = reader.readByte();
+			int pitchAngle = reader.readByte();
+			
+			logData("Entity " + entityID + " moved (" + xMovement + ", " + yMovement + ", " + zMovement + ") is " + (onGround ? "" : " not") + " on ground. Yaw: " + yawAngle + " Pitch: " + pitchAngle);
+		}
+		else if(id == 0x2A)
+		{
+			logPacket("Entity look direction");
+			
+			int entityID = reader.readCInt();
+			
+			int yawAngle = reader.readByte();
+			int pitchAngle = reader.readByte();
+			
+			logData("Entity " + entityID + " changed look direction. Yaw: " + yawAngle + " Pitch: " + pitchAngle);
+		}
+		else if(id == 0x50)
+		{
+			logPacket("Entity teleport");
+			
+			int entityID = reader.readCInt();
+			int xMovement = reader.readShort();
+			int yMovement = reader.readShort();
+			int zMovement = reader.readShort();
+			boolean onGround = reader.readBoolean();
+			
+			int yawAngle = reader.readByte();
+			int pitchAngle = reader.readByte();
+			
+			logData("Entity " + entityID + " teleported (" + xMovement + ", " + yMovement + ", " + zMovement + ") is " + (onGround ? "" : " not") + " on ground. Yaw: " + yawAngle + " Pitch: " + pitchAngle);
 		}
 		else if(id == 0x26)
 		{
@@ -96,10 +155,11 @@ public class GenericPacketProcessor extends PacketThread
 		{
 			logPacket("WorldTime");
 			
-			long worldAge = reader.readLong();
-			long dayTime = reader.readLong();
-			
-			logData("AgeOfWorld: " + worldAge + " Time: " + dayTime);
+			//STOP SPAMMING!
+//			long worldAge = reader.readLong();
+//			long dayTime = reader.readLong();
+//			
+//			logData("AgeOfWorld: " + worldAge + " Time: " + dayTime);
 		}
 		else if(id == 13)
 		{
@@ -192,10 +252,6 @@ public class GenericPacketProcessor extends PacketThread
 		{
 			logPacket("Spawn Position");
 		}
-		else if(id == 0x32)
-		{
-			logPacket("Player Location/Head");
-		}
 		else if(id == 0x3b)
 		{
 			logPacket("World Border");
@@ -210,6 +266,11 @@ public class GenericPacketProcessor extends PacketThread
 			//UByte -> Max players (ignored)
 			//String -> Map type...?
 			//Boolean -> Show Debug
+		}
+		else if(id == 0x38)
+		{
+			logPacket("(Re)spawn to dimension");
+			logData("Spawned in dimension: " + reader.readInt());
 		}
 		else
 		{
