@@ -1,0 +1,49 @@
+Chat:
+	Tabcompletion (active > passive)
+	Send-history
+	Better GUI
+	MC chat style
+	
+Tabframework:
+	Better scroll behaviour
+	Eventually get rid of it or rewrite/adjust
+	
+3D:
+	Eventually textures
+	Yolo, smooth edges
+	Entity-positions as markers
+	Moving in first person
+	Unlock camera
+	More than just one (or more) chunk(s) view range
+	
+Thread:
+	Thread to process chunks in background
+	In general MOAR threads
+	Threadsafe data, or restrict access?
+	
+Packets:
+	Sharing by lookups, instead of if/else
+	Multiple adapters to connect to more than one major version
+	
+Data:
+	Create a data collector class (for each connected server)
+	Maintain multi-server possibility
+	Collect every data the server sends
+	Complain if the server sends invalid data (MC does that by default already btw)
+	
+Downloads/Cache:
+	GUI to ask User which world he is in, save all chunks into that world, until world switch
+		Its not really possible to detect the world in which a player had spawned. The servers are not verbose enough.
+	Load chunks from file system, until they are loaded from the server.
+	Allow offline view of the worlds for each server.
+		Any offline chunk needs an indicator to be identitfied
+	
+AI: 
+	Automated movement for the player
+		No special meaning yet
+		Maybe world download
+	Path finding
+		Just say where, client does the rest
+	Auto placement
+		Ofc without "hacking", just inputs
+	
