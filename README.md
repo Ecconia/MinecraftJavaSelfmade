@@ -4,11 +4,16 @@ A Minecraft client written in Java from scratch.
 
 It was one of the days again, when MC pissed me off... Broken chat, weird graphics, well you know what 1.13.2 has to offer.
 
-## Start
+Well its nicer to use a system where every mistake is the fault of someone you can talk to. A system where one can fix every bug. A system which can be improved on demand.
 
-This project starts very messy in git. The first refactoring has already been done to improve the code. But the second will come soon this time gitted.
+## Start and progress
 
-Before the cleanup its not worth looking at the code.
+This project stated with a very messy git. But that had been cleaned up.
+
+The first features had been the connection to online servers. The next logical step was the reading of packets and establishing a chat to talk to the other players.
+
+To use this client as a replacement its required to see the world, single chunks can be viewed already.
+The next thing to do is the positioning of the camera and adding the player and move it with the keyboard.
 
 ## Furture plans
 
@@ -16,23 +21,36 @@ Before the cleanup its not worth looking at the code.
     - Better GUI
     - Tabcompletion/History
     - on click/hover
-* Its not yet decided if 3D will be added, if so in a simple version and slowly improving.
-    - If there won't be a main menu, but a main SP world, maybe a floating island.
+* 3D will be added, in a simple version and slowly improving.
+    - There won't be a main menu, but a main SP world, maybe a floating island.
 * For debugging/logging a special GUI with tabs, if possible allow moving the tabs.
-    - Chunkmap, shows which chunks are loaded/unloaded/downloaded.
+    - Chunkmap, has to show which chunks are unloaded, and the age of each chunk.
 * For debugging an overview over the data collected.
 * Offline playing if connection is lost, never dump chunks and other data.
-    - While at it, just save the whole server too.
+    - While at it, just save the whole server world too.
     - Disconnect player from actual position.
 * errr...
 
 ## Current Features
 
-* Connecting with any online-mode server
+* Connecting with (any) online-mode server.
   * Compression
   * Encryption
   * Keep-Alive auto-sending
-* Printing chat messages in a special window, and chatting from that window.
+* Chat-Window
+  - History of all chat messages (which can be parsed) in a scrollPane.
+  - Primive input field.
+  - Client commands, for internal events.
+* Client with multiple TABs for different topics.
+  - Looks like Chrome, works quite well - throws Exception though.
+* World/Chunks
+  - Currently are all saved as objects (waiting for mem error).
+  - A Map shows all chunks which are stored.
+* 3D bad -> good
+  - (JOGL, cause AWT and it just works)
+  - The current Chunk can be viewd in 3D.
+  - Uses a random color for each block type.
+  - Primitive controls to move the chunk.
 
 ##### As most of Ecconias YOLO projects, its a learning project.
 
