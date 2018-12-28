@@ -16,6 +16,8 @@ import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
+import de.ecconia.mc.jclient.gui.input.KeyDebouncer;
+
 @SuppressWarnings("serial")
 public class YA3DTest extends JPanel implements GLEventListener
 {
@@ -32,36 +34,7 @@ public class YA3DTest extends JPanel implements GLEventListener
 	public YA3DTest()
 	{
 		blocks = DecodeChunkTest.getProcessedChunk();
-		
-		List<Integer> blocktypes = new ArrayList<>();
-		for(int iy = 0; iy < 256; iy++)
-		{
-			for(int ix = 0; ix < 16; ix++)
-			{
-				for(int iz = 0; iz < 16; iz++)
-				{
-					int block = blocks[ix][iz][iy];
-					if(block != 0)
-					{
-						blocktypes.add(block);
-					}
-				}
-			}
-		}
-		
-		final float[] c = {0f, 0.2f, 0.8f, 1f};
-		
-		colors = new float[blocktypes.size()][3];
-		for(int i = 0; i < blocktypes.size(); i++)
-		{
-			int red = r.nextInt(4);
-			int green = r.nextInt(4);
-			int blue = r.nextInt(4);
-			
-			colors[i][0] = c[red];
-			colors[i][1] = c[green];
-			colors[i][2] = c[blue];
-		}
+		generateColors();
 		
 		//getting the capabilities object of GL2 profile        
 		final GLProfile profile = GLProfile.get(GLProfile.GL2);
@@ -87,6 +60,28 @@ public class YA3DTest extends JPanel implements GLEventListener
 			}
 		});
 		
+		//Keys:
+		//	Control - 17
+		
+		//Modifiers:
+		//	Shift - 16
+		//	Alt - 18
+		//	ESC - 27
+		addKeyListener(new KeyDebouncer(new KeyDebouncer.KeyPress()
+		{
+			@Override
+			public void released(int keyCode, char keyChar)
+			{
+				System.out.println(keyChar + " ↑");
+			}
+			
+			@Override
+			public void pressed(int keyCode, char keyChar)
+			{
+				System.out.println(keyChar + " ↓");
+			}
+		}));
+		
 		setLayout(new BorderLayout());
 		setFocusable(true);
 		add(glcanvas);
@@ -107,11 +102,6 @@ public class YA3DTest extends JPanel implements GLEventListener
 		gl.glEnable(GL2.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL2.GL_LEQUAL);
 		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
-	}
-	
-	@Override
-	public void dispose(GLAutoDrawable drawable)
-	{
 	}
 	
 	@Override
@@ -344,5 +334,43 @@ public class YA3DTest extends JPanel implements GLEventListener
 		
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
+	}
+	
+	@Override
+	public void dispose(GLAutoDrawable drawable)
+	{
+	}
+	
+	public void generateColors()
+	{
+		List<Integer> blocktypes = new ArrayList<>();
+		for(int iy = 0; iy < 256; iy++)
+		{
+			for(int ix = 0; ix < 16; ix++)
+			{
+				for(int iz = 0; iz < 16; iz++)
+				{
+					int block = blocks[ix][iz][iy];
+					if(block != 0)
+					{
+						blocktypes.add(block);
+					}
+				}
+			}
+		}
+		
+		final float[] c = {0f, 0.2f, 0.8f, 1f};
+		
+		colors = new float[blocktypes.size()][3];
+		for(int i = 0; i < blocktypes.size(); i++)
+		{
+			int red = r.nextInt(4);
+			int green = r.nextInt(4);
+			int blue = r.nextInt(4);
+			
+			colors[i][0] = c[red];
+			colors[i][1] = c[green];
+			colors[i][2] = c[blue];
+		}
 	}
 }
