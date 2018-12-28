@@ -144,184 +144,180 @@ public class YA3DTest extends JPanel implements GLEventListener
 		gl.glFlush();
 	}
 	
+	private final static double blockRadius = 0.4999;
+	private final static double blockOutterRadius = 0.45;
+	private final static double blockInnerRadius = 0.5;
+	
 	private void drawBlock(GL2 gl, int x, int y, int z)
 	{
 		gl.glPushMatrix();
-		
 		gl.glTranslatef(x, y, z);
-		gl.glBegin(GL2.GL_QUADS);
 		
-		double r = 0.4999;
+		gl.glBegin(GL2.GL_QUADS);
 		
 		//Top:
-		gl.glVertex3d(r, r, r);
-		gl.glVertex3d(r, r, -r);
-		gl.glVertex3d(-r, r, -r);
-		gl.glVertex3d(-r, r, r);
+		gl.glVertex3d(blockRadius, blockRadius, blockRadius);
+		gl.glVertex3d(blockRadius, blockRadius, -blockRadius);
+		gl.glVertex3d(-blockRadius, blockRadius, -blockRadius);
+		gl.glVertex3d(-blockRadius, blockRadius, blockRadius);
 		
 		//Bottom:
-		gl.glVertex3d(r, -r, r);
-		gl.glVertex3d(r, -r, -r);
-		gl.glVertex3d(-r, -r, -r);
-		gl.glVertex3d(-r, -r, r);
+		gl.glVertex3d(blockRadius, -blockRadius, blockRadius);
+		gl.glVertex3d(blockRadius, -blockRadius, -blockRadius);
+		gl.glVertex3d(-blockRadius, -blockRadius, -blockRadius);
+		gl.glVertex3d(-blockRadius, -blockRadius, blockRadius);
 		
 		//Left:
-		gl.glVertex3d(-r, -r, r);
-		gl.glVertex3d(-r, -r, -r);
-		gl.glVertex3d(-r, r, -r);
-		gl.glVertex3d(-r, r, r);
+		gl.glVertex3d(-blockRadius, -blockRadius, blockRadius);
+		gl.glVertex3d(-blockRadius, -blockRadius, -blockRadius);
+		gl.glVertex3d(-blockRadius, blockRadius, -blockRadius);
+		gl.glVertex3d(-blockRadius, blockRadius, blockRadius);
 		
 		//Right:
-		gl.glVertex3d(r, -r, r);
-		gl.glVertex3d(r, -r, -r);
-		gl.glVertex3d(r, r, -r);
-		gl.glVertex3d(r, r, r);
+		gl.glVertex3d(blockRadius, -blockRadius, blockRadius);
+		gl.glVertex3d(blockRadius, -blockRadius, -blockRadius);
+		gl.glVertex3d(blockRadius, blockRadius, -blockRadius);
+		gl.glVertex3d(blockRadius, blockRadius, blockRadius);
 		
 		//Back:
-		gl.glVertex3d(-r, -r, -r);
-		gl.glVertex3d(r, -r, -r);
-		gl.glVertex3d(r, r, -r);
-		gl.glVertex3d(-r, r, -r);
+		gl.glVertex3d(-blockRadius, -blockRadius, -blockRadius);
+		gl.glVertex3d(blockRadius, -blockRadius, -blockRadius);
+		gl.glVertex3d(blockRadius, blockRadius, -blockRadius);
+		gl.glVertex3d(-blockRadius, blockRadius, -blockRadius);
 		
 		//Front:
-		gl.glVertex3d(-r, -r, r);
-		gl.glVertex3d(r, -r, r);
-		gl.glVertex3d(r, r, r);
-		gl.glVertex3d(-r, r, r);
-		
-		gl.glEnd();
-		
-		double i = 0.45;
-		r = 0.5;
+		gl.glVertex3d(-blockRadius, -blockRadius, blockRadius);
+		gl.glVertex3d(blockRadius, -blockRadius, blockRadius);
+		gl.glVertex3d(blockRadius, blockRadius, blockRadius);
+		gl.glVertex3d(-blockRadius, blockRadius, blockRadius);
 		
 		gl.glColor3f(0.5f, 0.5f, 0.5f);
-		gl.glBegin(GL2.GL_QUADS);
 		
 		//TOP:
-		gl.glVertex3d(r, r, r);
-		gl.glVertex3d(r, r, -r);
-		gl.glVertex3d(i, r, -r);
-		gl.glVertex3d(i, r, r);
+		gl.glVertex3d(blockInnerRadius, blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(blockInnerRadius, blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, blockInnerRadius, blockInnerRadius);
 		
-		gl.glVertex3d(-r, r, r);
-		gl.glVertex3d(-r, r, -r);
-		gl.glVertex3d(-i, r, -r);
-		gl.glVertex3d(-i, r, r);
+		gl.glVertex3d(-blockInnerRadius, blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockOutterRadius, blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockOutterRadius, blockInnerRadius, blockInnerRadius);
 		
-		gl.glVertex3d(-i, r, r);
-		gl.glVertex3d(i, r, r);
-		gl.glVertex3d(i, r, i);
-		gl.glVertex3d(-i, r, i);
+		gl.glVertex3d(-blockOutterRadius, blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, blockInnerRadius, blockOutterRadius);
+		gl.glVertex3d(-blockOutterRadius, blockInnerRadius, blockOutterRadius);
 		
-		gl.glVertex3d(-i, r, -r);
-		gl.glVertex3d(i, r, -r);
-		gl.glVertex3d(i, r, -i);
-		gl.glVertex3d(-i, r, -i);
+		gl.glVertex3d(-blockOutterRadius, blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, blockInnerRadius, -blockOutterRadius);
+		gl.glVertex3d(-blockOutterRadius, blockInnerRadius, -blockOutterRadius);
 		
 		//Bottom:
-		gl.glVertex3d(r, -r, r);
-		gl.glVertex3d(r, -r, -r);
-		gl.glVertex3d(i, -r, -r);
-		gl.glVertex3d(i, -r, r);
+		gl.glVertex3d(blockInnerRadius, -blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(blockInnerRadius, -blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, -blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, -blockInnerRadius, blockInnerRadius);
 		
-		gl.glVertex3d(-r, -r, r);
-		gl.glVertex3d(-r, -r, -r);
-		gl.glVertex3d(-i, -r, -r);
-		gl.glVertex3d(-i, -r, r);
+		gl.glVertex3d(-blockInnerRadius, -blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, -blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockOutterRadius, -blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockOutterRadius, -blockInnerRadius, blockInnerRadius);
 		
-		gl.glVertex3d(-i, -r, r);
-		gl.glVertex3d(i, -r, r);
-		gl.glVertex3d(i, -r, i);
-		gl.glVertex3d(-i, -r, i);
+		gl.glVertex3d(-blockOutterRadius, -blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, -blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, -blockInnerRadius, blockOutterRadius);
+		gl.glVertex3d(-blockOutterRadius, -blockInnerRadius, blockOutterRadius);
 		
-		gl.glVertex3d(-i, -r, -r);
-		gl.glVertex3d(i, -r, -r);
-		gl.glVertex3d(i, -r, -i);
-		gl.glVertex3d(-i, -r, -i);
+		gl.glVertex3d(-blockOutterRadius, -blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, -blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, -blockInnerRadius, -blockOutterRadius);
+		gl.glVertex3d(-blockOutterRadius, -blockInnerRadius, -blockOutterRadius);
 		
 		//Right:
-		gl.glVertex3d(r, r, r);
-		gl.glVertex3d(r, -r, r);
-		gl.glVertex3d(r, -r, i);
-		gl.glVertex3d(r, r, i);
+		gl.glVertex3d(blockInnerRadius, blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(blockInnerRadius, -blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(blockInnerRadius, -blockInnerRadius, blockOutterRadius);
+		gl.glVertex3d(blockInnerRadius, blockInnerRadius, blockOutterRadius);
 		
-		gl.glVertex3d(r, r, -r);
-		gl.glVertex3d(r, -r, -r);
-		gl.glVertex3d(r, -r, -i);
-		gl.glVertex3d(r, r, -i);
+		gl.glVertex3d(blockInnerRadius, blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(blockInnerRadius, -blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(blockInnerRadius, -blockInnerRadius, -blockOutterRadius);
+		gl.glVertex3d(blockInnerRadius, blockInnerRadius, -blockOutterRadius);
 		
-		gl.glVertex3d(r, r, -i);
-		gl.glVertex3d(r, r, i);
-		gl.glVertex3d(r, i, i);
-		gl.glVertex3d(r, i, -i);
+		gl.glVertex3d(blockInnerRadius, blockInnerRadius, -blockOutterRadius);
+		gl.glVertex3d(blockInnerRadius, blockInnerRadius, blockOutterRadius);
+		gl.glVertex3d(blockInnerRadius, blockOutterRadius, blockOutterRadius);
+		gl.glVertex3d(blockInnerRadius, blockOutterRadius, -blockOutterRadius);
 		
-		gl.glVertex3d(r, -r, -i);
-		gl.glVertex3d(r, -r, i);
-		gl.glVertex3d(r, -i, i);
-		gl.glVertex3d(r, -i, -i);
+		gl.glVertex3d(blockInnerRadius, -blockInnerRadius, -blockOutterRadius);
+		gl.glVertex3d(blockInnerRadius, -blockInnerRadius, blockOutterRadius);
+		gl.glVertex3d(blockInnerRadius, -blockOutterRadius, blockOutterRadius);
+		gl.glVertex3d(blockInnerRadius, -blockOutterRadius, -blockOutterRadius);
 		
 		//Left:
-		gl.glVertex3d(-r, r, r);
-		gl.glVertex3d(-r, -r, r);
-		gl.glVertex3d(-r, -r, i);
-		gl.glVertex3d(-r, r, i);
+		gl.glVertex3d(-blockInnerRadius, blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, -blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, -blockInnerRadius, blockOutterRadius);
+		gl.glVertex3d(-blockInnerRadius, blockInnerRadius, blockOutterRadius);
 		
-		gl.glVertex3d(-r, r, -r);
-		gl.glVertex3d(-r, -r, -r);
-		gl.glVertex3d(-r, -r, -i);
-		gl.glVertex3d(-r, r, -i);
+		gl.glVertex3d(-blockInnerRadius, blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, -blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, -blockInnerRadius, -blockOutterRadius);
+		gl.glVertex3d(-blockInnerRadius, blockInnerRadius, -blockOutterRadius);
 		
-		gl.glVertex3d(-r, r, -i);
-		gl.glVertex3d(-r, r, i);
-		gl.glVertex3d(-r, i, i);
-		gl.glVertex3d(-r, i, -i);
+		gl.glVertex3d(-blockInnerRadius, blockInnerRadius, -blockOutterRadius);
+		gl.glVertex3d(-blockInnerRadius, blockInnerRadius, blockOutterRadius);
+		gl.glVertex3d(-blockInnerRadius, blockOutterRadius, blockOutterRadius);
+		gl.glVertex3d(-blockInnerRadius, blockOutterRadius, -blockOutterRadius);
 		
-		gl.glVertex3d(-r, -r, -i);
-		gl.glVertex3d(-r, -r, i);
-		gl.glVertex3d(-r, -i, i);
-		gl.glVertex3d(-r, -i, -i);
+		gl.glVertex3d(-blockInnerRadius, -blockInnerRadius, -blockOutterRadius);
+		gl.glVertex3d(-blockInnerRadius, -blockInnerRadius, blockOutterRadius);
+		gl.glVertex3d(-blockInnerRadius, -blockOutterRadius, blockOutterRadius);
+		gl.glVertex3d(-blockInnerRadius, -blockOutterRadius, -blockOutterRadius);
 		
 		//Front:
-		gl.glVertex3d(r, r, r);
-		gl.glVertex3d(-r, r, r);
-		gl.glVertex3d(-r, i, r);
-		gl.glVertex3d(r, i, r);
+		gl.glVertex3d(blockInnerRadius, blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, blockOutterRadius, blockInnerRadius);
+		gl.glVertex3d(blockInnerRadius, blockOutterRadius, blockInnerRadius);
 		
-		gl.glVertex3d(r, -r, r);
-		gl.glVertex3d(-r, -r, r);
-		gl.glVertex3d(-r, -i, r);
-		gl.glVertex3d(r, -i, r);
+		gl.glVertex3d(blockInnerRadius, -blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, -blockInnerRadius, blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, -blockOutterRadius, blockInnerRadius);
+		gl.glVertex3d(blockInnerRadius, -blockOutterRadius, blockInnerRadius);
 		
-		gl.glVertex3d(r, -i, r);
-		gl.glVertex3d(r, i, r);
-		gl.glVertex3d(i, i, r);
-		gl.glVertex3d(i, -i, r);
+		gl.glVertex3d(blockInnerRadius, -blockOutterRadius, blockInnerRadius);
+		gl.glVertex3d(blockInnerRadius, blockOutterRadius, blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, blockOutterRadius, blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, -blockOutterRadius, blockInnerRadius);
 		
-		gl.glVertex3d(-r, -i, r);
-		gl.glVertex3d(-r, i, r);
-		gl.glVertex3d(-i, i, r);
-		gl.glVertex3d(-i, -i, r);
+		gl.glVertex3d(-blockInnerRadius, -blockOutterRadius, blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, blockOutterRadius, blockInnerRadius);
+		gl.glVertex3d(-blockOutterRadius, blockOutterRadius, blockInnerRadius);
+		gl.glVertex3d(-blockOutterRadius, -blockOutterRadius, blockInnerRadius);
 		
 		//Back:
-		gl.glVertex3d(r, r, -r);
-		gl.glVertex3d(-r, r, -r);
-		gl.glVertex3d(-r, i, -r);
-		gl.glVertex3d(r, i, -r);
+		gl.glVertex3d(blockInnerRadius, blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, blockOutterRadius, -blockInnerRadius);
+		gl.glVertex3d(blockInnerRadius, blockOutterRadius, -blockInnerRadius);
 		
-		gl.glVertex3d(r, -r, -r);
-		gl.glVertex3d(-r, -r, -r);
-		gl.glVertex3d(-r, -i, -r);
-		gl.glVertex3d(r, -i, -r);
+		gl.glVertex3d(blockInnerRadius, -blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, -blockInnerRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, -blockOutterRadius, -blockInnerRadius);
+		gl.glVertex3d(blockInnerRadius, -blockOutterRadius, -blockInnerRadius);
 		
-		gl.glVertex3d(r, -i, -r);
-		gl.glVertex3d(r, i, -r);
-		gl.glVertex3d(i, i, -r);
-		gl.glVertex3d(i, -i, -r);
+		gl.glVertex3d(blockInnerRadius, -blockOutterRadius, -blockInnerRadius);
+		gl.glVertex3d(blockInnerRadius, blockOutterRadius, -blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, blockOutterRadius, -blockInnerRadius);
+		gl.glVertex3d(blockOutterRadius, -blockOutterRadius, -blockInnerRadius);
 		
-		gl.glVertex3d(-r, -i, -r);
-		gl.glVertex3d(-r, i, -r);
-		gl.glVertex3d(-i, i, -r);
-		gl.glVertex3d(-i, -i, -r);
+		gl.glVertex3d(-blockInnerRadius, -blockOutterRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockInnerRadius, blockOutterRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockOutterRadius, blockOutterRadius, -blockInnerRadius);
+		gl.glVertex3d(-blockOutterRadius, -blockOutterRadius, -blockInnerRadius);
 		
 		gl.glEnd();
 		
