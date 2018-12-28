@@ -80,6 +80,7 @@ public class YA3DTest extends JPanel implements GLEventListener
 			if(e.isShiftDown())
 			{
 				lifting += wheelRotation * 6;
+				System.out.println("L: " + lifting);
 			}
 			else
 			{
@@ -117,9 +118,9 @@ public class YA3DTest extends JPanel implements GLEventListener
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		
-		gl.glTranslatef(-8, lifting, -50);
+		gl.glRotatef(20f, 1, 0, 0);
 		gl.glRotatef(rotation, 0.0f, 1.0f, 0.0f);
-		
+		gl.glTranslatef(-8, -22, -8);
 		for(int y = 0; y < 256; y++)
 		{
 			for(int x = 0; x < 16; x++)
@@ -136,6 +137,7 @@ public class YA3DTest extends JPanel implements GLEventListener
 			}
 		}
 		
+		rotation += 1f;
 		gl.glFlush();
 	}
 	
@@ -335,7 +337,7 @@ public class YA3DTest extends JPanel implements GLEventListener
 		
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(45.0f, aspectRatio, 1.0, 100.0);
+		glu.gluPerspective(45.0f, aspectRatio, 0.01, 100.0);
 		
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
