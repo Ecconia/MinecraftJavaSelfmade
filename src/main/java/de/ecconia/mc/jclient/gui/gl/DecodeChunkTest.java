@@ -137,18 +137,6 @@ public class DecodeChunkTest
 		readchunk = chunk;
 	}
 	
-	private static String asBin(int i, int length)
-	{
-		String bin = Integer.toBinaryString(i);
-		
-		while(bin.length() < length)
-		{
-			bin = '0' + bin;
-		}
-		
-		return bin;
-	}
-	
 	private static SubChunk[] prepareSubChunkMap(int input)
 	{
 		SubChunk[] map = new SubChunk[16];

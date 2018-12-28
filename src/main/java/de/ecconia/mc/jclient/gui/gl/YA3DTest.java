@@ -22,6 +22,7 @@ public class YA3DTest extends JPanel implements GLEventListener
 	private GLU glu;
 	private Random r = new Random();
 	
+	//TODO: Optimize access!
 	int[][][] blocks = new int[16][16][256];
 	float[][] colors;
 	
@@ -39,7 +40,6 @@ public class YA3DTest extends JPanel implements GLEventListener
 			{
 				for(int iz = 0; iz < 16; iz++)
 				{
-					//TODO: Optimize access!
 					int block = blocks[ix][iz][iy];
 					if(block != 0)
 					{
@@ -95,7 +95,6 @@ public class YA3DTest extends JPanel implements GLEventListener
 	public void init(GLAutoDrawable drawable)
 	{
 		final GL2 gl = drawable.getGL().getGL2();
-		
 		glu = new GLU();
 		
 		gl.glShadeModel(GL2.GL_SMOOTH);
@@ -114,8 +113,6 @@ public class YA3DTest extends JPanel implements GLEventListener
 	@Override
 	public void display(GLAutoDrawable drawable)
 	{
-//		L.writeLineOnChannel("spam!", "############################################################");
-//		System.out.println("Render...");
 		final GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
@@ -129,14 +126,12 @@ public class YA3DTest extends JPanel implements GLEventListener
 			{
 				for(int z = 0; z < 16; z++)
 				{
-					//TODO: Optimize access!
 					int block = blocks[x][z][y];
 					if(block != 0)
 					{
 						gl.glColor3f(colors[block][0], colors[block][1], colors[block][2]);
 						drawBlock(gl, x, y, z);
 					}
-//					L.writeLineOnChannel("spam!", "XYZ: " + x + ", " + y + ", " + z + " -> " + block);
 				}
 			}
 		}
@@ -327,7 +322,6 @@ public class YA3DTest extends JPanel implements GLEventListener
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
 	{
-//		System.out.println("Resize!!!");
 		final GL2 gl = drawable.getGL().getGL2();
 		
 		if(height <= 0)
@@ -341,21 +335,9 @@ public class YA3DTest extends JPanel implements GLEventListener
 		
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-//		System.out.println("Aspect: " + aspectRatio);
 		glu.gluPerspective(45.0f, aspectRatio, 1.0, 100.0);
 		
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
-	
-//	private void setRandomColor(GL2 gl)
-//	{
-//		final float[] c = {0f, 0.2f, 0.8f, 1f};
-//		
-//		int red = r.nextInt(4);
-//		int green = r.nextInt(4);
-//		int blue = r.nextInt(4);
-//		
-//		gl.glColor3f(c[red], c[green], c[blue]);
-//	}
 }

@@ -12,7 +12,10 @@ public class StartMCClient
 		Credentials.load();
 		L.init();
 		
-		Connector con = new Connector("s.redstone-server.info", 25565, (connector) ->  {
+		String domain = "s.redstone-server.info";
+//		String domain = "localhost";
+		
+		Connector con = new Connector(domain, 25565, (connector) ->  {
 			MessageBuilder mb = new MessageBuilder();
 			
 			mb.addCInt(404);
