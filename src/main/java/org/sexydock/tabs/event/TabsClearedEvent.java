@@ -27,22 +27,22 @@ import org.sexydock.tabs.Tab;
 
 public class TabsClearedEvent extends TabbedPaneEvent
 {
-	public TabsClearedEvent( JTabbedPane tabbedPane , long timestamp , List<Tab> removedTabs )
+	public TabsClearedEvent(JTabbedPane tabbedPane, long timestamp, List<Tab> removedTabs)
 	{
-		super( tabbedPane , timestamp );
+		super(tabbedPane, timestamp);
 		this.removedTabs = removedTabs;
 	}
 	
-	public final List<Tab>	removedTabs;
+	public final List<Tab> removedTabs;
 	
-	public List<Tab> getRemovedTabs( )
+	public List<Tab> getRemovedTabs()
 	{
 		return removedTabs;
 	}
 	
 	@Override
-	public String toString( )
+	public String toString()
 	{
-		return String.format( "%s[tabbedPane: %s, timestamp: %d]" , getClass( ).getName( ) , tabbedPane , timestamp );
+		return String.format("%s[tabbedPane: %s, timestamp: %d]", getClass().getName(), tabbedPane, timestamp);
 	}
 }

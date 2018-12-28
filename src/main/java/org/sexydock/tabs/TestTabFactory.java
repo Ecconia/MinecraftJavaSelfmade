@@ -32,29 +32,29 @@ import javax.swing.JPanel;
  */
 public class TestTabFactory implements ITabFactory
 {
-	private static int	tabCounter	= 1;
+	private static int tabCounter = 1;
 	
-	public Tab createTab( )
+	public Tab createTab()
 	{
-		return new Tab( );
+		return new Tab();
 	}
 	
 	@Override
-	public Tab createTabWithContent( )
+	public Tab createTabWithContent()
 	{
-		String title = "Tab " + ( tabCounter++ );
-		Tab tab = new Tab( title , createTabContent( title ) );
+		String title = "Tab " + (tabCounter++);
+		Tab tab = new Tab(title, createTabContent(title));
 		return tab;
 	}
 	
-	private static Component createTabContent( String title )
+	private static Component createTabContent(String title)
 	{
-		JPanel content = new JPanel( );
-		content.setOpaque( false );
-		content.setLayout( new FlowLayout( ) );
-		JLabel contentLabel = new JLabel( title );
-		contentLabel.setFont( contentLabel.getFont( ).deriveFont( 72f ) );
-		content.add( contentLabel );
+		JPanel content = new JPanel();
+		content.setOpaque(false);
+		content.setLayout(new FlowLayout());
+		JLabel contentLabel = new JLabel(title);
+		contentLabel.setFont(contentLabel.getFont().deriveFont(72f));
+		content.add(contentLabel);
 		return content;
 	}
 }

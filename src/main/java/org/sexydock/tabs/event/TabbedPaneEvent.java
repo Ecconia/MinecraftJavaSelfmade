@@ -23,21 +23,21 @@ import javax.swing.JTabbedPane;
 
 public class TabbedPaneEvent
 {
-	public TabbedPaneEvent( JTabbedPane tabbedPane , long timestamp )
+	public TabbedPaneEvent(JTabbedPane tabbedPane, long timestamp)
 	{
 		this.timestamp = timestamp;
 		this.tabbedPane = tabbedPane;
 	}
 	
-	public final JTabbedPane	tabbedPane;
-	public final long		timestamp;
+	public final JTabbedPane tabbedPane;
+	public final long timestamp;
 	
-	public JTabbedPane getTabbedPane( )
+	public JTabbedPane getTabbedPane()
 	{
 		return tabbedPane;
 	}
 	
-	public long getTimestamp( )
+	public long getTimestamp()
 	{
 		return timestamp;
 	}

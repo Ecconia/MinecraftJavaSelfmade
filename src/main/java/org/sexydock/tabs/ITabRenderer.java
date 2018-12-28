@@ -36,12 +36,12 @@ public interface ITabRenderer
 	 * @return the {@link Component} that represents the jhromeTab itself. This will not merely paint the jhromeTab, like a single {@link ListCellRenderer} is
 	 *         used to paint many cells, but will actually be added to a {@link TabbedPane}'s Component hierarchy.
 	 */
-	public abstract Component getRenderer( );
+	public abstract Component getRenderer();
 	
 	/**
 	 * @return this jhromeTab's close button. {@link TabbedPane} will automatically add a listener to this button if it is not {@code null}.
 	 */
-	public abstract JButton getCloseButton( );
+	public abstract JButton getCloseButton();
 	
 	/**
 	 * Specifies where the user can click and drag this jhromeTab. This way the jhromeTab component can behave as though it has a non-rectangular shape.
@@ -51,7 +51,7 @@ public interface ITabRenderer
 	 * @return {@code true} if the user can drag the jhromeTab after dragging from {@code p}. NOTE: must return {@code false} for points over the close button
 	 *         and other operable components, or the user will be able to drag the jhromeTab from these points!
 	 */
-	public abstract boolean isDraggableAt( Point p );
+	public abstract boolean isDraggableAt(Point p);
 	
 	/**
 	 * Specifies where the user can click and select this jhromeTab. This way the jhromeTab component can behave as though it has a non-rectangular shape.
@@ -61,7 +61,7 @@ public interface ITabRenderer
 	 * @return {@code true} if the user can select the jhromeTab by pressing the mouse at {@code p}. NOTE: must return {@code false} for points over the close
 	 *         button and other operable components, or the user will be able to select the jhromeTab by clicking these components!
 	 */
-	public abstract boolean isSelectableAt( Point p );
+	public abstract boolean isSelectableAt(Point p);
 	
 	/**
 	 * Specifies where the jhromeTab is "hoverable." If the user moves the mouse over the hoverable areas of this jhromeTab, {@link TabbedPane} will set it to
@@ -71,26 +71,26 @@ public interface ITabRenderer
 	 *            the point the user moved the mouse over, in the renderer's coordinate system.
 	 * @return {@code true} if the jhromeTab should be set to the rollover state when the user moves the mouse over {@code p}.
 	 */
-	public abstract boolean isHoverableAt( Point p );
+	public abstract boolean isHoverableAt(Point p);
 	
 	/**
 	 * @return whether the jhromeTab is selected.
 	 */
-	public abstract boolean isSelected( );
+	public abstract boolean isSelected();
 	
 	/**
 	 * Sets the jhromeTab selection state. The jhromeTab renderer should change its appearance accordingly.
 	 */
-	public abstract void setSelected( boolean selected );
+	public abstract void setSelected(boolean selected);
 	
 	/**
 	 * @return whether the jhromeTab is rolled over.
 	 */
-	public abstract boolean isRollover( );
+	public abstract boolean isRollover();
 	
 	/**
 	 * Sets the jhromeTab rollover state. The jhromeTab renderer should change its appearance accordingly.
 	 */
-	public abstract void setRollover( boolean rollover );
+	public abstract void setRollover(boolean rollover);
 	
 }

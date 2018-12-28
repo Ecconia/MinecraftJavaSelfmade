@@ -35,29 +35,29 @@ import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 public class LabelReplacementDemo implements ISexyTabsDemo
 {
 	@Override
-	public void start( )
+	public void start()
 	{
-		DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow( getClass( ).getSimpleName( ) );
+		DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow(getClass().getSimpleName());
 		
-		TestTabFactory tabFactory = new TestTabFactory( );
-		window.getTabbedPane( ).putClientProperty( JhromeTabbedPaneUI.TAB_FACTORY , tabFactory );
+		TestTabFactory tabFactory = new TestTabFactory();
+		window.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.TAB_FACTORY, tabFactory);
 		
-		Tab tab1 = tabFactory.createTabWithContent( );
-		window.getTabbedPane( ).addTab( tab1.getTitle( ) , tab1.getContent( ) );
+		Tab tab1 = tabFactory.createTabWithContent();
+		window.getTabbedPane().addTab(tab1.getTitle(), tab1.getContent());
 		
-		JButton button = new JButton( "Click Me!" );
-		button.addActionListener( new ActionListener( )
+		JButton button = new JButton("Click Me!");
+		button.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed( ActionEvent e )
+			public void actionPerformed(ActionEvent e)
 			{
-				JOptionPane.showMessageDialog( SwingUtilities.getWindowAncestor( ( Component ) e.getSource( ) ) , "Pretty cool huh?" );
+				JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((Component) e.getSource()), "Pretty cool huh?");
 			}
-		} );
-		window.getTabbedPane( ).setTabComponentAt( 0 , button );
+		});
+		window.getTabbedPane().setTabComponentAt(0, button);
 		
-		window.getWindow( ).setSize( 800 , 600 );
-		window.getWindow( ).setLocationRelativeTo( null );
-		window.getWindow( ).setVisible( true );
+		window.getWindow().setSize(800, 600);
+		window.getWindow().setLocationRelativeTo(null);
+		window.getWindow().setVisible(true);
 	}
 }

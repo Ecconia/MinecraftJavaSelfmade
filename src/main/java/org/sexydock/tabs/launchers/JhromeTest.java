@@ -34,36 +34,36 @@ import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 
 public class JhromeTest
 {
-	public static void main( String[ ] args )
+	public static void main(String[] args)
 	{
-		SwingUtilities.invokeLater( new Runnable( )
+		SwingUtilities.invokeLater(new Runnable()
 		{
 			@Override
-			public void run( )
+			public void run()
 			{
-				JFrame window = new JFrame( );
-				JTabbedPane tabbedPane = new JTabbedPane( );
-				JhromeTabbedPaneUI tabbedPaneUI = new JhromeTabbedPaneUI( );
-				tabbedPane.setUI( tabbedPaneUI );
-				tabbedPane.setBorder( new EmptyBorder( 5 , 5 , 5 , 5 ) );
-				window.getContentPane( ).add( tabbedPane , BorderLayout.CENTER );
+				JFrame window = new JFrame();
+				JTabbedPane tabbedPane = new JTabbedPane();
+				JhromeTabbedPaneUI tabbedPaneUI = new JhromeTabbedPaneUI();
+				tabbedPane.setUI(tabbedPaneUI);
+				tabbedPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+				window.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 				
-				for( int i = 0 ; i < 2 ; i++ )
+				for(int i = 0; i < 2; i++)
 				{
-					Tab tab = tabbedPaneUI.getTabFactory( ).createTabWithContent( );
-					tabbedPane.addTab( tab.getTitle( ) , tab.getContent( ) );
+					Tab tab = tabbedPaneUI.getTabFactory().createTabWithContent();
+					tabbedPane.addTab(tab.getTitle(), tab.getContent());
 				}
 				
-				tabbedPane.setTabComponentAt( 0 , new JButton( "Tab 1" ) );
-				tabbedPane.setTitleAt( 1 , "TEST" );
-				tabbedPane.setSelectedIndex( 1 );
-				tabbedPane.setIconAt( 1 , UIManager.getIcon( "OptionPane.informationIcon" ) );
+				tabbedPane.setTabComponentAt(0, new JButton("Tab 1"));
+				tabbedPane.setTitleAt(1, "TEST");
+				tabbedPane.setSelectedIndex(1);
+				tabbedPane.setIconAt(1, UIManager.getIcon("OptionPane.informationIcon"));
 				
-				window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-				window.setSize( new Dimension( 800 , 600 ) );
-				window.setLocationRelativeTo( null );
-				window.setVisible( true );
+				window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				window.setSize(new Dimension(800, 600));
+				window.setLocationRelativeTo(null);
+				window.setVisible(true);
 			}
-		} );
+		});
 	}
 }

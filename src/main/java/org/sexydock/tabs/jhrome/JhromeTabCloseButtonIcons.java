@@ -32,74 +32,74 @@ import javax.swing.ImageIcon;
 
 public class JhromeTabCloseButtonIcons
 {
-	private static Icon	normalIcon;
-	private static Icon	rolloverIcon;
-	private static Icon	pressedIcon;
+	private static Icon normalIcon;
+	private static Icon rolloverIcon;
+	private static Icon pressedIcon;
 	
-	public static Icon getJhromeNormalIcon( )
+	public static Icon getJhromeNormalIcon()
 	{
-		if( normalIcon == null )
+		if(normalIcon == null)
 		{
-			normalIcon = createJhromeNormalIcon( );
+			normalIcon = createJhromeNormalIcon();
 		}
 		return normalIcon;
 	}
 	
-	public static Icon getJhromeRolloverIcon( )
+	public static Icon getJhromeRolloverIcon()
 	{
-		if( rolloverIcon == null )
+		if(rolloverIcon == null)
 		{
-			rolloverIcon = createJhromeRolloverIcon( );
+			rolloverIcon = createJhromeRolloverIcon();
 		}
 		return rolloverIcon;
 	}
 	
-	public static Icon getJhromePressedIcon( )
+	public static Icon getJhromePressedIcon()
 	{
-		if( pressedIcon == null )
+		if(pressedIcon == null)
 		{
-			pressedIcon = createJhromePressedIcon( );
+			pressedIcon = createJhromePressedIcon();
 		}
 		return pressedIcon;
 	}
 	
-	public static ImageIcon createJhromeNormalIcon( )
+	public static ImageIcon createJhromeNormalIcon()
 	{
-		return createIcon( 12 , 2.9f , new Color( 174 , 174 , 174 ) , new BasicStroke( 1.4f ) , null );
+		return createIcon(12, 2.9f, new Color(174, 174, 174), new BasicStroke(1.4f), null);
 	}
 	
-	public static ImageIcon createJhromeRolloverIcon( )
+	public static ImageIcon createJhromeRolloverIcon()
 	{
-		return createIcon( 12 , 2.5f , new Color( 249 , 235 , 235 ) , new BasicStroke( 1.2f ) , new Color( 193 , 53 , 53 ) );
+		return createIcon(12, 2.5f, new Color(249, 235, 235), new BasicStroke(1.2f), new Color(193, 53, 53));
 	}
 	
-	public static ImageIcon createJhromePressedIcon( )
+	public static ImageIcon createJhromePressedIcon()
 	{
-		return createIcon( 12 , 2.5f , new Color( 237 , 233 , 233 ) , new BasicStroke( 1.2f ) , new Color( 67 , 30 , 32 ) );
+		return createIcon(12, 2.5f, new Color(237, 233, 233), new BasicStroke(1.2f), new Color(67, 30, 32));
 	}
 	
-	public static ImageIcon createIcon( int size , float xLength , Color xColor , Stroke xStroke , Color circleColor )
+	public static ImageIcon createIcon(int size, float xLength, Color xColor, Stroke xStroke, Color circleColor)
 	{
-		BufferedImage image = new BufferedImage( size , size , BufferedImage.TYPE_INT_ARGB );
+		BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 		
-		Graphics2D g2 = ( Graphics2D ) image.getGraphics( );
+		Graphics2D g2 = (Graphics2D) image.getGraphics();
 		
-		g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING , RenderingHints.VALUE_ANTIALIAS_ON );
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		if( circleColor != null )
+		if(circleColor != null)
 		{
-			g2.setColor( circleColor );
-			g2.fillOval( 0 , 0 , size , size );
+			g2.setColor(circleColor);
+			g2.fillOval(0, 0, size, size);
 		}
 		
-		g2.setColor( xColor );
-		g2.setStroke( xStroke );
+		g2.setColor(xColor);
+		g2.setStroke(xStroke);
 		
-		int size2 = ( int ) Math.ceil( size / 2.0 );
+		int size2 = (int) Math.ceil(size / 2.0);
 		
-		g2.draw( new Line2D.Float( size2 - xLength , size2 - xLength , size2 + xLength , size2 + xLength ) );
-		g2.draw( new Line2D.Float( size2 - xLength , size2 + xLength , size2 + xLength , size2 - xLength ) );
+		g2.draw(new Line2D.Float(size2 - xLength, size2 - xLength, size2 + xLength, size2 + xLength));
+		g2.draw(new Line2D.Float(size2 - xLength, size2 + xLength, size2 + xLength, size2 - xLength));
 		
-		return new ImageIcon( image );
+		return new ImageIcon(image);
 	}
 }

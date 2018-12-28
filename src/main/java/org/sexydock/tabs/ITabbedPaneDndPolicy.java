@@ -38,7 +38,7 @@ public interface ITabbedPaneDndPolicy
 	 *            the {@code IJhromeTab} the user is dragging.
 	 * @return {@code true} if {@code jhromeTab} may be torn away from {@code tabbedPane}.
 	 */
-	boolean isTearAwayAllowed( JTabbedPane tabbedPane , Tab tab );
+	boolean isTearAwayAllowed(JTabbedPane tabbedPane, Tab tab);
 	
 	/**
 	 * Controls whether a jhromeTab may be "snapped in" to a {@code JhromeTabbedPane} (if it can be added by being dragged over the tabbed pane).
@@ -49,5 +49,5 @@ public interface ITabbedPaneDndPolicy
 	 *            the {@code IJhromeTab} the user is dragging.
 	 * @return {@code true} if {@code jhromeTab} may be snapped into {@code tabbedPane}.
 	 */
-	boolean isSnapInAllowed( JTabbedPane tabbedPane , Tab tab );
+	boolean isSnapInAllowed(JTabbedPane tabbedPane, Tab tab);
 }

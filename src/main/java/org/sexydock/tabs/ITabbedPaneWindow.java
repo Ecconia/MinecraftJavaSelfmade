@@ -36,10 +36,10 @@ public interface ITabbedPaneWindow
 	/**
 	 * @return the {@code JhromeTabbedPane} in the window.
 	 */
-	JTabbedPane getTabbedPane( );
+	JTabbedPane getTabbedPane();
 	
 	/**
 	 * @return the {@code Window} containing the tabbed pane.
 	 */
-	Window getWindow( );
+	Window getWindow();
 }

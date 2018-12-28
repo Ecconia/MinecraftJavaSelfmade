@@ -36,91 +36,91 @@ import com.sun.awt.AWTUtilities;
 @SuppressWarnings("restriction")
 public class DefaultFloatingTabHandler implements IFloatingTabHandler
 {
-	private Window	dragImageWindow	= null;
-	private Image	dragImage		= null;
+	private Window dragImageWindow = null;
+	private Image dragImage = null;
 	
-	private int		xOffs;
-	private int		yOffs;
+	private int xOffs;
+	private int yOffs;
 	
-	public void initialize( Tab draggedTab , Point grabPoint )
+	public void initialize(Tab draggedTab, Point grabPoint)
 	{
-		JTabbedPane tabbedPane = SwingUtils.getJTabbedPaneAncestor( draggedTab );
-		JhromeTabbedPaneUI tabbedPaneUI = SwingUtils.getJTabbedPaneAncestorUI( draggedTab );
+		JTabbedPane tabbedPane = SwingUtils.getJTabbedPaneAncestor(draggedTab);
+		JhromeTabbedPaneUI tabbedPaneUI = SwingUtils.getJTabbedPaneAncestorUI(draggedTab);
 		
-		if( tabbedPaneUI != null )
+		if(tabbedPaneUI != null)
 		{
-			dragImage = tabbedPaneUI.createDragImage( draggedTab );
-			switch( tabbedPane.getTabPlacement( ) )
+			dragImage = tabbedPaneUI.createDragImage(draggedTab);
+			switch(tabbedPane.getTabPlacement())
 			{
-				case JTabbedPane.TOP:
-					xOffs = -grabPoint.x * 3 / 4;
-					yOffs = 10;
-					break;
-				case JTabbedPane.BOTTOM:
-					xOffs = -grabPoint.x * 3 / 4;
-					yOffs = -dragImage.getHeight( null ) - 10;
-					break;
-				case JTabbedPane.LEFT:
-					xOffs = 10;
-					yOffs = -grabPoint.y * 3 / 4;
-					break;
-				case JTabbedPane.RIGHT:
-					xOffs = -dragImage.getWidth( null ) - 10;
-					yOffs = -grabPoint.y * 3 / 4;
-					break;
+			case JTabbedPane.TOP:
+				xOffs = -grabPoint.x * 3 / 4;
+				yOffs = 10;
+				break;
+			case JTabbedPane.BOTTOM:
+				xOffs = -grabPoint.x * 3 / 4;
+				yOffs = -dragImage.getHeight(null) - 10;
+				break;
+			case JTabbedPane.LEFT:
+				xOffs = 10;
+				yOffs = -grabPoint.y * 3 / 4;
+				break;
+			case JTabbedPane.RIGHT:
+				xOffs = -dragImage.getWidth(null) - 10;
+				yOffs = -grabPoint.y * 3 / 4;
+				break;
 			}
 		}
 	}
 	
-	@SuppressWarnings( "serial" )
+	@SuppressWarnings("serial")
 	@Override
-	public void onFloatingBegin( Tab draggedTab , Point grabPoint )
+	public void onFloatingBegin(Tab draggedTab, Point grabPoint)
 	{
-		initialize( draggedTab , grabPoint );
+		initialize(draggedTab, grabPoint);
 		
-		if( dragImage != null )
+		if(dragImage != null)
 		{
-			if( dragImageWindow == null )
+			if(dragImageWindow == null)
 			{
-				dragImageWindow = new Window( null )
+				dragImageWindow = new Window(null)
 				{
 					@Override
-					public void paint( Graphics g )
+					public void paint(Graphics g)
 					{
-						Graphics2D g2 = ( Graphics2D ) g;
+						Graphics2D g2 = (Graphics2D) g;
 						
-						if( dragImage != null )
+						if(dragImage != null)
 						{
-							g2.drawImage( dragImage , 0 , 0 , null );
+							g2.drawImage(dragImage, 0, 0, null);
 						}
 					}
 				};
 				
-				AWTUtilities.setWindowOpaque( dragImageWindow , false );
+				AWTUtilities.setWindowOpaque(dragImageWindow, false);
 			}
 			
-			dragImageWindow.setSize( dragImage.getWidth( null ) , dragImage.getHeight( null ) );
-			dragImageWindow.setAlwaysOnTop( true );
+			dragImageWindow.setSize(dragImage.getWidth(null), dragImage.getHeight(null));
+			dragImageWindow.setAlwaysOnTop(true);
 		}
 	}
 	
 	@Override
-	public void onFloatingTabDragged( DragSourceDragEvent dsde , Tab draggedTab , double grabX )
+	public void onFloatingTabDragged(DragSourceDragEvent dsde, Tab draggedTab, double grabX)
 	{
-		if( dragImageWindow != null )
+		if(dragImageWindow != null)
 		{
-			Point p = new Point( dsde.getX( ) + xOffs , dsde.getY( ) + yOffs );
-			dragImageWindow.setLocation( p );
-			dragImageWindow.setVisible( true );
+			Point p = new Point(dsde.getX() + xOffs, dsde.getY() + yOffs);
+			dragImageWindow.setLocation(p);
+			dragImageWindow.setVisible(true);
 		}
 	}
 	
 	@Override
-	public void onFloatingEnd( )
+	public void onFloatingEnd()
 	{
-		if( dragImageWindow != null )
+		if(dragImageWindow != null)
 		{
-			dragImageWindow.dispose( );
+			dragImageWindow.dispose();
 			dragImageWindow = null;
 		}
 		dragImage = null;

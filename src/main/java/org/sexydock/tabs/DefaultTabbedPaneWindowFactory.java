@@ -28,13 +28,13 @@ import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
  */
 public class DefaultTabbedPaneWindowFactory implements ITabbedPaneWindowFactory
 {
-	public DefaultTabbedPaneWindowFactory( DefaultTabbedPaneWindow firstWindow )
+	public DefaultTabbedPaneWindowFactory(DefaultTabbedPaneWindow firstWindow)
 	{
 		this.firstWindow = firstWindow;
-		firstWindow.getTabbedPane( ).putClientProperty( JhromeTabbedPaneUI.TAB_DROP_FAILURE_HANDLER , new DefaultTabDropFailureHandler( this ) );
+		firstWindow.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.TAB_DROP_FAILURE_HANDLER, new DefaultTabDropFailureHandler(this));
 	}
 	
-	private DefaultTabbedPaneWindow	firstWindow;
+	private DefaultTabbedPaneWindow firstWindow;
 	
 	/*
 	 * (non-Javadoc)
@@ -42,11 +42,11 @@ public class DefaultTabbedPaneWindowFactory implements ITabbedPaneWindowFactory
 	 * @see org.jhrome.IJhromeWindowFactory#createWindow()
 	 */
 	@Override
-	public ITabbedPaneWindow createWindow( )
+	public ITabbedPaneWindow createWindow()
 	{
-		final DefaultTabbedPaneWindow frame = new DefaultTabbedPaneWindow( firstWindow.getTitle( ) );
-		JhromeTabbedPaneUI.copySettings( firstWindow.getTabbedPane( ) , frame.getTabbedPane( ) );
-		frame.setDefaultCloseOperation( DefaultTabbedPaneWindow.DISPOSE_ON_CLOSE );
+		final DefaultTabbedPaneWindow frame = new DefaultTabbedPaneWindow(firstWindow.getTitle());
+		JhromeTabbedPaneUI.copySettings(firstWindow.getTabbedPane(), frame.getTabbedPane());
+		frame.setDefaultCloseOperation(DefaultTabbedPaneWindow.DISPOSE_ON_CLOSE);
 		return frame;
 	}
 }

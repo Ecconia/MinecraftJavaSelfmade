@@ -28,20 +28,20 @@ import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 public class NoTearAwayDemo implements ISexyTabsDemo
 {
 	@Override
-	public void start( )
+	public void start()
 	{
-		DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow( getClass( ).getSimpleName( ) );
+		DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow(getClass().getSimpleName());
 		
-		TestTabFactory tabFactory = new TestTabFactory( );
-		window.getTabbedPane( ).putClientProperty( JhromeTabbedPaneUI.TAB_FACTORY , tabFactory );
-		window.getTabbedPane( ).putClientProperty( JhromeTabbedPaneUI.DND_POLICY , new DefaultTabbedPaneDndPolicy( false , true ) );
+		TestTabFactory tabFactory = new TestTabFactory();
+		window.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.TAB_FACTORY, tabFactory);
+		window.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.DND_POLICY, new DefaultTabbedPaneDndPolicy(false, true));
 		
-		Tab tab1 = tabFactory.createTabWithContent( );
-		tab1.setTitle( "Try to tear tabs away!" );
-		window.getTabbedPane( ).addTab( tab1.getTitle( ) , tab1.getContent( ) );
+		Tab tab1 = tabFactory.createTabWithContent();
+		tab1.setTitle("Try to tear tabs away!");
+		window.getTabbedPane().addTab(tab1.getTitle(), tab1.getContent());
 		
-		window.setSize( 800 , 600 );
-		window.setLocationRelativeTo( null );
-		window.setVisible( true );
+		window.setSize(800, 600);
+		window.setLocationRelativeTo(null);
+		window.setVisible(true);
 	}
 }

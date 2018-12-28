@@ -34,62 +34,62 @@ import java.util.HashSet;
  */
 public abstract class RecursiveListener
 {
-	private ContainerListener	containerListener	= new HierarchyChangeListener( );
+	private ContainerListener containerListener = new HierarchyChangeListener();
 	
-	private HashSet<Component>	excluded			= new HashSet<Component>( );
+	private HashSet<Component> excluded = new HashSet<Component>();
 	
-	public void addExcludedComponent( Component c )
+	public void addExcludedComponent(Component c)
 	{
-		excluded.add( c );
+		excluded.add(c);
 	}
 	
-	public void removeExcludedComponent( Component c )
+	public void removeExcludedComponent(Component c)
 	{
-		excluded.remove( c );
+		excluded.remove(c);
 	}
 	
 	private class HierarchyChangeListener implements ContainerListener
 	{
 		@Override
-		public void componentAdded( ContainerEvent e )
+		public void componentAdded(ContainerEvent e)
 		{
-			installRecursively( e.getChild( ) );
+			installRecursively(e.getChild());
 		}
 		
 		@Override
-		public void componentRemoved( ContainerEvent e )
+		public void componentRemoved(ContainerEvent e)
 		{
-			uninstallRecursively( e.getChild( ) );
+			uninstallRecursively(e.getChild());
 		}
 	}
 	
-	public void installRecursively( Component c )
+	public void installRecursively(Component c)
 	{
-		if( excluded.contains( c ) )
+		if(excluded.contains(c))
 		{
 			return;
 		}
-		install( c );
-		if( c instanceof Container )
+		install(c);
+		if(c instanceof Container)
 		{
-			Container cont = ( Container ) c;
-			cont.addContainerListener( containerListener );
-			installRecursively( cont );
+			Container cont = (Container) c;
+			cont.addContainerListener(containerListener);
+			installRecursively(cont);
 		}
 	}
 	
-	public void uninstallRecursively( Component c )
+	public void uninstallRecursively(Component c)
 	{
-		uninstall( c );
-		if( c instanceof Container )
+		uninstall(c);
+		if(c instanceof Container)
 		{
-			Container cont = ( Container ) c;
-			cont.removeContainerListener( containerListener );
-			uninstallRecursively( cont );
+			Container cont = (Container) c;
+			cont.removeContainerListener(containerListener);
+			uninstallRecursively(cont);
 		}
 	}
 	
-	protected abstract void install( Component c );
+	protected abstract void install(Component c);
 	
-	protected abstract void uninstall( Component c );
+	protected abstract void uninstall(Component c);
 }

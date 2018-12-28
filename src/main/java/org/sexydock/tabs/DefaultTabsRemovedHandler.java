@@ -10,17 +10,17 @@ import javax.swing.SwingUtilities;
 public class DefaultTabsRemovedHandler extends ContainerAdapter
 {
 	@Override
-	public void componentRemoved( ContainerEvent e )
+	public void componentRemoved(ContainerEvent e)
 	{
-		if( e.getContainer( ) instanceof JTabbedPane )
+		if(e.getContainer() instanceof JTabbedPane)
 		{
-			JTabbedPane tabbedPane = ( JTabbedPane ) e.getContainer( );
-			if( tabbedPane.getTabCount( ) == 0 )
+			JTabbedPane tabbedPane = (JTabbedPane) e.getContainer();
+			if(tabbedPane.getTabCount() == 0)
 			{
-				Window ancestor = SwingUtilities.getWindowAncestor( tabbedPane );
-				if( ancestor != null )
+				Window ancestor = SwingUtilities.getWindowAncestor(tabbedPane);
+				if(ancestor != null)
 				{
-					ancestor.dispose( );
+					ancestor.dispose();
 				}
 			}
 		}

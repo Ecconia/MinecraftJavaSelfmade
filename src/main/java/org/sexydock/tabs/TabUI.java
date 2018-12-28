@@ -25,9 +25,9 @@ import javax.swing.plaf.ComponentUI;
 
 public abstract class TabUI extends ComponentUI
 {
-	public abstract boolean isDraggableAt( Tab tabRenderer , Point p );
+	public abstract boolean isDraggableAt(Tab tabRenderer, Point p);
 	
-	public abstract boolean isSelectableAt( Tab tabRenderer , Point p );
+	public abstract boolean isSelectableAt(Tab tabRenderer, Point p);
 	
-	public abstract boolean isHoverableAt( Tab tabRenderer , Point p );
+	public abstract boolean isHoverableAt(Tab tabRenderer, Point p);
 }

@@ -42,38 +42,38 @@ import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 public class ComponentWrapperTabDemo implements ISexyTabsDemo
 {
 	@Override
-	public void start( )
+	public void start()
 	{
-		DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow( );
+		DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow();
 		
-		TestTabFactory tabFactory = new TestTabFactory( );
-		window.getTabbedPane( ).putClientProperty( JhromeTabbedPaneUI.TAB_FACTORY , tabFactory );
+		TestTabFactory tabFactory = new TestTabFactory();
+		window.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.TAB_FACTORY, tabFactory);
 		
-		JButton button = new JButton( "Click Me!" );
-		button.addActionListener( new ActionListener( )
+		JButton button = new JButton("Click Me!");
+		button.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed( ActionEvent e )
+			public void actionPerformed(ActionEvent e)
 			{
-				JOptionPane.showMessageDialog( SwingUtilities.getWindowAncestor( ( Component ) e.getSource( ) ) , "Pretty cool huh?" );
+				JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor((Component) e.getSource()), "Pretty cool huh?");
 			}
-		} );
+		});
 		
-		JTextField textField = new JTextField( "Edit Me!" );
-		textField.setTransferHandler( null );
+		JTextField textField = new JTextField("Edit Me!");
+		textField.setTransferHandler(null);
 		
-		JPanel renderer = new JPanel( new GridLayout( 2 , 1 , 2 , 2 ) );
-		renderer.setBorder( new CompoundBorder( new LineBorder( Color.BLACK ) , new EmptyBorder( 5 , 5 , 5 , 5 ) ) );
-		renderer.add( button );
-		renderer.add( textField );
+		JPanel renderer = new JPanel(new GridLayout(2, 1, 2, 2));
+		renderer.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(5, 5, 5, 5)));
+		renderer.add(button);
+		renderer.add(textField);
 		
-		JhromeTabbedPaneUI tabbedPaneUI = ( JhromeTabbedPaneUI ) window.getTabbedPane( ).getUI( );
-		ComponentWrapperTab tab1 = new ComponentWrapperTab( renderer , new JPanel( ) );
-		tabbedPaneUI.addTab( 0 , tab1 , false );
-		window.getTabbedPane( ).setSelectedIndex( 0 );
+		JhromeTabbedPaneUI tabbedPaneUI = (JhromeTabbedPaneUI) window.getTabbedPane().getUI();
+		ComponentWrapperTab tab1 = new ComponentWrapperTab(renderer, new JPanel());
+		tabbedPaneUI.addTab(0, tab1, false);
+		window.getTabbedPane().setSelectedIndex(0);
 		
-		window.setSize( 800 , 600 );
-		window.setLocationRelativeTo( null );
-		window.setVisible( true );
+		window.setSize(800, 600);
+		window.setLocationRelativeTo(null);
+		window.setVisible(true);
 	}
 }

@@ -53,178 +53,178 @@ import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 
 public class SexyTabsDemos implements ISexyTabsDemo
 {
-	public static void main( String[ ] args )
+	public static void main(String[] args)
 	{
-		new SexyTabsDemos( ).start( );
+		new SexyTabsDemos().start();
 	}
 	
-	private static String getSourcePath( Class<?> clazz )
+	private static String getSourcePath(Class<?> clazz)
 	{
-		return clazz.getName( ).replace( '.' , '/' ) + ".java";
+		return clazz.getName().replace('.', '/') + ".java";
 	}
 	
 	@Override
-	public void start( )
+	public void start()
 	{
-		SwingUtilities.invokeLater( new Runnable( )
+		SwingUtilities.invokeLater(new Runnable()
 		{
 			@Override
-			public void run( )
+			public void run()
 			{
-				final JPanel demoListPanel = new JPanel( new BorderLayout( ) );
-				demoListPanel.setOpaque( false );
-				final JList<DemoItem> demoList = new JList<DemoItem>( );
-				final JScrollPane demoListScroller = new JScrollPane( demoList );
-				demoListPanel.add( demoListScroller , BorderLayout.CENTER );
+				final JPanel demoListPanel = new JPanel(new BorderLayout());
+				demoListPanel.setOpaque(false);
+				final JList<DemoItem> demoList = new JList<DemoItem>();
+				final JScrollPane demoListScroller = new JScrollPane(demoList);
+				demoListPanel.add(demoListScroller, BorderLayout.CENTER);
 				
-				final DefaultListModel<DemoItem> demoListModel = new DefaultListModel<DemoItem>( );
+				final DefaultListModel<DemoItem> demoListModel = new DefaultListModel<DemoItem>();
 				try
 				{
-					demoListModel.addElement( new DemoItem( SexyTabsDemos.this , "SexyTabsDemos (This Program)" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( SexyTabsDemos.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new OutOfTheBoxDemo( ) , "Out of the Box Demo" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( OutOfTheBoxDemo.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new GettingStarted( ) , "Getting Started" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( GettingStarted.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new GenericDemo( ) , "Generic Demo" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( GenericDemo.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new BottomTabPlacementDemo( ) , "Bottom Tab Placement Demo" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( BottomTabPlacementDemo.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new NotepadDemo( ) , "Notepad Demo" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( NotepadDemo.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new LabelReplacementDemo( ) , "Label Replacement Demo" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( LabelReplacementDemo.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new ColoredTabDemo( ) , "Colored Tab Demo" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( ColoredTabDemo.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new ComponentWrapperTabDemo( ) , "ComponentWrapperTab Demo" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( ComponentWrapperTabDemo.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new NonUniformTabWidthDemo( ) , "Non-Uniform Tab Width Demo" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( NonUniformTabWidthDemo.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new NoTearAwayDemo( ) , "No Tear Away Demo" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( NoTearAwayDemo.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new NoSnapInDemo( ) , "No Snap In Demo" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( NoSnapInDemo.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new ITabbedPaneListenerDemo( ) , "ITabbedPaneListener Demo" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( ITabbedPaneListenerDemo.class ) ) ) ) );
-					demoListModel.addElement( new DemoItem( new SlowAnimationDemo( ) , "Slow Animation Demo" , read( getClass( ).getClassLoader( ).getResource( getSourcePath( SlowAnimationDemo.class ) ) ) ) );
+					demoListModel.addElement(new DemoItem(SexyTabsDemos.this, "SexyTabsDemos (This Program)", read(getClass().getClassLoader().getResource(getSourcePath(SexyTabsDemos.class)))));
+					demoListModel.addElement(new DemoItem(new OutOfTheBoxDemo(), "Out of the Box Demo", read(getClass().getClassLoader().getResource(getSourcePath(OutOfTheBoxDemo.class)))));
+					demoListModel.addElement(new DemoItem(new GettingStarted(), "Getting Started", read(getClass().getClassLoader().getResource(getSourcePath(GettingStarted.class)))));
+					demoListModel.addElement(new DemoItem(new GenericDemo(), "Generic Demo", read(getClass().getClassLoader().getResource(getSourcePath(GenericDemo.class)))));
+					demoListModel.addElement(new DemoItem(new BottomTabPlacementDemo(), "Bottom Tab Placement Demo", read(getClass().getClassLoader().getResource(getSourcePath(BottomTabPlacementDemo.class)))));
+					demoListModel.addElement(new DemoItem(new NotepadDemo(), "Notepad Demo", read(getClass().getClassLoader().getResource(getSourcePath(NotepadDemo.class)))));
+					demoListModel.addElement(new DemoItem(new LabelReplacementDemo(), "Label Replacement Demo", read(getClass().getClassLoader().getResource(getSourcePath(LabelReplacementDemo.class)))));
+					demoListModel.addElement(new DemoItem(new ColoredTabDemo(), "Colored Tab Demo", read(getClass().getClassLoader().getResource(getSourcePath(ColoredTabDemo.class)))));
+					demoListModel.addElement(new DemoItem(new ComponentWrapperTabDemo(), "ComponentWrapperTab Demo", read(getClass().getClassLoader().getResource(getSourcePath(ComponentWrapperTabDemo.class)))));
+					demoListModel.addElement(new DemoItem(new NonUniformTabWidthDemo(), "Non-Uniform Tab Width Demo", read(getClass().getClassLoader().getResource(getSourcePath(NonUniformTabWidthDemo.class)))));
+					demoListModel.addElement(new DemoItem(new NoTearAwayDemo(), "No Tear Away Demo", read(getClass().getClassLoader().getResource(getSourcePath(NoTearAwayDemo.class)))));
+					demoListModel.addElement(new DemoItem(new NoSnapInDemo(), "No Snap In Demo", read(getClass().getClassLoader().getResource(getSourcePath(NoSnapInDemo.class)))));
+					demoListModel.addElement(new DemoItem(new ITabbedPaneListenerDemo(), "ITabbedPaneListener Demo", read(getClass().getClassLoader().getResource(getSourcePath(ITabbedPaneListenerDemo.class)))));
+					demoListModel.addElement(new DemoItem(new SlowAnimationDemo(), "Slow Animation Demo", read(getClass().getClassLoader().getResource(getSourcePath(SlowAnimationDemo.class)))));
 				}
-				catch( Exception e1 )
+				catch(Exception e1)
 				{
-					e1.printStackTrace( );
-					JOptionPane.showMessageDialog( null , new Object[ ] { "Failed to load demo source code!" , e1.getLocalizedMessage( ) } , "I/O Error" , JOptionPane.ERROR_MESSAGE );
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, new Object[] {"Failed to load demo source code!", e1.getLocalizedMessage()}, "I/O Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				
-				demoList.setModel( demoListModel );
+				demoList.setModel(demoListModel);
 				
-				DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow( "SexyTabs demos" );
-				window.addWindowListener( new DefaultWindowsClosedHandler( ) );
-				window.getTabbedPane( ).putClientProperty( JhromeTabbedPaneUI.NEW_TAB_BUTTON_VISIBLE , false );
+				DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow("SexyTabs demos");
+				window.addWindowListener(new DefaultWindowsClosedHandler());
+				window.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.NEW_TAB_BUTTON_VISIBLE, false);
 				
-				final Tab demoSelectorTab = new Tab( "SexyTabs Demos" , demoListPanel );
-				JhromeTabUI demoSelectorTabUI = ( JhromeTabUI ) demoSelectorTab.getUI( );
-				demoSelectorTabUI.getLabel( ).setFont( demoSelectorTabUI.getLabel( ).getFont( ).deriveFont( Font.BOLD ) );
-				demoSelectorTab.putClientProperty( BasicTabUI.CLOSE_BUTTON_VISIBLE , false );
+				final Tab demoSelectorTab = new Tab("SexyTabs Demos", demoListPanel);
+				JhromeTabUI demoSelectorTabUI = (JhromeTabUI) demoSelectorTab.getUI();
+				demoSelectorTabUI.getLabel().setFont(demoSelectorTabUI.getLabel().getFont().deriveFont(Font.BOLD));
+				demoSelectorTab.putClientProperty(BasicTabUI.CLOSE_BUTTON_VISIBLE, false);
 				
-				JhromeTabbedPaneUI tabbedPaneUI = ( JhromeTabbedPaneUI ) window.getTabbedPane( ).getUI( );
-				tabbedPaneUI.addTab( demoSelectorTab );
-				tabbedPaneUI.setSelectedTab( demoSelectorTab );
+				JhromeTabbedPaneUI tabbedPaneUI = (JhromeTabbedPaneUI) window.getTabbedPane().getUI();
+				tabbedPaneUI.addTab(demoSelectorTab);
+				tabbedPaneUI.setSelectedTab(demoSelectorTab);
 				
-				window.getTabbedPane( ).setMnemonicAt( 0 , KeyEvent.VK_S );
-				window.getTabbedPane( ).putClientProperty( JhromeTabbedPaneUI.DND_POLICY , new ITabbedPaneDndPolicy( )
+				window.getTabbedPane().setMnemonicAt(0, KeyEvent.VK_S);
+				window.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.DND_POLICY, new ITabbedPaneDndPolicy()
 				{
 					@Override
-					public boolean isTearAwayAllowed( JTabbedPane tabbedPane , Tab tab )
+					public boolean isTearAwayAllowed(JTabbedPane tabbedPane, Tab tab)
 					{
 						return tab != demoSelectorTab;
 					}
 					
 					@Override
-					public boolean isSnapInAllowed( JTabbedPane tabbedPane , Tab tab )
+					public boolean isSnapInAllowed(JTabbedPane tabbedPane, Tab tab)
 					{
 						return true;
 					}
-				} );
+				});
 				
-				window.getWindow( ).setSize( 800 , 600 );
-				window.getWindow( ).setLocationRelativeTo( null );
-				window.getWindow( ).setVisible( true );
+				window.getWindow().setSize(800, 600);
+				window.getWindow().setLocationRelativeTo(null);
+				window.getWindow().setVisible(true);
 				
-				demoList.addListSelectionListener( new ListSelectionListener( )
+				demoList.addListSelectionListener(new ListSelectionListener()
 				{
 					@Override
-					public void valueChanged( ListSelectionEvent e )
+					public void valueChanged(ListSelectionEvent e)
 					{
-						if( !e.getValueIsAdjusting( ) && demoList.getSelectedValue( ) != null && demoList.getSelectedValue( ) instanceof DemoItem )
+						if(!e.getValueIsAdjusting() && demoList.getSelectedValue() != null && demoList.getSelectedValue() instanceof DemoItem)
 						{
-							DemoItem demoItem = ( DemoItem ) demoList.getSelectedValue( );
+							DemoItem demoItem = (DemoItem) demoList.getSelectedValue();
 							
-							JTabbedPane tabbedPane = SwingUtils.getJTabbedPaneAncestor( demoList );
-							if( tabbedPane != null )
+							JTabbedPane tabbedPane = SwingUtils.getJTabbedPaneAncestor(demoList);
+							if(tabbedPane != null)
 							{
-								tabbedPane.addTab( demoItem.name , createDemoPanel( demoItem.demo , demoItem.source ) );
-								tabbedPane.setSelectedIndex( tabbedPane.getTabCount( ) - 1 );
+								tabbedPane.addTab(demoItem.name, createDemoPanel(demoItem.demo, demoItem.source));
+								tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
 							}
-							demoList.clearSelection( );
+							demoList.clearSelection();
 						}
 					}
-				} );
+				});
 			}
-		} );
+		});
 	}
 	
 	static class DemoItem
 	{
-		public DemoItem( ISexyTabsDemo demo , String name , String source )
+		public DemoItem(ISexyTabsDemo demo, String name, String source)
 		{
-			super( );
+			super();
 			this.demo = demo;
 			this.name = name;
 			this.source = source;
 		}
 		
-		ISexyTabsDemo	demo;
-		String			name;
-		String			source;
+		ISexyTabsDemo demo;
+		String name;
+		String source;
 		
 		@Override
-		public String toString( )
+		public String toString()
 		{
 			return name;
 		}
 	}
 	
-	public static JPanel createDemoPanel( final ISexyTabsDemo demo , String source )
+	public static JPanel createDemoPanel(final ISexyTabsDemo demo, String source)
 	{
-		JPanel panel = new JPanel( new BorderLayout( ) );
-		panel.setOpaque( false );
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.setOpaque(false);
 		
-		JButton startButton = new JButton( "Launch" );
-		startButton.addActionListener( new ActionListener( )
+		JButton startButton = new JButton("Launch");
+		startButton.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed( ActionEvent e )
+			public void actionPerformed(ActionEvent e)
 			{
-				demo.start( );
+				demo.start();
 			}
-		} );
+		});
 		
-		panel.add( startButton , BorderLayout.NORTH );
+		panel.add(startButton, BorderLayout.NORTH);
 		
-		JTextArea sourceArea = new JTextArea( );
-		sourceArea.setFont( new Font( "Monospaced" , Font.PLAIN , 11 ) );
-		sourceArea.setEditable( false );
+		JTextArea sourceArea = new JTextArea();
+		sourceArea.setFont(new Font("Monospaced", Font.PLAIN, 11));
+		sourceArea.setEditable(false);
 		// sourceArea.setTransferHandler( null );
-		sourceArea.setText( source );
-		JScrollPane sourceAreaScroller = new JScrollPane( sourceArea );
-		panel.add( sourceAreaScroller , BorderLayout.CENTER );
+		sourceArea.setText(source);
+		JScrollPane sourceAreaScroller = new JScrollPane(sourceArea);
+		panel.add(sourceAreaScroller, BorderLayout.CENTER);
 		
 		return panel;
 	}
 	
-	public static String read( URL url ) throws IOException
+	public static String read(URL url) throws IOException
 	{
-		return read( url.openStream( ) );
+		return read(url.openStream());
 	}
 	
-	public static String read( InputStream in ) throws IOException
+	public static String read(InputStream in) throws IOException
 	{
-		BufferedReader reader = new BufferedReader( new InputStreamReader( in ) );
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		
-		StringBuffer buffer = new StringBuffer( );
+		StringBuffer buffer = new StringBuffer();
 		String line;
-		while( ( line = reader.readLine( ) ) != null )
+		while((line = reader.readLine()) != null)
 		{
-			buffer.append( line ).append( '\n' );
+			buffer.append(line).append('\n');
 		}
 		
-		return buffer.toString( );
+		return buffer.toString();
 	}
 }

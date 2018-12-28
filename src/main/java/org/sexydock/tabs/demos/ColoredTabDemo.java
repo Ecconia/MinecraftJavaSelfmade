@@ -30,24 +30,24 @@ import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 public class ColoredTabDemo implements ISexyTabsDemo
 {
 	@Override
-	public void start( )
+	public void start()
 	{
-		DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow( getClass( ).getSimpleName( ) );
+		DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow(getClass().getSimpleName());
 		
-		TestTabFactory tabFactory = new TestTabFactory( );
-		window.getTabbedPane( ).putClientProperty( JhromeTabbedPaneUI.TAB_FACTORY , tabFactory );
+		TestTabFactory tabFactory = new TestTabFactory();
+		window.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.TAB_FACTORY, tabFactory);
 		
-		JhromeTabbedPaneUI tabbedPaneUI = ( JhromeTabbedPaneUI ) window.getTabbedPane( ).getUI( );
-		Tab tab1 = tabbedPaneUI.getTabFactory( ).createTabWithContent( );
-		JhromeTabUI ui = new JhromeTabUI( );
-		ui.getSelectedAttributes( ).topColor = Color.RED;
-		ui.getRolloverAttributes( ).topColor = Color.BLUE;
-		tab1.setUI( ui );
-		tabbedPaneUI.addTab( 0 , tab1 , false );
-		window.getTabbedPane( ).setSelectedIndex( 0 );
+		JhromeTabbedPaneUI tabbedPaneUI = (JhromeTabbedPaneUI) window.getTabbedPane().getUI();
+		Tab tab1 = tabbedPaneUI.getTabFactory().createTabWithContent();
+		JhromeTabUI ui = new JhromeTabUI();
+		ui.getSelectedAttributes().topColor = Color.RED;
+		ui.getRolloverAttributes().topColor = Color.BLUE;
+		tab1.setUI(ui);
+		tabbedPaneUI.addTab(0, tab1, false);
+		window.getTabbedPane().setSelectedIndex(0);
 		
-		window.setSize( 800 , 600 );
-		window.setLocationRelativeTo( null );
-		window.setVisible( true );
+		window.setSize(800, 600);
+		window.setLocationRelativeTo(null);
+		window.setVisible(true);
 	}
 }

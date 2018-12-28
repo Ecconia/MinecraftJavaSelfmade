@@ -31,6 +31,6 @@ public interface ITabbedPaneWindowFactory
 	/**
 	 * @return a new {@code IJhromeWindow}.
 	 */
-	public abstract ITabbedPaneWindow createWindow( );
+	public abstract ITabbedPaneWindow createWindow();
 	
 }
