@@ -78,7 +78,11 @@ public class DefaultTabDropFailureHandler implements ITabDropFailureHandler
 		newWindow.setVisible(true);
 		
 		newWindow.toFront();
-		newWindow.requestFocus();
+		//TODO: Add a self-written factory, instead of editing the source here.
+		//Ecconia: NOPE, should not happen
+//		newWindow.requestFocus();
+		//Ecconia: But this:
+		tabbedPane.setFocusable(false);
 		
 		Point loc = newWindow.getLocation();
 		Component renderer = draggedTab.getRenderer();

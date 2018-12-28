@@ -12,7 +12,7 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
@@ -68,11 +68,10 @@ public class YA3DTest extends JPanel implements GLEventListener
 		GLCapabilities capabilities = new GLCapabilities(profile);
 		
 		// The canvas
-		final GLCanvas glcanvas = new GLCanvas(capabilities);
+		final GLJPanel glcanvas = new GLJPanel(capabilities);
 		glcanvas.addGLEventListener(this);
+		glcanvas.setFocusable(false);
 		glcanvas.setSize(400, 400);
-		setLayout(new BorderLayout());
-		add(glcanvas);
 		
 		addMouseWheelListener(e -> {
 			int wheelRotation = e.getWheelRotation();
@@ -87,6 +86,10 @@ public class YA3DTest extends JPanel implements GLEventListener
 				rotation += wheelRotation;
 			}
 		});
+		
+		setLayout(new BorderLayout());
+		setFocusable(true);
+		add(glcanvas);
 		
 		final FPSAnimator animator = new FPSAnimator(glcanvas, 30, true);
 		animator.start();
