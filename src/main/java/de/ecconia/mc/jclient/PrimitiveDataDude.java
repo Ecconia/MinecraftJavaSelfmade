@@ -101,7 +101,7 @@ public class PrimitiveDataDude
 			System.out.println("New chunk location: " + chunkX + " " + chunkZ);
 			
 			//Event:
-//			worldHandler.updateChunkCoords(newChunkX, newChunkZ);
+			worldHandler.updateChunkCoords(newChunkX, newChunkZ);
 		}
 	}
 	

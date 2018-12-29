@@ -1,8 +1,5 @@
 package de.ecconia.mc.jclient.network.processor;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,25 +43,25 @@ public class WorldPacketProcessor extends PacketThread
 			boolean wholeChunk = reader.readBoolean();
 			logData("> Whole chunk: " + wholeChunk);
 			
-			if(x == -168 && y == 168)
-			{
-				byte[] bytes = reader.readBytes(reader.remaining());
-				
-				try(FileOutputStream fos = new FileOutputStream("exportedChunk"))
-				{
-					fos.write(bytes);
-				}
-				catch(FileNotFoundException e)
-				{
-					System.out.println("FNF: " + e);
-				}
-				catch(IOException e)
-				{
-					System.out.println("IOE: " + e);
-				}
-				
-				return;
-			}
+//			if(x == -168 && y == 168)
+//			{
+//				byte[] bytes = reader.readBytes(reader.remaining());
+//				
+//				try(FileOutputStream fos = new FileOutputStream("exportedChunk"))
+//				{
+//					fos.write(bytes);
+//				}
+//				catch(FileNotFoundException e)
+//				{
+//					System.out.println("FNF: " + e);
+//				}
+//				catch(IOException e)
+//				{
+//					System.out.println("IOE: " + e);
+//				}
+//				
+//				return;
+//			}
 			
 			int subChunkBitMap = reader.readCInt();
 			logData("> Subchunk map: " + asBin(subChunkBitMap, 16));
@@ -244,7 +241,8 @@ public class WorldPacketProcessor extends PacketThread
 			if(chunk != null)
 			{
 				//Its just a simple update, not really important later on.
-				System.out.println("WARNING, chunk has been overwritten!");
+				//TODO: Re-add, once unloading is working.
+//				System.out.println("WARNING, chunk has been overwritten!");
 			}
 		}
 		

@@ -132,14 +132,26 @@ public class Simple3D extends JPanel implements GLEventListener
 	
 	//### ### ### ### ### ### ###
 	
+	private static int chunkProcessor = 1;
+	
 	public Simple3D(WorldPacketProcessor worldPacketProcessor, PrimitiveDataDude dataDude)
 	{
 		dataDude.setChunkPosHandler((x, z) -> {
 			//TODO: Threadsafe!
-			System.out.println("On thread: " + Thread.currentThread().getName());
-			blocks = worldPacketProcessor.getProcessedChunk(x, z);
-			
-			generateColors();
+			new Thread(() -> {
+				System.out.println("On thread: " + Thread.currentThread().getName());
+				try
+				{
+					Thread.sleep(500);
+				}
+				catch(InterruptedException e1)
+				{
+					e1.printStackTrace();
+				}
+				blocks = worldPacketProcessor.getProcessedChunk(x, z);
+				
+				generateColors();
+			}, "Chunk processor # " + chunkProcessor++).start();
 		});
 		
 		try
