@@ -25,36 +25,36 @@ import org.sexydock.tabs.Tab;
 
 public class TabMovedEvent extends TabbedPaneEvent
 {
-	public TabMovedEvent( JTabbedPane tabbedPane , long timestamp , Tab movedTab , int prevIndex , int newIndex )
+	public TabMovedEvent(JTabbedPane tabbedPane, long timestamp, Tab movedTab, int prevIndex, int newIndex)
 	{
-		super( tabbedPane , timestamp );
+		super(tabbedPane, timestamp);
 		this.movedTab = movedTab;
 		this.prevIndex = prevIndex;
 		this.newIndex = newIndex;
 	}
 	
-	public final Tab	movedTab;
-	public final int	prevIndex;
-	public final int	newIndex;
+	public final Tab movedTab;
+	public final int prevIndex;
+	public final int newIndex;
 	
-	public Tab getMovedTab( )
+	public Tab getMovedTab()
 	{
 		return movedTab;
 	}
 	
-	public int getPrevIndex( )
+	public int getPrevIndex()
 	{
 		return prevIndex;
 	}
 	
-	public int getNewIndex( )
+	public int getNewIndex()
 	{
 		return newIndex;
 	}
 	
 	@Override
-	public String toString( )
+	public String toString()
 	{
-		return String.format( "%s[tabbedPane: %s, timestamp: %d, movedTab: %s, prevIndex: %d, newIndex: %d]" , getClass( ).getName( ) , tabbedPane , timestamp , movedTab , prevIndex , newIndex );
+		return String.format("%s[tabbedPane: %s, timestamp: %d, movedTab: %s, prevIndex: %d, newIndex: %d]", getClass().getName(), tabbedPane, timestamp, movedTab, prevIndex, newIndex);
 	}
 }

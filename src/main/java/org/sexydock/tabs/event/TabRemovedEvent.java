@@ -25,29 +25,29 @@ import org.sexydock.tabs.Tab;
 
 public class TabRemovedEvent extends TabbedPaneEvent
 {
-	public TabRemovedEvent( JTabbedPane tabbedPane , long timestamp , Tab removedTab , int removedIndex )
+	public TabRemovedEvent(JTabbedPane tabbedPane, long timestamp, Tab removedTab, int removedIndex)
 	{
-		super( tabbedPane , timestamp );
+		super(tabbedPane, timestamp);
 		this.removedTab = removedTab;
 		this.removedIndex = removedIndex;
 	}
 	
-	public final Tab	removedTab;
-	public final int	removedIndex;
+	public final Tab removedTab;
+	public final int removedIndex;
 	
-	public Tab getRemovedTab( )
+	public Tab getRemovedTab()
 	{
 		return removedTab;
 	}
 	
-	public int getRemovedIndex( )
+	public int getRemovedIndex()
 	{
 		return removedIndex;
 	}
 	
 	@Override
-	public String toString( )
+	public String toString()
 	{
-		return String.format( "%s[tabbedPane: %s, timestamp: %d, removedTab: %s, removedIndex: %d]" , getClass( ).getName( ) , tabbedPane , timestamp , removedTab , removedIndex );
+		return String.format("%s[tabbedPane: %s, timestamp: %d, removedTab: %s, removedIndex: %d]", getClass().getName(), tabbedPane, timestamp, removedTab, removedIndex);
 	}
 }

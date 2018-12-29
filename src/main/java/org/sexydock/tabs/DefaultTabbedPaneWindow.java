@@ -35,52 +35,52 @@ import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
  * 
  * @author andy.edwards
  */
-@SuppressWarnings( "serial" )
+@SuppressWarnings("serial")
 public class DefaultTabbedPaneWindow extends JFrame implements ITabbedPaneWindow
 {
 	
-	public DefaultTabbedPaneWindow( ) throws HeadlessException
+	public DefaultTabbedPaneWindow() throws HeadlessException
 	{
-		super( );
-		init( );
+		super();
+		init();
 	}
 	
-	public DefaultTabbedPaneWindow( GraphicsConfiguration gc )
+	public DefaultTabbedPaneWindow(GraphicsConfiguration gc)
 	{
-		super( gc );
-		init( );
+		super(gc);
+		init();
 	}
 	
-	public DefaultTabbedPaneWindow( String title , GraphicsConfiguration gc )
+	public DefaultTabbedPaneWindow(String title, GraphicsConfiguration gc)
 	{
-		super( title , gc );
-		init( );
+		super(title, gc);
+		init();
 	}
 	
-	public DefaultTabbedPaneWindow( String title ) throws HeadlessException
+	public DefaultTabbedPaneWindow(String title) throws HeadlessException
 	{
-		super( title );
-		init( );
+		super(title);
+		init();
 	}
 	
-	JTabbedPane	tabbedPane;
+	JTabbedPane tabbedPane;
 	
-	private void init( )
+	private void init()
 	{
-		tabbedPane = new JTabbedPane( );
-		tabbedPane.setUI( new JhromeTabbedPaneUI( ) );
-		tabbedPane.putClientProperty( JhromeTabbedPaneUI.NEW_TAB_BUTTON_VISIBLE , true );
-		tabbedPane.putClientProperty( JhromeTabbedPaneUI.TAB_CLOSE_BUTTONS_VISIBLE , true );
-		tabbedPane.putClientProperty( JhromeTabbedPaneUI.TAB_DROP_FAILURE_HANDLER , new DefaultTabDropFailureHandler( new DefaultTabbedPaneWindowFactory( this ) ) );
-		tabbedPane.putClientProperty( JhromeTabbedPaneUI.DND_POLICY , new DefaultTabbedPaneDndPolicy( true , true ) );
+		tabbedPane = new JTabbedPane();
+		tabbedPane.setUI(new JhromeTabbedPaneUI());
+		tabbedPane.putClientProperty(JhromeTabbedPaneUI.NEW_TAB_BUTTON_VISIBLE, true);
+		tabbedPane.putClientProperty(JhromeTabbedPaneUI.TAB_CLOSE_BUTTONS_VISIBLE, true);
+		tabbedPane.putClientProperty(JhromeTabbedPaneUI.TAB_DROP_FAILURE_HANDLER, new DefaultTabDropFailureHandler(new DefaultTabbedPaneWindowFactory(this)));
+		tabbedPane.putClientProperty(JhromeTabbedPaneUI.DND_POLICY, new DefaultTabbedPaneDndPolicy(true, true));
 		
-		tabbedPane.setBorder( new EmptyBorder( 3 , 3 , 3 , 3 ) );
-		getContentPane( ).add( tabbedPane , BorderLayout.CENTER );
+		tabbedPane.setBorder(new EmptyBorder(3, 3, 3, 3));
+		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
-		tabbedPane.addContainerListener( new DefaultTabsRemovedHandler( ) );
+		tabbedPane.addContainerListener(new DefaultTabsRemovedHandler());
 		
-		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-		addWindowListener( new DefaultWindowsClosedHandler( ) );
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		addWindowListener(new DefaultWindowsClosedHandler());
 	}
 	
 	/*
@@ -89,13 +89,13 @@ public class DefaultTabbedPaneWindow extends JFrame implements ITabbedPaneWindow
 	 * @see org.jhrome.IJhromeWindow#getTabbedPane()
 	 */
 	@Override
-	public JTabbedPane getTabbedPane( )
+	public JTabbedPane getTabbedPane()
 	{
 		return tabbedPane;
 	}
 	
 	@Override
-	public Window getWindow( )
+	public Window getWindow()
 	{
 		return this;
 	}

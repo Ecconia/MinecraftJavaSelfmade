@@ -11,167 +11,167 @@ import org.sexydock.tabs.jhrome.JhromeTabUI;
 
 public class Tab extends JComponent
 {
-	private static final String	uiClassId				= "TabUI";
+	private static final String uiClassId = "TabUI";
 	
-	private static final long	serialVersionUID		= 5209596149902613716L;
+	private static final long serialVersionUID = 5209596149902613716L;
 	
-	private String				title;
-	private Icon				icon;
-	private Component			tabComponent;
-	private int					mnemonic				= '\0';
-	private int					displayedMnemonicIndex	= -1;
-	private boolean				rollover;
-	private boolean				selected;
+	private String title;
+	private Icon icon;
+	private Component tabComponent;
+	private int mnemonic = '\0';
+	private int displayedMnemonicIndex = -1;
+	private boolean rollover;
+	private boolean selected;
 	
-	private Component			content;
+	private Component content;
 	
 	static
 	{
-		UIManager.getDefaults( ).put( uiClassId , JhromeTabUI.class.getName( ) );
+		UIManager.getDefaults().put(uiClassId, JhromeTabUI.class.getName());
 	}
 	
-	public Tab( )
+	public Tab()
 	{
-		this( null , null );
+		this(null, null);
 	}
 	
-	public Tab( String title )
+	public Tab(String title)
 	{
-		this( title , null );
+		this(title, null);
 	}
 	
-	public Tab( String title , Component content )
+	public Tab(String title, Component content)
 	{
-		setTitle( title );
-		setContent( content );
+		setTitle(title);
+		setContent(content);
 		
-		updateUI( );
+		updateUI();
 	}
 	
-	public boolean isRollover( )
+	public boolean isRollover()
 	{
 		return rollover;
 	}
 	
-	public void setRollover( boolean rollover )
+	public void setRollover(boolean rollover)
 	{
-		if( this.rollover != rollover )
+		if(this.rollover != rollover)
 		{
 			this.rollover = rollover;
-			firePropertyChange( "rollover" , !rollover , rollover );
+			firePropertyChange("rollover", !rollover, rollover);
 		}
 	}
 	
-	public boolean isSelected( )
+	public boolean isSelected()
 	{
 		return selected;
 	}
 	
-	public void setSelected( boolean selected )
+	public void setSelected(boolean selected)
 	{
-		if( this.selected != selected )
+		if(this.selected != selected)
 		{
 			this.selected = selected;
-			firePropertyChange( "selected" , !selected , selected );
+			firePropertyChange("selected", !selected, selected);
 		}
 	}
 	
-	public TabUI getUI( )
+	public TabUI getUI()
 	{
-		return ( TabUI ) ui;
+		return (TabUI) ui;
 	}
 	
-	public String getTitle( )
+	public String getTitle()
 	{
 		return title;
 	}
 	
-	private static boolean equals( Object o1 , Object o2 )
+	private static boolean equals(Object o1, Object o2)
 	{
-		return ( o1 == o2 ) || ( o1 != null && o1.equals( o2 ) ) || ( o2 != null && o2.equals( o1 ) );
+		return (o1 == o2) || (o1 != null && o1.equals(o2)) || (o2 != null && o2.equals(o1));
 	}
 	
-	public void setTitle( String title )
+	public void setTitle(String title)
 	{
-		if( !equals( title , this.title ) )
+		if(!equals(title, this.title))
 		{
 			String oldValue = this.title;
 			this.title = title;
-			firePropertyChange( "title" , oldValue , title );
+			firePropertyChange("title", oldValue, title);
 		}
 	}
 	
-	public Component getTabComponent( )
+	public Component getTabComponent()
 	{
 		return tabComponent;
 	}
 	
-	public void setTabComponent( Component overrideTitle )
+	public void setTabComponent(Component overrideTitle)
 	{
-		if( this.tabComponent != overrideTitle )
+		if(this.tabComponent != overrideTitle)
 		{
 			Component oldValue = this.tabComponent;
 			this.tabComponent = overrideTitle;
-			firePropertyChange( "overrideTitle" , oldValue , overrideTitle );
+			firePropertyChange("overrideTitle", oldValue, overrideTitle);
 		}
 	}
 	
-	public Icon getIcon( )
+	public Icon getIcon()
 	{
 		return icon;
 	}
 	
-	public void setIcon( Icon icon )
+	public void setIcon(Icon icon)
 	{
-		if( this.icon != icon )
+		if(this.icon != icon)
 		{
 			Icon oldValue = this.icon;
 			this.icon = icon;
-			firePropertyChange( "icon" , oldValue , icon );
+			firePropertyChange("icon", oldValue, icon);
 		}
 	}
 	
-	public int getMnemonic( )
+	public int getMnemonic()
 	{
 		return mnemonic;
 	}
 	
-	public void setMnemonic( int mnemonic )
+	public void setMnemonic(int mnemonic)
 	{
-		if( this.mnemonic != mnemonic )
+		if(this.mnemonic != mnemonic)
 		{
 			int oldValue = this.mnemonic;
 			this.mnemonic = mnemonic;
-			firePropertyChange( "mnemonic" , oldValue , mnemonic );
+			firePropertyChange("mnemonic", oldValue, mnemonic);
 		}
 	}
 	
-	public int getDisplayedMnemonicIndex( )
+	public int getDisplayedMnemonicIndex()
 	{
 		return displayedMnemonicIndex;
 	}
 	
-	public void setDisplayedMnemonicIndex( int displayedMnemonic )
+	public void setDisplayedMnemonicIndex(int displayedMnemonic)
 	{
-		if( this.displayedMnemonicIndex != displayedMnemonic )
+		if(this.displayedMnemonicIndex != displayedMnemonic)
 		{
 			int oldValue = this.displayedMnemonicIndex;
 			this.displayedMnemonicIndex = displayedMnemonic;
-			firePropertyChange( "displayedMnemonic" , oldValue , displayedMnemonic );
+			firePropertyChange("displayedMnemonic", oldValue, displayedMnemonic);
 		}
 	}
 	
-	public Component getRenderer( )
+	public Component getRenderer()
 	{
 		return this;
 	}
 	
-	public Component getContent( )
+	public Component getContent()
 	{
 		return content;
 	}
 	
-	public void setContent( Component tabContent )
+	public void setContent(Component tabContent)
 	{
 		this.content = tabContent;
 	}
@@ -184,9 +184,9 @@ public class Tab extends JComponent
 	 * @return {@code true} if the user can drag the jhromeTab after dragging from {@code p}. NOTE: must return {@code false} for points over the close button
 	 *         and other operable components, or the user will be able to drag the jhromeTab from these points!
 	 */
-	public boolean isDraggableAt( Point p )
+	public boolean isDraggableAt(Point p)
 	{
-		return getUI( ).isDraggableAt( this , p );
+		return getUI().isDraggableAt(this, p);
 	}
 	
 	/**
@@ -197,9 +197,9 @@ public class Tab extends JComponent
 	 * @return {@code true} if the user can select the jhromeTab by pressing the mouse at {@code p}. NOTE: must return {@code false} for points over the close
 	 *         button and other operable components, or the user will be able to select the jhromeTab by clicking these components!
 	 */
-	public boolean isSelectableAt( Point p )
+	public boolean isSelectableAt(Point p)
 	{
-		return getUI( ).isSelectableAt( this , p );
+		return getUI().isSelectableAt(this, p);
 	}
 	
 	/**
@@ -210,25 +210,25 @@ public class Tab extends JComponent
 	 *            the point the user moved the mouse over, in the renderer's coordinate system.
 	 * @return {@code true} if the jhromeTab should be set to the rollover state when the user moves the mouse over {@code p}.
 	 */
-	public boolean isHoverableAt( Point p )
+	public boolean isHoverableAt(Point p)
 	{
-		return getUI( ).isHoverableAt( this , p );
+		return getUI().isHoverableAt(this, p);
 	}
 	
 	@Override
-	public String getUIClassID( )
+	public String getUIClassID()
 	{
 		return uiClassId;
 	}
 	
 	@Override
-	public void updateUI( )
+	public void updateUI()
 	{
-		setUI( ( TabUI ) UIManager.getUI( this ) );
+		setUI((TabUI) UIManager.getUI(this));
 	}
 	
-	public void setUI( TabUI ui )
+	public void setUI(TabUI ui)
 	{
-		super.setUI( ui );
+		super.setUI(ui);
 	}
 }

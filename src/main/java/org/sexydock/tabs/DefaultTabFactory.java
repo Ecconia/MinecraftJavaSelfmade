@@ -19,7 +19,6 @@ along with Jhrome.  If not, see <http://www.gnu.org/licenses/>.
 
 package org.sexydock.tabs;
 
-
 /**
  * The default implementation of {@link ITabFactory}.
  * 
@@ -27,13 +26,13 @@ package org.sexydock.tabs;
  */
 public class DefaultTabFactory implements ITabFactory
 {
-	public Tab createTab( )
+	public Tab createTab()
 	{
-		return new Tab( );
+		return new Tab();
 	}
 	
 	@Override
-	public Tab createTabWithContent( )
+	public Tab createTabWithContent()
 	{
 		return null;
 	}

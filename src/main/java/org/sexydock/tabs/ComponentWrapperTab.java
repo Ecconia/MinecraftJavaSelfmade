@@ -28,81 +28,81 @@ import java.awt.Point;
  * 
  * @author andy.edwards
  */
-@SuppressWarnings( "serial" )
+@SuppressWarnings("serial")
 public class ComponentWrapperTab extends Tab
 {
-	public ComponentWrapperTab( Component renderer , Component content )
+	public ComponentWrapperTab(Component renderer, Component content)
 	{
-		super( "" );
+		super("");
 		this.renderer = renderer;
 		this.content = content;
-		setUI( null );
-		setLayout( new BorderLayout( ) );
-		add( renderer , BorderLayout.CENTER );
+		setUI(null);
+		setLayout(new BorderLayout());
+		add(renderer, BorderLayout.CENTER);
 	}
 	
-	Component	renderer;
-	Component	content;
+	Component renderer;
+	Component content;
 	
-	boolean		selected	= false;
-	boolean		rollover	= false;
+	boolean selected = false;
+	boolean rollover = false;
 	
 	@Override
-	public Component getRenderer( )
+	public Component getRenderer()
 	{
 		return renderer;
 	}
 	
 	@Override
-	public Component getContent( )
+	public Component getContent()
 	{
 		return content;
 	}
 	
 	@Override
-	public void setContent( Component content )
+	public void setContent(Component content)
 	{
 		this.content = content;
 	}
 	
 	@Override
-	public boolean isDraggableAt( Point p )
+	public boolean isDraggableAt(Point p)
 	{
-		return renderer.contains( p );
+		return renderer.contains(p);
 	}
 	
 	@Override
-	public boolean isSelectableAt( Point p )
+	public boolean isSelectableAt(Point p)
 	{
-		return renderer.contains( p );
+		return renderer.contains(p);
 	}
 	
 	@Override
-	public boolean isHoverableAt( Point p )
+	public boolean isHoverableAt(Point p)
 	{
-		return renderer.contains( p );
+		return renderer.contains(p);
 	}
 	
 	@Override
-	public boolean isSelected( )
+	public boolean isSelected()
 	{
 		return selected;
 	}
 	
 	@Override
-	public void setSelected( boolean selected )
+	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
 	}
 	
 	@Override
-	public boolean isRollover( )
+	public boolean isRollover()
 	{
 		return rollover;
 	}
 	
 	@Override
-	public void setRollover( boolean rollover )
+	public void setRollover(boolean rollover)
 	{
 		this.rollover = rollover;
 	}

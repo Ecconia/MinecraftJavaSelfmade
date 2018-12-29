@@ -48,169 +48,169 @@ import org.sexydock.tabs.jhrome.JhromeNewTabButtonBorder.Attributes;
 
 public class JhromeNewTabButtonUI extends BasicButtonUI
 {
-	public JhromeNewTabButtonUI( )
+	public JhromeNewTabButtonUI()
 	{
-		init( );
+		init();
 	}
 	
 	@Override
-	public void installUI( JComponent c )
+	public void installUI(JComponent c)
 	{
-		super.installUI( c );
-		button = ( AbstractButton ) c;
-		button.setIcon( JhromeNewTabButtonUI.createNewTabButtonIcon( ) );
-		button.setFocusable( false );
-		button.setContentAreaFilled( false );
-		button.setBorder( border );
-		button.setContentAreaFilled( false );
-		button.setOpaque( false );
+		super.installUI(c);
+		button = (AbstractButton) c;
+		button.setIcon(JhromeNewTabButtonUI.createNewTabButtonIcon());
+		button.setFocusable(false);
+		button.setContentAreaFilled(false);
+		button.setBorder(border);
+		button.setContentAreaFilled(false);
+		button.setOpaque(false);
 	}
 	
 	@Override
-	public void uninstallUI( JComponent c )
+	public void uninstallUI(JComponent c)
 	{
-		super.uninstallUI( c );
-		button.setIcon( null );
-		button.setFocusable( true );
-		button.setContentAreaFilled( true );
-		button.setBorder( null );
-		button.setContentAreaFilled( true );
-		button.setOpaque( true );
+		super.uninstallUI(c);
+		button.setIcon(null);
+		button.setFocusable(true);
+		button.setContentAreaFilled(true);
+		button.setBorder(null);
+		button.setContentAreaFilled(true);
+		button.setOpaque(true);
 	}
 	
-	public static JhromeNewTabButtonUI createUI( JComponent c )
+	public static JhromeNewTabButtonUI createUI(JComponent c)
 	{
-		return new JhromeNewTabButtonUI( );
+		return new JhromeNewTabButtonUI();
 	}
 	
-	AbstractButton				button			= null;
+	AbstractButton button = null;
 	
-	JhromeNewTabButtonBorder	border;
+	JhromeNewTabButtonBorder border;
 	
-	Attributes					normalAttrs		= JhromeNewTabButtonBorder.UNSELECTED_ATTRIBUTES.clone( );
+	Attributes normalAttrs = JhromeNewTabButtonBorder.UNSELECTED_ATTRIBUTES.clone();
 	
-	float						highlight		= 0f;
-	float						highlightSpeed	= 0.2f;
-	javax.swing.Timer			highlightTimer;
+	float highlight = 0f;
+	float highlightSpeed = 0.2f;
+	javax.swing.Timer highlightTimer;
 	
-	private void init( )
+	private void init()
 	{
-		border = new JhromeNewTabButtonBorder( );
+		border = new JhromeNewTabButtonBorder();
 		
-		highlightTimer = new javax.swing.Timer( 30 , new ActionListener( )
+		highlightTimer = new javax.swing.Timer(30, new ActionListener()
 		{
 			@Override
-			public void actionPerformed( ActionEvent e )
+			public void actionPerformed(ActionEvent e)
 			{
-				if( button != null )
+				if(button != null)
 				{
-					button.repaint( );
+					button.repaint();
 				}
 			}
-		} );
+		});
 	}
 	
 	@Override
-	public void paint( Graphics g , JComponent c )
+	public void paint(Graphics g, JComponent c)
 	{
-		button = ( AbstractButton ) c;
-		update( ( AbstractButton ) c );
-		paintFill( g , c );
-		super.paint( g , c );
+		button = (AbstractButton) c;
+		update((AbstractButton) c);
+		paintFill(g, c);
+		super.paint(g, c);
 	}
 	
-	public void paintFill( Graphics g , JComponent c )
+	public void paintFill(Graphics g, JComponent c)
 	{
-		border.paint( c , g , 0 , 0 , c.getWidth( ) , c.getHeight( ) , false , true );
+		border.paint(c, g, 0, 0, c.getWidth(), c.getHeight(), false, true);
 	}
 	
-	protected float animate( float current , float target )
+	protected float animate(float current, float target)
 	{
-		if( current < target )
+		if(current < target)
 		{
-			current = Math.min( target , current + highlightSpeed );
+			current = Math.min(target, current + highlightSpeed);
 		}
-		else if( current > target )
+		else if(current > target)
 		{
-			current = Math.max( target , current - highlightSpeed );
+			current = Math.max(target, current - highlightSpeed);
 		}
 		return current;
 	}
 	
-	protected void update( AbstractButton button )
+	protected void update(AbstractButton button)
 	{
-		JTabbedPane tabbedPane = SwingUtils.getJTabbedPaneAncestor( button );
-		if( tabbedPane != null )
+		JTabbedPane tabbedPane = SwingUtils.getJTabbedPaneAncestor(button);
+		if(tabbedPane != null)
 		{
-			border.flip = tabbedPane.getTabPlacement( ) == JTabbedPane.BOTTOM || tabbedPane.getTabPlacement( ) == JTabbedPane.RIGHT;
+			border.flip = tabbedPane.getTabPlacement() == JTabbedPane.BOTTOM || tabbedPane.getTabPlacement() == JTabbedPane.RIGHT;
 		}
-		if( button.getModel( ).isPressed( ) )
+		if(button.getModel().isPressed())
 		{
-			border.attrs.copy( JhromeNewTabButtonBorder.PRESSED_ATTRIBUTES );
-			highlightTimer.stop( );
+			border.attrs.copy(JhromeNewTabButtonBorder.PRESSED_ATTRIBUTES);
+			highlightTimer.stop();
 		}
 		else
 		{
-			float targetHighlight = button.getModel( ).isRollover( ) ? 1 : 0;
-			if( highlight != targetHighlight )
+			float targetHighlight = button.getModel().isRollover() ? 1 : 0;
+			if(highlight != targetHighlight)
 			{
-				highlight = animate( highlight , targetHighlight );
-				highlightTimer.start( );
+				highlight = animate(highlight, targetHighlight);
+				highlightTimer.start();
 			}
 			else
 			{
-				highlightTimer.stop( );
+				highlightTimer.stop();
 			}
-			border.attrs.copy( JhromeNewTabButtonBorder.UNSELECTED_ATTRIBUTES );
-			border.attrs.interpolateColors( JhromeNewTabButtonBorder.UNSELECTED_ATTRIBUTES , JhromeNewTabButtonBorder.ROLLOVER_ATTRIBUTES , highlight );
+			border.attrs.copy(JhromeNewTabButtonBorder.UNSELECTED_ATTRIBUTES);
+			border.attrs.interpolateColors(JhromeNewTabButtonBorder.UNSELECTED_ATTRIBUTES, JhromeNewTabButtonBorder.ROLLOVER_ATTRIBUTES, highlight);
 		}
 	}
 	
-	public static Icon createNewTabButtonIcon( )
+	public static Icon createNewTabButtonIcon()
 	{
-		BufferedImage image = new BufferedImage( 10 , 10 , BufferedImage.TYPE_INT_ARGB );
-		Path2D path = new Path2D.Double( );
-		path.moveTo( 3 , 0 );
-		path.lineTo( 6 , 0 );
-		path.lineTo( 6 , 3 );
-		path.lineTo( 9 , 3 );
-		path.lineTo( 9 , 6 );
-		path.lineTo( 6 , 6 );
-		path.lineTo( 6 , 9 );
-		path.lineTo( 3 , 9 );
-		path.lineTo( 3 , 6 );
-		path.lineTo( 0 , 6 );
-		path.lineTo( 0 , 3 );
-		path.lineTo( 3 , 3 );
-		path.lineTo( 3 , 0 );
+		BufferedImage image = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB);
+		Path2D path = new Path2D.Double();
+		path.moveTo(3, 0);
+		path.lineTo(6, 0);
+		path.lineTo(6, 3);
+		path.lineTo(9, 3);
+		path.lineTo(9, 6);
+		path.lineTo(6, 6);
+		path.lineTo(6, 9);
+		path.lineTo(3, 9);
+		path.lineTo(3, 6);
+		path.lineTo(0, 6);
+		path.lineTo(0, 3);
+		path.lineTo(3, 3);
+		path.lineTo(3, 0);
 		
-		Graphics2D g2 = ( Graphics2D ) image.getGraphics( );
-		g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING , RenderingHints.VALUE_ANTIALIAS_ON );
+		Graphics2D g2 = (Graphics2D) image.getGraphics();
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		g2.setColor( Color.WHITE );
-		g2.fill( path );
-		g2.setColor( JhromeTabBorderAttributes.UNSELECTED_BORDER.outlineColor );
-		g2.setStroke( new BasicStroke( 1.1f ) );
-		g2.draw( path );
+		g2.setColor(Color.WHITE);
+		g2.fill(path);
+		g2.setColor(JhromeTabBorderAttributes.UNSELECTED_BORDER.outlineColor);
+		g2.setStroke(new BasicStroke(1.1f));
+		g2.draw(path);
 		
-		return new ImageIcon( image );
+		return new ImageIcon(image);
 	}
 	
 	@Override
-	public Dimension getMinimumSize( JComponent c )
+	public Dimension getMinimumSize(JComponent c)
 	{
-		return new Dimension( 26 , 16 );
+		return new Dimension(26, 16);
 	}
 	
 	@Override
-	public Dimension getPreferredSize( JComponent c )
+	public Dimension getPreferredSize(JComponent c)
 	{
-		return new Dimension( 26 , 16 );
+		return new Dimension(26, 16);
 	}
 	
 	@Override
-	public Dimension getMaximumSize( JComponent c )
+	public Dimension getMaximumSize(JComponent c)
 	{
-		return new Dimension( 26 , 16 );
+		return new Dimension(26, 16);
 	}
 }

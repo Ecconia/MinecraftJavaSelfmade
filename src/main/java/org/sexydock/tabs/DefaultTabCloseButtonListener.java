@@ -6,8 +6,8 @@ public class DefaultTabCloseButtonListener implements ITabCloseButtonListener
 {
 	
 	@Override
-	public void tabCloseButtonPressed( JTabbedPane tabbedPane , int tabIndex )
+	public void tabCloseButtonPressed(JTabbedPane tabbedPane, int tabIndex)
 	{
-		tabbedPane.removeTabAt( tabIndex );
+		tabbedPane.removeTabAt(tabIndex);
 	}
 }

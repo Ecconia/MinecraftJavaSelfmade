@@ -25,43 +25,43 @@ import org.sexydock.tabs.Tab;
 
 public class TabSelectedEvent extends TabbedPaneEvent
 {
-	public TabSelectedEvent( JTabbedPane tabbedPane , long timestamp , Tab prevSelected , int prevSelectedIndex , Tab newSelected , int newSelectedIndex )
+	public TabSelectedEvent(JTabbedPane tabbedPane, long timestamp, Tab prevSelected, int prevSelectedIndex, Tab newSelected, int newSelectedIndex)
 	{
-		super( tabbedPane , timestamp );
+		super(tabbedPane, timestamp);
 		this.prevSelected = prevSelected;
 		this.prevSelectedIndex = prevSelectedIndex;
 		this.newSelected = newSelected;
 		this.newSelectedIndex = newSelectedIndex;
 	}
 	
-	public final Tab	prevSelected;
-	public final int	prevSelectedIndex;
-	public final Tab	newSelected;
-	public final int	newSelectedIndex;
+	public final Tab prevSelected;
+	public final int prevSelectedIndex;
+	public final Tab newSelected;
+	public final int newSelectedIndex;
 	
-	public Tab getPrevSelected( )
+	public Tab getPrevSelected()
 	{
 		return prevSelected;
 	}
 	
-	public Tab getNewSelected( )
+	public Tab getNewSelected()
 	{
 		return newSelected;
 	}
 	
-	public int getPrevSelectedIndex( )
+	public int getPrevSelectedIndex()
 	{
 		return prevSelectedIndex;
 	}
 	
-	public int getNewSelectedIndex( )
+	public int getNewSelectedIndex()
 	{
 		return newSelectedIndex;
 	}
 	
 	@Override
-	public String toString( )
+	public String toString()
 	{
-		return String.format( "%s[tabbedPane: %s, timestamp: %d, prevSelected: %s, prevSelectedIndex: %d, newIndex: %d]" , getClass( ).getName( ) , tabbedPane , timestamp , prevSelected , prevSelectedIndex , newSelected , newSelectedIndex );
+		return String.format("%s[tabbedPane: %s, timestamp: %d, prevSelected: %s, prevSelectedIndex: %d, newIndex: %d]", getClass().getName(), tabbedPane, timestamp, prevSelected, prevSelectedIndex, newSelected, newSelectedIndex);
 	}
 }

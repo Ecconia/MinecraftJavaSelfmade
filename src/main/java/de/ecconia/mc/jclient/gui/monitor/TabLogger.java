@@ -24,6 +24,9 @@ public class TabLogger
 	{
 		SwingUtilities.invokeLater(() -> {
 			window = new DefaultTabbedPaneWindow("Logging");
+			//There is no reason as of now to control the tabs by keyboard
+			
+			window.getTabbedPane().setFocusable(false);
 			window.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.USE_UNIFORM_WIDTH, false);
 			window.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.NEW_TAB_BUTTON_VISIBLE, false);
 			window.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.TAB_CLOSE_BUTTONS_VISIBLE, false);

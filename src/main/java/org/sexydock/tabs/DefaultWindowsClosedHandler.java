@@ -8,19 +8,19 @@ import java.awt.event.WindowEvent;
 public class DefaultWindowsClosedHandler extends WindowAdapter
 {
 	@Override
-	public void windowClosed( WindowEvent e )
+	public void windowClosed(WindowEvent e)
 	{
-		for( Window window : Window.getWindows( ) )
+		for(Window window : Window.getWindows())
 		{
-			if( window.isDisplayable( ) )
+			if(window.isDisplayable())
 			{
 				return;
 			}
 		}
 		
-		for( Frame frame : Frame.getFrames( ) )
+		for(Frame frame : Frame.getFrames())
 		{
-			if( frame.isDisplayable( ) )
+			if(frame.isDisplayable())
 			{
 				return;
 			}

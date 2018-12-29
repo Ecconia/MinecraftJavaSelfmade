@@ -40,89 +40,89 @@ import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 public class ITabbedPaneListenerDemo implements ISexyTabsDemo
 {
 	@Override
-	public void start( )
+	public void start()
 	{
-		DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow( "ITabbedPaneListener Demo" );
+		DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow("ITabbedPaneListener Demo");
 		
-		TestTabFactory tabFactory = new TestTabFactory( );
-		window.getTabbedPane( ).putClientProperty( JhromeTabbedPaneUI.TAB_FACTORY , tabFactory );
+		TestTabFactory tabFactory = new TestTabFactory();
+		window.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.TAB_FACTORY, tabFactory);
 		
-		final JTextArea messageArea = new JTextArea( );
-		final JScrollPane messageScroller = new JScrollPane( messageArea );
+		final JTextArea messageArea = new JTextArea();
+		final JScrollPane messageScroller = new JScrollPane(messageArea);
 		
-		ITabbedPaneListener listener = new ITabbedPaneListener( )
+		ITabbedPaneListener listener = new ITabbedPaneListener()
 		{
-			StringBuffer	text	= new StringBuffer( );
+			StringBuffer text = new StringBuffer();
 			
 			@Override
-			public void onEvent( TabbedPaneEvent event )
+			public void onEvent(TabbedPaneEvent event)
 			{
-				text.append( formatEvent( event ) ).append( '\n' );
-				messageArea.setText( text.toString( ) );
-				messageScroller.getVerticalScrollBar( ).setValue( messageScroller.getVerticalScrollBar( ).getMaximum( ) );
+				text.append(formatEvent(event)).append('\n');
+				messageArea.setText(text.toString());
+				messageScroller.getVerticalScrollBar().setValue(messageScroller.getVerticalScrollBar().getMaximum());
 			}
 		};
-		JhromeTabbedPaneUI ui = (JhromeTabbedPaneUI) window.getTabbedPane( ).getUI( );
-		ui.addTabbedPaneListener( listener );
-		window.getTabbedPane( ).addTab( "Listener", messageScroller );
-		window.getTabbedPane( ).setSelectedComponent( messageScroller );
-		final Tab listenerTab = ui.getTabAt( 0 );
-		listenerTab.putClientProperty( BasicTabUI.CLOSE_BUTTON_VISIBLE, false );
-		ui.setDndPolicy( new ITabbedPaneDndPolicy( )
+		JhromeTabbedPaneUI ui = (JhromeTabbedPaneUI) window.getTabbedPane().getUI();
+		ui.addTabbedPaneListener(listener);
+		window.getTabbedPane().addTab("Listener", messageScroller);
+		window.getTabbedPane().setSelectedComponent(messageScroller);
+		final Tab listenerTab = ui.getTabAt(0);
+		listenerTab.putClientProperty(BasicTabUI.CLOSE_BUTTON_VISIBLE, false);
+		ui.setDndPolicy(new ITabbedPaneDndPolicy()
 		{
 			@Override
-			public boolean isTearAwayAllowed( JTabbedPane tabbedPane , Tab tab )
+			public boolean isTearAwayAllowed(JTabbedPane tabbedPane, Tab tab)
 			{
 				return tab != listenerTab;
 			}
 			
 			@Override
-			public boolean isSnapInAllowed( JTabbedPane tabbedPane , Tab tab )
+			public boolean isSnapInAllowed(JTabbedPane tabbedPane, Tab tab)
 			{
 				return true;
 			}
-		} );
+		});
 		
-		window.setSize( 800 , 600 );
-		window.setLocationRelativeTo( null );
-		window.setVisible( true );
+		window.setSize(800, 600);
+		window.setLocationRelativeTo(null);
+		window.setVisible(true);
 	}
 	
-	private static String formatEvent( TabbedPaneEvent event )
+	private static String formatEvent(TabbedPaneEvent event)
 	{
-		if( event instanceof TabAddedEvent )
+		if(event instanceof TabAddedEvent)
 		{
-			TabAddedEvent e = ( TabAddedEvent ) event;
-			return "Added tab '" + getTabTitle( e.getAddedTab( ) ) + "' at index " + e.getInsertIndex( );
+			TabAddedEvent e = (TabAddedEvent) event;
+			return "Added tab '" + getTabTitle(e.getAddedTab()) + "' at index " + e.getInsertIndex();
 		}
-		else if( event instanceof TabRemovedEvent )
+		else if(event instanceof TabRemovedEvent)
 		{
-			TabRemovedEvent e = ( TabRemovedEvent ) event;
-			return "Removed tab '" + getTabTitle( e.getRemovedTab( ) ) + "' at index " + e.getRemovedIndex( );
+			TabRemovedEvent e = (TabRemovedEvent) event;
+			return "Removed tab '" + getTabTitle(e.getRemovedTab()) + "' at index " + e.getRemovedIndex();
 		}
-		else if( event instanceof TabMovedEvent )
+		else if(event instanceof TabMovedEvent)
 		{
-			TabMovedEvent e = ( TabMovedEvent ) event;
-			return "Moved tab '" + getTabTitle( e.getMovedTab( ) ) + "' from index " + e.getPrevIndex( ) + " to index " + e.getNewIndex( );
+			TabMovedEvent e = (TabMovedEvent) event;
+			return "Moved tab '" + getTabTitle(e.getMovedTab()) + "' from index " + e.getPrevIndex() + " to index " + e.getNewIndex();
 		}
-		else if( event instanceof TabSelectedEvent )
+		else if(event instanceof TabSelectedEvent)
 		{
-			TabSelectedEvent e = ( TabSelectedEvent ) event;
-			return "Selected tab '" + getTabTitle( e.getNewSelected( ) ) + "' at index " + e.getNewSelectedIndex( );
+			TabSelectedEvent e = (TabSelectedEvent) event;
+			return "Selected tab '" + getTabTitle(e.getNewSelected()) + "' at index " + e.getNewSelectedIndex();
 		}
-		else if( event instanceof TabsClearedEvent )
+		else if(event instanceof TabsClearedEvent)
 		{
 			return "Cleared all tabs";
 		}
 		return "";
 	}
 	
-	private static String getTabTitle( Tab tab )
+	private static String getTabTitle(Tab tab)
 	{
-		if( tab == null )
+		if(tab == null)
 		{
 			return "none";
 		}
-		return tab.getTitle( );
+		return tab.getTitle();
 	}
 }

@@ -30,52 +30,52 @@ import org.sexydock.tabs.Tab;
 
 public class TabTest
 {
-	public static void main( String[ ] args )
+	public static void main(String[] args)
 	{
-		JFrame frame = new JFrame( );
-		Container content = frame.getContentPane( );
-		content.setLayout( new GridLayout( 1 , 1 , 5 , 5 ) );
+		JFrame frame = new JFrame();
+		Container content = frame.getContentPane();
+		content.setLayout(new GridLayout(1, 1, 5, 5));
 		
-		final Tab defaultTab = new Tab( "Default Tab" );
-		content.add( defaultTab );
+		final Tab defaultTab = new Tab("Default Tab");
+		content.add(defaultTab);
 		
-		MouseAdapter adapter = new MouseAdapter( )
+		MouseAdapter adapter = new MouseAdapter()
 		{
 			
 			@Override
-			public void mousePressed( MouseEvent e )
+			public void mousePressed(MouseEvent e)
 			{
-				if( defaultTab.isSelectableAt( e.getPoint( ) ) )
+				if(defaultTab.isSelectableAt(e.getPoint()))
 				{
-					defaultTab.setSelected( !defaultTab.isSelected( ) );
+					defaultTab.setSelected(!defaultTab.isSelected());
 				}
 			}
 			
 			@Override
-			public void mouseMoved( MouseEvent e )
+			public void mouseMoved(MouseEvent e)
 			{
-				defaultTab.setRollover( defaultTab.isHoverableAt( e.getPoint( ) ) );
+				defaultTab.setRollover(defaultTab.isHoverableAt(e.getPoint()));
 			}
 			
 			@Override
-			public void mouseEntered( MouseEvent e )
+			public void mouseEntered(MouseEvent e)
 			{
-				defaultTab.setRollover( defaultTab.isHoverableAt( e.getPoint( ) ) );
+				defaultTab.setRollover(defaultTab.isHoverableAt(e.getPoint()));
 			}
 			
 			@Override
-			public void mouseExited( MouseEvent e )
+			public void mouseExited(MouseEvent e)
 			{
-				defaultTab.setRollover( defaultTab.isHoverableAt( e.getPoint( ) ) );
+				defaultTab.setRollover(defaultTab.isHoverableAt(e.getPoint()));
 			}
 		};
 		
-		defaultTab.addMouseListener( adapter );
-		defaultTab.addMouseMotionListener( adapter );
+		defaultTab.addMouseListener(adapter);
+		defaultTab.addMouseMotionListener(adapter);
 		
-		frame.pack( );
-		frame.setLocationRelativeTo( null );
-		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		frame.setVisible( true );
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
 	}
 }

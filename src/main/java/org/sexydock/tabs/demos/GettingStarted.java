@@ -28,18 +28,18 @@ public class GettingStarted implements ISexyTabsDemo
 	// differently. See NotepadDemo for a prime example of how to structure a tabbed application.
 	
 	@Override
-	public void start( )
+	public void start()
 	{
 		// To turn on Google Chrome-style tabs for all JTabbedPanes in an existing
 		// application, simply put the following code in your application startup:
 		
-		UIManager.getDefaults( ).put( "TabbedPaneUI" , JhromeTabbedPaneUI.class.getName( ) );
+		UIManager.getDefaults().put("TabbedPaneUI", JhromeTabbedPaneUI.class.getName());
 		
-		final JTabbedPane tabbedPane = new JTabbedPane( );
+		final JTabbedPane tabbedPane = new JTabbedPane();
 		
 		// Or, just set the tabbed pane's UI directly:
 		
-		tabbedPane.setUI( new JhromeTabbedPaneUI( ) );
+		tabbedPane.setUI(new JhromeTabbedPaneUI());
 		
 		// Now the tabbed pane will look like Google Chrome, but besides letting
 		// you reorder its tabs, it won't let you do anything special beyond
@@ -47,15 +47,15 @@ public class GettingStarted implements ISexyTabsDemo
 		
 		// To turn on tab close buttons, do this:
 		
-		tabbedPane.putClientProperty( JhromeTabbedPaneUI.TAB_CLOSE_BUTTONS_VISIBLE , true );
+		tabbedPane.putClientProperty(JhromeTabbedPaneUI.TAB_CLOSE_BUTTONS_VISIBLE, true);
 		
 		// But how to make the window close when the user closes the last tab? Use this:
 		
-		tabbedPane.addContainerListener( new DefaultTabsRemovedHandler( ) );
+		tabbedPane.addContainerListener(new DefaultTabsRemovedHandler());
 		
 		// To turn on the new tab button, do this:
 		
-		tabbedPane.putClientProperty( JhromeTabbedPaneUI.NEW_TAB_BUTTON_VISIBLE , true );
+		tabbedPane.putClientProperty(JhromeTabbedPaneUI.NEW_TAB_BUTTON_VISIBLE, true);
 		
 		// Not so fast! The new tab button won't work yet. You have to define how the
 		// content of new tabs is created. Here's how:
@@ -63,60 +63,60 @@ public class GettingStarted implements ISexyTabsDemo
 		@SuppressWarnings("serial")
 		class MyContent extends JPanel
 		{
-			public MyContent( )
+			public MyContent()
 			{
-				setOpaque( false );
+				setOpaque(false);
 			}
 		}
 		;
 		
-		ITabFactory tabFactory = new ITabFactory( )
+		ITabFactory tabFactory = new ITabFactory()
 		{
-			int	tabCount	= 1;
+			int tabCount = 1;
 			
 			@Override
-			public Tab createTabWithContent( )
+			public Tab createTabWithContent()
 			{
-				String title = "Tab " + ( tabCount++ );
+				String title = "Tab " + (tabCount++);
 				
-				JPanel content = new MyContent( );
+				JPanel content = new MyContent();
 				
 				// put your content here!
-				content.setLayout( new FlowLayout( ) );
-				JLabel contentLabel = new JLabel( title );
-				contentLabel.setFont( new Font( "Arial" , Font.BOLD , 72 ) );
-				content.add( contentLabel );
+				content.setLayout(new FlowLayout());
+				JLabel contentLabel = new JLabel(title);
+				contentLabel.setFont(new Font("Arial", Font.BOLD, 72));
+				content.add(contentLabel);
 				
-				return new Tab( title , content );
+				return new Tab(title, content);
 			}
 			
 			@Override
-			public Tab createTab( )
+			public Tab createTab()
 			{
-				return new Tab( );
+				return new Tab();
 			}
 		};
 		
-		tabbedPane.putClientProperty( JhromeTabbedPaneUI.TAB_FACTORY , tabFactory );
+		tabbedPane.putClientProperty(JhromeTabbedPaneUI.TAB_FACTORY, tabFactory);
 		
 		// Not too bad...now to make it possible to drag tabs out of the tabbed pane
 		// and back in!
 		
-		tabbedPane.putClientProperty( JhromeTabbedPaneUI.DND_POLICY , new ITabbedPaneDndPolicy( )
+		tabbedPane.putClientProperty(JhromeTabbedPaneUI.DND_POLICY, new ITabbedPaneDndPolicy()
 		{
 			@Override
-			public boolean isTearAwayAllowed( JTabbedPane tabbedPane , Tab tab )
+			public boolean isTearAwayAllowed(JTabbedPane tabbedPane, Tab tab)
 			{
 				return true;
 			}
 			
 			@Override
-			public boolean isSnapInAllowed( JTabbedPane tabbedPane , Tab tab )
+			public boolean isSnapInAllowed(JTabbedPane tabbedPane, Tab tab)
 			{
 				// This way tabs we don't recognize can't be dragged in!
-				return tab.getContent( ) instanceof MyContent;
+				return tab.getContent() instanceof MyContent;
 			}
-		} );
+		});
 		
 		// Then: what if the user drags a tab and drops it outside the window?
 		// Here's how to make that pop up a new window.
@@ -127,29 +127,29 @@ public class GettingStarted implements ISexyTabsDemo
 		@SuppressWarnings("serial")
 		class MyFrame extends JFrame implements ITabbedPaneWindow
 		{
-			public MyFrame( JTabbedPane tabbedPane )
+			public MyFrame(JTabbedPane tabbedPane)
 			{
-				super( "Hello World!" );
+				super("Hello World!");
 				this.tabbedPane = tabbedPane;
-				getContentPane( ).add( tabbedPane , BorderLayout.CENTER );
-				setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+				getContentPane().add(tabbedPane, BorderLayout.CENTER);
+				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				
 				// add a listener to exit when the last window is closed
 				// (this should happen automatically but there seem to be
 				// slight memory leaks caused by Jhrome)
-				addWindowListener( new DefaultWindowsClosedHandler( ) );
+				addWindowListener(new DefaultWindowsClosedHandler());
 			}
 			
-			JTabbedPane	tabbedPane;
+			JTabbedPane tabbedPane;
 			
 			@Override
-			public JTabbedPane getTabbedPane( )
+			public JTabbedPane getTabbedPane()
 			{
 				return tabbedPane;
 			}
 			
 			@Override
-			public Window getWindow( )
+			public Window getWindow()
 			{
 				return this;
 			}
@@ -158,13 +158,13 @@ public class GettingStarted implements ISexyTabsDemo
 		// Create a window factory that knows how to set up a new window with
 		// a tabbed pane in it.
 		
-		ITabbedPaneWindowFactory windowFactory = new ITabbedPaneWindowFactory( )
+		ITabbedPaneWindowFactory windowFactory = new ITabbedPaneWindowFactory()
 		{
 			@Override
-			public ITabbedPaneWindow createWindow( )
+			public ITabbedPaneWindow createWindow()
 			{
-				JTabbedPane newTabbedPane = new JTabbedPane( );
-				newTabbedPane.setUI( new JhromeTabbedPaneUI( ) );
+				JTabbedPane newTabbedPane = new JTabbedPane();
+				newTabbedPane.setUI(new JhromeTabbedPaneUI());
 				
 				// copy all of the special properties we set up on the first
 				// tabbed pane. In practice the tabbed pane would be created
@@ -172,29 +172,29 @@ public class GettingStarted implements ISexyTabsDemo
 				// be no need for this, but I did it to make the steps in this
 				// guide linear.
 				
-				JhromeTabbedPaneUI.copySettings( tabbedPane , newTabbedPane );
-				newTabbedPane.addContainerListener( new DefaultTabsRemovedHandler( ) );
+				JhromeTabbedPaneUI.copySettings(tabbedPane, newTabbedPane);
+				newTabbedPane.addContainerListener(new DefaultTabsRemovedHandler());
 				
-				return new MyFrame( newTabbedPane );
+				return new MyFrame(newTabbedPane);
 			}
 		};
 		
 		// Finally, install a tab drop failure handler that will use the window factory:
 		
-		tabbedPane.putClientProperty( JhromeTabbedPaneUI.TAB_DROP_FAILURE_HANDLER , new DefaultTabDropFailureHandler( windowFactory ) );
+		tabbedPane.putClientProperty(JhromeTabbedPaneUI.TAB_DROP_FAILURE_HANDLER, new DefaultTabDropFailureHandler(windowFactory));
 		
 		// Almost ready...create the first tab with the tab factory and add it:
 		
-		Tab tab = tabFactory.createTabWithContent( );
-		tabbedPane.addTab( tab.getTitle( ) , tab.getContent( ) );
+		Tab tab = tabFactory.createTabWithContent();
+		tabbedPane.addTab(tab.getTitle(), tab.getContent());
 		
 		// All right! Time to show off what we've done!
 		
-		MyFrame frame = new MyFrame( tabbedPane );
+		MyFrame frame = new MyFrame(tabbedPane);
 		
-		frame.getContentPane( ).add( tabbedPane , BorderLayout.CENTER );
-		frame.setSize( 800 , 600 );
-		frame.setLocationRelativeTo( null );
-		frame.setVisible( true );
+		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		frame.setSize(800, 600);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
 	}
 }

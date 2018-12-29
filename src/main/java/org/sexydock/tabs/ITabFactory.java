@@ -30,7 +30,7 @@ public interface ITabFactory
 	/**
 	 * @return a new {IJhromeTab}.
 	 */
-	Tab createTab( );
+	Tab createTab();
 	
-	Tab createTabWithContent( );
+	Tab createTabWithContent();
 }

@@ -29,19 +29,19 @@ import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 public class BottomTabPlacementDemo implements ISexyTabsDemo
 {
 	@Override
-	public void start( )
+	public void start()
 	{
-		DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow( getClass( ).getSimpleName( ) );
+		DefaultTabbedPaneWindow window = new DefaultTabbedPaneWindow(getClass().getSimpleName());
 		
-		TestTabFactory tabFactory = new TestTabFactory( );
-		window.getTabbedPane( ).putClientProperty( JhromeTabbedPaneUI.TAB_FACTORY , tabFactory );
-		window.getTabbedPane( ).setTabPlacement( JTabbedPane.BOTTOM );
+		TestTabFactory tabFactory = new TestTabFactory();
+		window.getTabbedPane().putClientProperty(JhromeTabbedPaneUI.TAB_FACTORY, tabFactory);
+		window.getTabbedPane().setTabPlacement(JTabbedPane.BOTTOM);
 		
-		Tab tab1 = tabFactory.createTabWithContent( );
-		window.getTabbedPane( ).addTab( tab1.getTitle( ) , tab1.getContent( ) );
+		Tab tab1 = tabFactory.createTabWithContent();
+		window.getTabbedPane().addTab(tab1.getTitle(), tab1.getContent());
 		
-		window.getWindow( ).setSize( 800 , 600 );
-		window.getWindow( ).setLocationRelativeTo( null );
-		window.getWindow( ).setVisible( true );
+		window.getWindow().setSize(800, 600);
+		window.getWindow().setLocationRelativeTo(null);
+		window.getWindow().setVisible(true);
 	}
 }
