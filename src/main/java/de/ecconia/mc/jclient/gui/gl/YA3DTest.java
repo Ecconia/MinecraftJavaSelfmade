@@ -1,6 +1,13 @@
 package de.ecconia.mc.jclient.gui.gl;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
+import java.awt.Robot;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,10 +38,54 @@ public class YA3DTest extends JPanel implements GLEventListener
 	float rotation = 0;
 	float lifting = -25;
 	
+	int posX = -8;
+	int posY = -22;
+	int posZ = -8;
+	
+	float neck = 20f;
+	
+	boolean isCaptured = false;
+	int mouseClickPosX = 0;
+	int mouseClickPosY = 0;
+	Robot robot;
+	
+	private void reset()
+	{
+		robot.mouseMove(mouseClickPosX, mouseClickPosY);
+	}
+	
+	private void newAbsMousePos(int x, int y)
+	{
+		if(isCaptured)
+		{
+			int xMove = mouseClickPosX - x;
+			int yMove = mouseClickPosY - y;
+			
+			if(xMove != 0 || yMove != 0)
+			{
+				reset();
+				
+				System.out.println("+ (" + xMove + ", " + yMove + ")");
+				
+				updateNeck(yMove);
+				updateRotation(xMove);
+			}
+		}
+	}
+	
 	public YA3DTest()
 	{
 		blocks = DecodeChunkTest.getProcessedChunk();
 		generateColors();
+		
+		try
+		{
+			robot = new Robot();
+		}
+		catch(AWTException e1)
+		{
+			e1.printStackTrace();
+		}
 		
 		//getting the capabilities object of GL2 profile        
 		final GLProfile profile = GLProfile.get(GLProfile.GL2);
@@ -60,6 +111,74 @@ public class YA3DTest extends JPanel implements GLEventListener
 			}
 		});
 		
+		addMouseListener(new MouseListener()
+		{
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+				System.out.println("Clicked the window!");
+				isCaptured = true;
+				mouseClickPosX = e.getXOnScreen();
+				mouseClickPosY = e.getYOnScreen();
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e)
+			{
+				if(isCaptured)
+				{
+					reset();
+				}
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e)
+			{
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+			}
+		});
+		
+		addMouseMotionListener(new MouseMotionListener()
+		{
+			@Override
+			public void mouseMoved(MouseEvent e)
+			{
+				newAbsMousePos(e.getXOnScreen(), e.getYOnScreen());
+			}
+			
+			@Override
+			public void mouseDragged(MouseEvent e)
+			{
+			}
+		});
+		
+		addFocusListener(new FocusListener()
+		{
+			@Override
+			public void focusLost(FocusEvent e)
+			{
+				if(isCaptured)
+				{
+					System.out.println("Focus lost, free mouse!");
+					isCaptured = false;
+				}
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e)
+			{
+			}
+		});
+		
 		//Keys:
 		//	Control - 17
 		
@@ -72,13 +191,49 @@ public class YA3DTest extends JPanel implements GLEventListener
 			@Override
 			public void released(int keyCode, char keyChar)
 			{
-				System.out.println(keyChar + " ↑");
+				//TODO: Add mouse for head/camera rotation.
+				if(keyCode == 18)
+				{
+					//Free mouse, if captured.
+					System.out.println("Free Mouse, cause ALT.");
+					isCaptured = false;
+				}
 			}
 			
 			@Override
 			public void pressed(int keyCode, char keyChar)
 			{
-				System.out.println(keyChar + " ↓");
+				//TODO: Fix directions, forward/backward/left/right
+				if(keyChar == 'a')
+				{
+					//Plus 'x'
+					posX++;
+				}
+				else if(keyChar == 'd')
+				{
+					//minus 'x'
+					posX--;
+				}
+				else if(keyChar == 'w')
+				{
+					//Plus 'z'
+					posZ++;
+				}
+				else if(keyChar == 's')
+				{
+					//Minus 'z'
+					posZ--;
+				}
+				else if(keyChar == 'q')
+				{
+					//Up
+					posY++;
+				}
+				else if(keyChar == 'e')
+				{
+					//Down
+					posY--;
+				}
 			}
 		}));
 		
@@ -88,6 +243,29 @@ public class YA3DTest extends JPanel implements GLEventListener
 		
 		final FPSAnimator animator = new FPSAnimator(glcanvas, 30, true);
 		animator.start();
+	}
+	
+	public void updateNeck(int d)
+	{
+		neck -= (float) d / 10f;
+		
+		if(neck < -90)
+		{
+			neck = -90;
+		}
+		
+		if(neck > 90)
+		{
+			neck = 90;
+		}
+		
+		System.out.println("Neck: " + neck);
+	}
+	
+	public void updateRotation(int d)
+	{
+		rotation -= (float) d / 10f;
+		System.out.println("Rotation: " + rotation);
 	}
 	
 	@Override
@@ -111,9 +289,9 @@ public class YA3DTest extends JPanel implements GLEventListener
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		
-		gl.glRotatef(20f, 1, 0, 0);
+		gl.glRotatef(neck, 1, 0, 0);
 		gl.glRotatef(rotation, 0.0f, 1.0f, 0.0f);
-		gl.glTranslatef(-8, -22, -8);
+		gl.glTranslatef(posX, posY, posZ);
 		for(int y = 0; y < 256; y++)
 		{
 			for(int x = 0; x < 16; x++)
@@ -130,7 +308,6 @@ public class YA3DTest extends JPanel implements GLEventListener
 			}
 		}
 		
-		rotation += 1f;
 		gl.glFlush();
 	}
 	
