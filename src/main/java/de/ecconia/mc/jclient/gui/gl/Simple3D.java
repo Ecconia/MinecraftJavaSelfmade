@@ -1,6 +1,17 @@
 package de.ecconia.mc.jclient.gui.gl;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -12,11 +23,12 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.gui.input.KeyDebouncer;
 import de.ecconia.mc.jclient.network.processor.WorldPacketProcessor;
 
 @SuppressWarnings("serial")
@@ -26,11 +38,99 @@ public class Simple3D extends JPanel implements GLEventListener
 	private GLU glu;
 	private Random r = new Random();
 	
-	int[][][] blocks = new int[16][16][256];
-	float[][] colors;
+	//TODO: Optimize access!
+	private int[][][] blocks = new int[16][16][256];
+	private float[][] colors;
 	
-	float rotation = 30;
-	float lifting = -25;
+	private float rotation = 30;
+	private float neck = 20f;
+	
+	private int posX = -8;
+	private int posY = -22;
+	private int posZ = -8;
+	
+	private boolean isCaptured = false;
+	private int mouseClickPosX = 0;
+	private int mouseClickPosY = 0;
+	private int lastAbsMousePosX;
+	private int lastAbsMousePosY;
+	
+	private Robot robot;
+	
+	//### Mouse ### ### ### ### ### ###
+	
+	private void freeMouse()
+	{
+		isCaptured = false;
+		
+		setCursor(Cursor.getDefaultCursor());
+	}
+	
+	private void captureMouse(int x, int y)
+	{
+		isCaptured = true;
+		mouseClickPosX = x;
+		mouseClickPosY = y;
+		
+		lastAbsMousePosX = x;
+		lastAbsMousePosY = y;
+		
+		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
+		setCursor(blankCursor);
+	}
+	
+	public void checkForMouseChanges()
+	{
+		Point currentMousePos = MouseInfo.getPointerInfo().getLocation();
+		int currentX = currentMousePos.x;
+		int currentY = currentMousePos.y;
+		
+		int diffX = lastAbsMousePosX - currentX;
+		int diffY = lastAbsMousePosY - currentY;
+		
+		if(diffX != 0 || diffY != 0)
+		{
+			robot.mouseMove(mouseClickPosX, mouseClickPosY);
+			lastAbsMousePosX = mouseClickPosX;
+			lastAbsMousePosY = mouseClickPosY;
+			
+			updateNeck(diffY);
+			updateRotation(diffX);
+		}
+	}
+	
+	public void updateNeck(int d)
+	{
+		neck -= (float) d / 10f;
+		
+		if(neck < -90)
+		{
+			neck = -90;
+		}
+		
+		if(neck > 90)
+		{
+			neck = 90;
+		}
+	}
+	
+	public void updateRotation(int d)
+	{
+		rotation -= (float) d / 10f;
+		
+		if(rotation > 180)
+		{
+			rotation -= 360;
+		}
+		
+		if(rotation < -180)
+		{
+			rotation += 360;
+		}
+	}
+	
+	//### ### ### ### ### ### ###
 	
 	public Simple3D(WorldPacketProcessor worldPacketProcessor, PrimitiveDataDude dataDude)
 	{
@@ -39,64 +139,191 @@ public class Simple3D extends JPanel implements GLEventListener
 			System.out.println("On thread: " + Thread.currentThread().getName());
 			blocks = worldPacketProcessor.getProcessedChunk(x, z);
 			
-			List<Integer> blocktypes = new ArrayList<>();
-			for(int iy = 0; iy < 256; iy++)
-			{
-				for(int ix = 0; ix < 16; ix++)
-				{
-					for(int iz = 0; iz < 16; iz++)
-					{
-						//TODO: Optimize access!
-						int block = blocks[ix][iz][iy];
-						if(block != 0)
-						{
-							blocktypes.add(block);
-						}
-					}
-				}
-			}
-			
-			final float[] c = {0f, 0.2f, 0.8f, 1f};
-			
-			colors = new float[blocktypes.size()][3];
-			for(int i = 0; i < blocktypes.size(); i++)
-			{
-				int red = r.nextInt(4);
-				int green = r.nextInt(4);
-				int blue = r.nextInt(4);
-				
-				colors[i][0] = c[red];
-				colors[i][1] = c[green];
-				colors[i][2] = c[blue];
-			}
+			generateColors();
 		});
+		
+		try
+		{
+			robot = new Robot();
+		}
+		catch(AWTException e1)
+		{
+			e1.printStackTrace();
+		}
 		
 		//getting the capabilities object of GL2 profile        
 		final GLProfile profile = GLProfile.get(GLProfile.GL2);
 		GLCapabilities capabilities = new GLCapabilities(profile);
 		
 		// The canvas
-		final GLCanvas glcanvas = new GLCanvas(capabilities);
+		final GLJPanel glcanvas = new GLJPanel(capabilities);
 		glcanvas.addGLEventListener(this);
+		glcanvas.setFocusable(false);
 		glcanvas.setSize(400, 400);
-		setLayout(new BorderLayout());
-		add(glcanvas);
 		
-		addMouseWheelListener(e -> {
-			int wheelRotation = e.getWheelRotation();
-			
-			if(e.isShiftDown())
+		glcanvas.addMouseListener(new MouseListener()
+		{
+			@Override
+			public void mouseReleased(MouseEvent e)
 			{
-				lifting += wheelRotation * 6;
 			}
-			else
+			
+			@Override
+			public void mousePressed(MouseEvent e)
 			{
-				rotation += wheelRotation;
+				//TODO: Fix this issue, the other one should capture the mouse.
+				System.out.println("Pressed canvas");
+				captureMouse(e.getXOnScreen(), e.getYOnScreen());
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e)
+			{
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e)
+			{
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
 			}
 		});
 		
+		addMouseListener(new MouseListener()
+		{
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+				System.out.println("Clicked the window!");
+				captureMouse(e.getXOnScreen(), e.getYOnScreen());
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e)
+			{
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e)
+			{
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+			}
+		});
+		
+		addFocusListener(new FocusListener()
+		{
+			@Override
+			public void focusLost(FocusEvent e)
+			{
+				if(isCaptured)
+				{
+					System.out.println("Focus lost, free mouse!");
+					freeMouse();
+				}
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e)
+			{
+			}
+		});
+		
+		addKeyListener(new KeyDebouncer(new KeyDebouncer.KeyPress()
+		{
+			@Override
+			public void released(int keyCode, char keyChar)
+			{
+				if(keyCode == 18)
+				{
+					//Free mouse, if captured.
+					System.out.println("Free Mouse, cause ALT.");
+					freeMouse();
+				}
+			}
+			
+			@Override
+			public void pressed(int keyCode, char keyChar)
+			{
+				//TODO: Fix directions, forward/backward/left/right
+				if(keyChar == 'a')
+				{
+					posX++;
+				}
+				else if(keyChar == 'd')
+				{
+					posX--;
+				}
+				else if(keyChar == 'w')
+				{
+					posZ++;
+				}
+				else if(keyChar == 's')
+				{
+					posZ--;
+				}
+				else if(keyChar == 'q')
+				{
+					posY++;
+				}
+				else if(keyChar == 'e')
+				{
+					posY--;
+				}
+			}
+		}));
+		
+		setLayout(new BorderLayout());
+		setFocusable(true);
+		add(glcanvas);
+		
 		final FPSAnimator animator = new FPSAnimator(glcanvas, 30, true);
 		animator.start();
+	}
+	
+	private void generateColors()
+	{
+		List<Integer> blocktypes = new ArrayList<>();
+		for(int iy = 0; iy < 256; iy++)
+		{
+			for(int ix = 0; ix < 16; ix++)
+			{
+				for(int iz = 0; iz < 16; iz++)
+				{
+					//TODO: Optimize access!
+					int block = blocks[ix][iz][iy];
+					if(block != 0)
+					{
+						blocktypes.add(block);
+					}
+				}
+			}
+		}
+		
+		final float[] c = {0f, 0.2f, 0.8f, 1f};
+		
+		colors = new float[blocktypes.size()][3];
+		for(int i = 0; i < blocktypes.size(); i++)
+		{
+			int red = r.nextInt(4);
+			int green = r.nextInt(4);
+			int blue = r.nextInt(4);
+			
+			colors[i][0] = c[red];
+			colors[i][1] = c[green];
+			colors[i][2] = c[blue];
+		}
 	}
 	
 	@Override
@@ -122,30 +349,30 @@ public class Simple3D extends JPanel implements GLEventListener
 	@Override
 	public void display(GLAutoDrawable drawable)
 	{
-//		L.writeLineOnChannel("spam!", "############################################################");
-//		System.out.println("Render...");
+		if(isCaptured)
+		{
+			checkForMouseChanges();
+		}
+		
 		final GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		
-		gl.glTranslatef(-8, lifting, -50);
+		gl.glRotatef(neck, 1, 0, 0);
 		gl.glRotatef(rotation, 0.0f, 1.0f, 0.0f);
-		
+		gl.glTranslatef(posX, posY, posZ);
 		for(int y = 0; y < 256; y++)
 		{
 			for(int x = 0; x < 16; x++)
 			{
 				for(int z = 0; z < 16; z++)
 				{
-					//TODO: Optimize access!
 					int block = blocks[x][z][y];
 					if(block != 0)
 					{
-//						setRandomColor(gl);
 						gl.glColor3f(colors[block][0], colors[block][1], colors[block][2]);
-						drawBlock(gl, x, y, z - 8);
+						Helper3D.drawBlock(gl, x, y, z - 8);
 					}
-//					L.writeLineOnChannel("spam!", "XYZ: " + x + ", " + y + ", " + z + " -> " + block);
 				}
 			}
 		}
@@ -153,194 +380,15 @@ public class Simple3D extends JPanel implements GLEventListener
 		gl.glFlush();
 	}
 	
-	private void drawBlock(GL2 gl, int x, int y, int z)
-	{
-		gl.glPushMatrix();
-		
-		gl.glTranslatef(x, y, z);
-		gl.glBegin(GL2.GL_QUADS);
-		
-		double r = 0.4999;
-		
-		//Top:
-		gl.glVertex3d(r, r, r);
-		gl.glVertex3d(r, r, -r);
-		gl.glVertex3d(-r, r, -r);
-		gl.glVertex3d(-r, r, r);
-		
-		//Bottom:
-		gl.glVertex3d(r, -r, r);
-		gl.glVertex3d(r, -r, -r);
-		gl.glVertex3d(-r, -r, -r);
-		gl.glVertex3d(-r, -r, r);
-		
-		//Left:
-		gl.glVertex3d(-r, -r, r);
-		gl.glVertex3d(-r, -r, -r);
-		gl.glVertex3d(-r, r, -r);
-		gl.glVertex3d(-r, r, r);
-		
-		//Right:
-		gl.glVertex3d(r, -r, r);
-		gl.glVertex3d(r, -r, -r);
-		gl.glVertex3d(r, r, -r);
-		gl.glVertex3d(r, r, r);
-		
-		//Back:
-		gl.glVertex3d(-r, -r, -r);
-		gl.glVertex3d(r, -r, -r);
-		gl.glVertex3d(r, r, -r);
-		gl.glVertex3d(-r, r, -r);
-		
-		//Front:
-		gl.glVertex3d(-r, -r, r);
-		gl.glVertex3d(r, -r, r);
-		gl.glVertex3d(r, r, r);
-		gl.glVertex3d(-r, r, r);
-		
-		gl.glEnd();
-		
-		double i = 0.45;
-		r = 0.5;
-		
-		gl.glColor3f(0.5f, 0.5f, 0.5f);
-		gl.glBegin(GL2.GL_QUADS);
-		
-		//TOP:
-		gl.glVertex3d(r, r, r);
-		gl.glVertex3d(r, r, -r);
-		gl.glVertex3d(i, r, -r);
-		gl.glVertex3d(i, r, r);
-		
-		gl.glVertex3d(-r, r, r);
-		gl.glVertex3d(-r, r, -r);
-		gl.glVertex3d(-i, r, -r);
-		gl.glVertex3d(-i, r, r);
-		
-		gl.glVertex3d(-i, r, r);
-		gl.glVertex3d(i, r, r);
-		gl.glVertex3d(i, r, i);
-		gl.glVertex3d(-i, r, i);
-		
-		gl.glVertex3d(-i, r, -r);
-		gl.glVertex3d(i, r, -r);
-		gl.glVertex3d(i, r, -i);
-		gl.glVertex3d(-i, r, -i);
-		
-		//Bottom:
-		gl.glVertex3d(r, -r, r);
-		gl.glVertex3d(r, -r, -r);
-		gl.glVertex3d(i, -r, -r);
-		gl.glVertex3d(i, -r, r);
-		
-		gl.glVertex3d(-r, -r, r);
-		gl.glVertex3d(-r, -r, -r);
-		gl.glVertex3d(-i, -r, -r);
-		gl.glVertex3d(-i, -r, r);
-		
-		gl.glVertex3d(-i, -r, r);
-		gl.glVertex3d(i, -r, r);
-		gl.glVertex3d(i, -r, i);
-		gl.glVertex3d(-i, -r, i);
-		
-		gl.glVertex3d(-i, -r, -r);
-		gl.glVertex3d(i, -r, -r);
-		gl.glVertex3d(i, -r, -i);
-		gl.glVertex3d(-i, -r, -i);
-		
-		//Right:
-		gl.glVertex3d(r, r, r);
-		gl.glVertex3d(r, -r, r);
-		gl.glVertex3d(r, -r, i);
-		gl.glVertex3d(r, r, i);
-		
-		gl.glVertex3d(r, r, -r);
-		gl.glVertex3d(r, -r, -r);
-		gl.glVertex3d(r, -r, -i);
-		gl.glVertex3d(r, r, -i);
-		
-		gl.glVertex3d(r, r, -i);
-		gl.glVertex3d(r, r, i);
-		gl.glVertex3d(r, i, i);
-		gl.glVertex3d(r, i, -i);
-		
-		gl.glVertex3d(r, -r, -i);
-		gl.glVertex3d(r, -r, i);
-		gl.glVertex3d(r, -i, i);
-		gl.glVertex3d(r, -i, -i);
-		
-		//Left:
-		gl.glVertex3d(-r, r, r);
-		gl.glVertex3d(-r, -r, r);
-		gl.glVertex3d(-r, -r, i);
-		gl.glVertex3d(-r, r, i);
-		
-		gl.glVertex3d(-r, r, -r);
-		gl.glVertex3d(-r, -r, -r);
-		gl.glVertex3d(-r, -r, -i);
-		gl.glVertex3d(-r, r, -i);
-		
-		gl.glVertex3d(-r, r, -i);
-		gl.glVertex3d(-r, r, i);
-		gl.glVertex3d(-r, i, i);
-		gl.glVertex3d(-r, i, -i);
-		
-		gl.glVertex3d(-r, -r, -i);
-		gl.glVertex3d(-r, -r, i);
-		gl.glVertex3d(-r, -i, i);
-		gl.glVertex3d(-r, -i, -i);
-		
-		//Front:
-		gl.glVertex3d(r, r, r);
-		gl.glVertex3d(-r, r, r);
-		gl.glVertex3d(-r, i, r);
-		gl.glVertex3d(r, i, r);
-		
-		gl.glVertex3d(r, -r, r);
-		gl.glVertex3d(-r, -r, r);
-		gl.glVertex3d(-r, -i, r);
-		gl.glVertex3d(r, -i, r);
-		
-		gl.glVertex3d(r, -i, r);
-		gl.glVertex3d(r, i, r);
-		gl.glVertex3d(i, i, r);
-		gl.glVertex3d(i, -i, r);
-		
-		gl.glVertex3d(-r, -i, r);
-		gl.glVertex3d(-r, i, r);
-		gl.glVertex3d(-i, i, r);
-		gl.glVertex3d(-i, -i, r);
-		
-		//Back:
-		gl.glVertex3d(r, r, -r);
-		gl.glVertex3d(-r, r, -r);
-		gl.glVertex3d(-r, i, -r);
-		gl.glVertex3d(r, i, -r);
-		
-		gl.glVertex3d(r, -r, -r);
-		gl.glVertex3d(-r, -r, -r);
-		gl.glVertex3d(-r, -i, -r);
-		gl.glVertex3d(r, -i, -r);
-		
-		gl.glVertex3d(r, -i, -r);
-		gl.glVertex3d(r, i, -r);
-		gl.glVertex3d(i, i, -r);
-		gl.glVertex3d(i, -i, -r);
-		
-		gl.glVertex3d(-r, -i, -r);
-		gl.glVertex3d(-r, i, -r);
-		gl.glVertex3d(-i, i, -r);
-		gl.glVertex3d(-i, -i, -r);
-		
-		gl.glEnd();
-		
-		gl.glPopMatrix();
-	}
-	
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
 	{
-//		System.out.println("Resize!!!");
+		if(isCaptured)
+		{
+			System.out.println("Resized, free mouse.");
+			freeMouse();
+		}
+		
 		final GL2 gl = drawable.getGL().getGL2();
 		
 		if(height <= 0)
@@ -354,21 +402,9 @@ public class Simple3D extends JPanel implements GLEventListener
 		
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-//		System.out.println("Aspect: " + aspectRatio);
 		glu.gluPerspective(45.0f, aspectRatio, 1.0, 100.0);
 		
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
-	
-//	private void setRandomColor(GL2 gl)
-//	{
-//		final float[] c = {0f, 0.2f, 0.8f, 1f};
-//		
-//		int red = r.nextInt(4);
-//		int green = r.nextInt(4);
-//		int blue = r.nextInt(4);
-//		
-//		gl.glColor3f(c[red], c[green], c[blue]);
-//	}
 }
