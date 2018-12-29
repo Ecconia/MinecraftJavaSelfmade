@@ -344,18 +344,6 @@ public class WorldPacketProcessor extends PacketThread
 			{
 				long[] longs = subChunk.getBlocks();
 				
-//				for(int y = 0; y < 16; y++)
-//				{
-//					for(int x = 0; x < 16; x++)
-//					{
-//						for(int z = 0; z < 16; z++)
-//						{
-//							//TODO: Optimize access!
-//							blocks[x][z][y + yOffset] = 0;
-//						}
-//					}
-//				}
-				
 				int bitsPerBlock = subChunk.getBitsPerBlock();
 				int maxBit = 1 << bitsPerBlock;
 				
@@ -365,9 +353,9 @@ public class WorldPacketProcessor extends PacketThread
 				
 				for(int y = 0; y < 16; y++)
 				{
-					for(int x = 0; x < 16; x++)
+					for(int z = 0; z < 16; z++)
 					{
-						for(int z = 0; z < 16; z++)
+						for(int x = 0; x < 16; x++)
 						{
 							int tmp = 0;
 							
@@ -401,7 +389,3 @@ public class WorldPacketProcessor extends PacketThread
 		return blocks;
 	}
 }
-
-//0 -> Air
-//33 -> Bedrock
-//10 -> Dirt

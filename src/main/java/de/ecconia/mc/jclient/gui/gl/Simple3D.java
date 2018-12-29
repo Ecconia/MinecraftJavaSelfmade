@@ -30,6 +30,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.gui.input.KeyDebouncer;
 import de.ecconia.mc.jclient.network.processor.WorldPacketProcessor;
+import de.ecconia.mc.jclient.tools.McMathHelper;
 
 @SuppressWarnings("serial")
 public class Simple3D extends JPanel implements GLEventListener
@@ -38,16 +39,26 @@ public class Simple3D extends JPanel implements GLEventListener
 	private GLU glu;
 	private Random r = new Random();
 	
-	//TODO: Optimize access!
-	private int[][][] blocks = new int[16][16][256];
-	private float[][] colors;
-	
+	//////////////////////////////////////
+	//Camera position:
 	private float rotation = 30;
 	private float neck = 20f;
 	
-	private int posX = -8;
-	private int posY = -22;
-	private int posZ = -8;
+	private int posX = 0;
+	private int posY = 0;
+	private int posZ = 0;
+	
+	//////////////////////////////////////
+	//World data:
+	
+	//TODO: Optimize access!
+	private int[][][] blocks = new int[16][16][256];
+	private float[][] colors;
+	private int offsetX = 0;
+	private int offsetZ = 0;
+	
+	//////////////////////////////////////
+	//Mouse capture stuff:
 	
 	private boolean isCaptured = false;
 	private int mouseClickPosX = 0;
@@ -57,6 +68,7 @@ public class Simple3D extends JPanel implements GLEventListener
 	
 	private Robot robot;
 	
+	//////////////////////////////////////
 	//### Mouse ### ### ### ### ### ###
 	
 	private void freeMouse()
@@ -139,7 +151,6 @@ public class Simple3D extends JPanel implements GLEventListener
 		dataDude.setChunkPosHandler((x, z) -> {
 			//TODO: Threadsafe!
 			new Thread(() -> {
-				System.out.println("On thread: " + Thread.currentThread().getName());
 				try
 				{
 					Thread.sleep(500);
@@ -148,10 +159,19 @@ public class Simple3D extends JPanel implements GLEventListener
 				{
 					e1.printStackTrace();
 				}
+				
 				blocks = worldPacketProcessor.getProcessedChunk(x, z);
+				offsetX = McMathHelper.toStartPos(x);
+				offsetZ = McMathHelper.toStartPos(z);
 				
 				generateColors();
 			}, "Chunk processor # " + chunkProcessor++).start();
+		});
+		
+		dataDude.setPlayerPositionHandler((x, y, z) -> {
+			posX = x;
+			posY = y;
+			posZ = z;
 		});
 		
 		try
@@ -372,7 +392,8 @@ public class Simple3D extends JPanel implements GLEventListener
 		
 		gl.glRotatef(neck, 1, 0, 0);
 		gl.glRotatef(rotation, 0.0f, 1.0f, 0.0f);
-		gl.glTranslatef(posX, posY, posZ);
+		gl.glTranslatef(-posX, -posY - 1, -posZ);
+		
 		for(int y = 0; y < 256; y++)
 		{
 			for(int x = 0; x < 16; x++)
@@ -383,7 +404,7 @@ public class Simple3D extends JPanel implements GLEventListener
 					if(block != 0)
 					{
 						gl.glColor3f(colors[block][0], colors[block][1], colors[block][2]);
-						Helper3D.drawBlock(gl, x, y, z - 8);
+						Helper3D.drawBlock(gl, offsetX + x, y, offsetZ + z);
 					}
 				}
 			}
@@ -414,7 +435,7 @@ public class Simple3D extends JPanel implements GLEventListener
 		
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(45.0f, aspectRatio, 1.0, 100.0);
+		glu.gluPerspective(45.0f, aspectRatio, 1.0, 5000.0);
 		
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();

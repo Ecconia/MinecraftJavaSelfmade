@@ -4,6 +4,7 @@ import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.gui.tabs.ChatPane;
 import de.ecconia.mc.jclient.network.connector.Connector;
+import de.ecconia.mc.jclient.tools.McMathHelper;
 import de.ecconia.mc.jclient.tools.PrintUtils;
 import old.packet.MessageBuilder;
 
@@ -82,16 +83,25 @@ public class PrimitiveDataDude
 	private int chunkZ = Integer.MAX_VALUE;
 	
 	private UpdateChunkPos worldHandler;
+	private UpdatePlayerPos playerPosHandler;
 	
 	public void setChunkPosHandler(UpdateChunkPos handler)
 	{
 		this.worldHandler = handler;
 	}
 	
+	public void setPlayerPositionHandler(UpdatePlayerPos playerPosHandler)
+	{
+		this.playerPosHandler = playerPosHandler;
+	}
+	
 	public void newPosition(int x, int y, int z)
 	{
-		int newChunkX = x / 16;
-		int newChunkZ = z / 16;
+		System.out.println("Recieved position: (" + x + ", " + y + ", " + z + ")");
+		playerPosHandler.updatePlayerCoords(x, y, z);
+		
+		int newChunkX = McMathHelper.toChunkPos(x);
+		int newChunkZ = McMathHelper.toChunkPos(z);
 		
 		if(newChunkX != chunkX || newChunkZ != chunkZ)
 		{
@@ -108,6 +118,11 @@ public class PrimitiveDataDude
 	public static interface UpdateChunkPos
 	{
 		public void updateChunkCoords(int x, int z);
+	}
+	
+	public static interface UpdatePlayerPos
+	{
+		public void updatePlayerCoords(int x, int y, int z);
 	}
 	
 	public void setPosition(int x, int y, int z)
