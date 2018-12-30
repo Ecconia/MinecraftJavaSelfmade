@@ -188,4 +188,19 @@ public class PrimitiveDataDude
 	{
 		return con;
 	}
+
+	public void walkTo(int posX, int posY, int posZ)
+	{
+		MessageBuilder mb = new MessageBuilder();
+		System.out.println("Walking to: (" + posX + ", " + posY + ", " + posZ + ")");
+		
+		mb.addDouble(posX);
+		mb.addDouble(posY);
+		mb.addDouble(posZ);
+		mb.addBoolean(true);
+		mb.prependCInt(0x10);
+		con.sendPacket(mb.asBytes());
+		
+		newPosition(posX, posY, posZ);
+	}
 }

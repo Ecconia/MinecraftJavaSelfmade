@@ -292,26 +292,32 @@ public class Simple3D extends JPanel implements GLEventListener
 				if(keyChar == 'a')
 				{
 					posX++;
+					dataDude.walkTo(posX, posY, posZ);
 				}
 				else if(keyChar == 'd')
 				{
 					posX--;
+					dataDude.walkTo(posX, posY, posZ);
 				}
 				else if(keyChar == 'w')
 				{
 					posZ++;
+					dataDude.walkTo(posX, posY, posZ);
 				}
 				else if(keyChar == 's')
 				{
 					posZ--;
+					dataDude.walkTo(posX, posY, posZ);
 				}
 				else if(keyChar == 'q')
 				{
 					posY++;
+					dataDude.walkTo(posX, posY, posZ);
 				}
 				else if(keyChar == 'e')
 				{
 					posY--;
+					dataDude.walkTo(posX, posY, posZ);
 				}
 			}
 		}));
