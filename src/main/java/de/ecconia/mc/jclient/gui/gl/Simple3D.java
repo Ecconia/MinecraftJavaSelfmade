@@ -28,6 +28,8 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
+import de.ecconia.mc.jclient.gui.gl.models.BlockModel;
 import de.ecconia.mc.jclient.gui.input.KeyDebouncer;
 import de.ecconia.mc.jclient.network.processor.WorldPacketProcessor;
 import de.ecconia.mc.jclient.tools.McMathHelper;
@@ -54,6 +56,7 @@ public class Simple3D extends JPanel implements GLEventListener
 	//TODO: Optimize access!
 	private int[][][] blocks = new int[16][16][256];
 	private float[][] colors;
+	private BlockLib blockModels = new BlockLib();
 	private int offsetX = 0;
 	private int offsetZ = 0;
 	
@@ -339,7 +342,6 @@ public class Simple3D extends JPanel implements GLEventListener
 			{
 				for(int iz = 0; iz < 16; iz++)
 				{
-					//TODO: Optimize access!
 					int block = blocks[ix][iz][iy];
 					if(block != 0)
 					{
@@ -409,8 +411,10 @@ public class Simple3D extends JPanel implements GLEventListener
 					int block = blocks[x][z][y];
 					if(block != 0)
 					{
-						gl.glColor3f(colors[block][0], colors[block][1], colors[block][2]);
-						Helper3D.drawBlock(gl, offsetX + x, y, offsetZ + z);
+//						gl.glColor3f(colors[block][0], colors[block][1], colors[block][2]);
+//						Helper3D.drawBlock(gl, offsetX + x, y, offsetZ + z);
+						BlockModel model = blockModels.get(block);
+						model.draw(gl, offsetX + x, y, offsetZ + z);
 					}
 				}
 			}

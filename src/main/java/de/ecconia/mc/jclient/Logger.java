@@ -18,4 +18,11 @@ public class Logger
 	{
 		System.out.println("WARNING: " + message);
 	}
+	
+	public static void important(String message)
+	{
+		System.out.println("#######################################");
+		System.out.println("IMPORTANT: " + message);
+		System.out.println("#######################################");
+	}
 }
