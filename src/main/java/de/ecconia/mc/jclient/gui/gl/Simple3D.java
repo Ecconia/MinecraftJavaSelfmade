@@ -435,7 +435,7 @@ public class Simple3D extends JPanel implements GLEventListener
 		
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(45.0f, aspectRatio, 1.0, 5000.0);
+		glu.gluPerspective(45.0f, aspectRatio, 0.1, 5000.0);
 		
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
