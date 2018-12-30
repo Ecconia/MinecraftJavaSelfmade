@@ -1,9 +1,8 @@
 package de.ecconia.mc.jclient.network.processor;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.data.world.Chunk;
+import de.ecconia.mc.jclient.data.world.SubChunk;
 import de.ecconia.mc.jclient.gui.gl.Simple3D;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.gui.tabs.ChunkMap;
@@ -14,7 +13,6 @@ import de.ecconia.mc.jclient.network.packeting.PacketThread;
 public class WorldPacketProcessor extends PacketThread
 {
 	private final ChunkMap cMap;
-	private final ChunkStorage chunks = new ChunkStorage();
 	
 	public WorldPacketProcessor(PrimitiveDataDude dataDude)
 	{
@@ -160,7 +158,7 @@ public class WorldPacketProcessor extends PacketThread
 			int nbtAmount = reader.readCInt();
 			logData(">> NBT Entries: " + nbtAmount + " Size: " + reader.remaining() + " bytes");
 			
-			chunks.put(x, y, chunk);
+			dataDude.getCurrentServer().getWorldManager().loadChunk(chunk);
 		}
 		else if(id == 0x0B)
 		{
@@ -224,91 +222,9 @@ public class WorldPacketProcessor extends PacketThread
 		L.writeLineOnChannel("C: World", message);
 	}
 	
-	private static class ChunkStorage
-	{
-		private final Map<Integer, Map<Integer, Chunk>> xList = new HashMap<>();
-		
-		public void put(int x, int y, Chunk chunk)
-		{
-			Map<Integer, Chunk> yList = xList.get(x);
-			if(yList == null)
-			{
-				yList = new HashMap<>();
-				xList.put(x, yList);
-			}
-			
-			chunk = yList.put(y, chunk);
-			if(chunk != null)
-			{
-				//Its just a simple update, not really important later on.
-				//TODO: Re-add, once unloading is working.
-//				System.out.println("WARNING, chunk has been overwritten!");
-			}
-		}
-		
-		public Chunk get(int x, int y)
-		{
-			Map<Integer, Chunk> yList = xList.get(x);
-			if(yList == null)
-			{
-				return null;
-			}
-			
-			Chunk c = yList.get(y);
-			return c;
-		}
-	}
-	
-	private static class Chunk
-	{
-		private SubChunk[] chunkMap;
-		
-		public Chunk(int x, int y)
-		{
-		}
-		
-		public void setChunkMap(SubChunk[] chunkMap)
-		{
-			this.chunkMap = chunkMap;
-		}
-		
-		public SubChunk[] getChunkMap()
-		{
-			return chunkMap;
-		}
-	}
-	
-	private static class SubChunk
-	{
-		public final int bitsPerBlock;
-		public final long[] blocks;
-		
-		public SubChunk()
-		{
-			bitsPerBlock = 0;
-			blocks = new long[0];
-		}
-		
-		public SubChunk(int bitsPerBlock, long[] dataLongs)
-		{
-			this.bitsPerBlock = bitsPerBlock;
-			this.blocks = dataLongs;
-		}
-		
-		public int getBitsPerBlock()
-		{
-			return bitsPerBlock;
-		}
-		
-		public long[] getBlocks()
-		{
-			return blocks;
-		}
-	}
-	
 	public int[][][] getProcessedChunk(int cx, int cz)
 	{
-		Chunk chunk = chunks.get(cx, cz);
+		Chunk chunk = dataDude.getCurrentServer().getWorldManager().getChunk(cx, cz);
 		int[][][] blocks = new int[16][16][256];
 		
 		if(chunk == null)

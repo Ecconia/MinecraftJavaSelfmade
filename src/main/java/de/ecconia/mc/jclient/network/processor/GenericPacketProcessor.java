@@ -261,8 +261,12 @@ public class GenericPacketProcessor extends PacketThread
 		{
 			logPacket("JoinPlayerState");
 			//Int -> ID
+			reader.readInt();
 			//UByte -> Gamemode
+			reader.readUByte();
 			//Int -> Dimension Type
+			int dimension = reader.readInt();
+			dataDude.getCurrentServer().getWorldManager().respawn(dimension);
 			//UByte -> Difficulty
 			//UByte -> Max players (ignored)
 			//String -> Map type...?
@@ -271,7 +275,9 @@ public class GenericPacketProcessor extends PacketThread
 		else if(id == 0x38)
 		{
 			logPacket("(Re)spawn to dimension");
-			logData("Spawned in dimension: " + reader.readInt());
+			int dimension = reader.readInt();
+			logData("Spawned in dimension: " + dimension);
+			dataDude.getCurrentServer().getWorldManager().respawn(dimension);
 		}
 		else
 		{
