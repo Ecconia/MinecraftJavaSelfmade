@@ -28,8 +28,8 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.gui.gl.buffers.Optimizer;
 import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
-import de.ecconia.mc.jclient.gui.gl.models.BlockModel;
 import de.ecconia.mc.jclient.gui.input.KeyDebouncer;
 import de.ecconia.mc.jclient.network.processor.WorldPacketProcessor;
 import de.ecconia.mc.jclient.tools.McMathHelper;
@@ -55,10 +55,13 @@ public class Simple3D extends JPanel implements GLEventListener
 	
 	//TODO: Optimize access!
 	private int[][][] blocks = new int[16][16][256];
+	//TODO: Dispose
 	private float[][] colors;
 	private BlockLib blockModels = new BlockLib();
 	private int offsetX = 0;
 	private int offsetZ = 0;
+	
+	private Optimizer o;
 	
 	//////////////////////////////////////
 	//Mouse capture stuff:
@@ -164,6 +167,7 @@ public class Simple3D extends JPanel implements GLEventListener
 				}
 				
 				blocks = worldPacketProcessor.getProcessedChunk(x, z);
+				o = new Optimizer(blocks);
 				offsetX = McMathHelper.toStartPos(x);
 				offsetZ = McMathHelper.toStartPos(z);
 				
@@ -400,24 +404,44 @@ public class Simple3D extends JPanel implements GLEventListener
 		
 		gl.glRotatef(neck, 1, 0, 0);
 		gl.glRotatef(rotation, 0.0f, 1.0f, 0.0f);
+		
 		gl.glTranslatef(-posX, -posY - 1, -posZ);
 		
-		for(int y = 0; y < 256; y++)
-		{
-			for(int x = 0; x < 16; x++)
-			{
-				for(int z = 0; z < 16; z++)
-				{
-					int block = blocks[x][z][y];
-					if(block != 0)
-					{
+//		for(int y = 0; y < 256; y++)
+//		{
+//			for(int x = 0; x < 16; x++)
+//			{
+//				for(int z = 0; z < 16; z++)
+//				{
+//					int block = blocks[x][z][y];
+//					if(block != 0)
+//					{
 //						gl.glColor3f(colors[block][0], colors[block][1], colors[block][2]);
 //						Helper3D.drawBlock(gl, offsetX + x, y, offsetZ + z);
-						BlockModel model = blockModels.get(block);
-						model.draw(gl, offsetX + x, y, offsetZ + z);
-					}
-				}
+//						BlockModel model = blockModels.get(block);
+//						model.draw(gl, offsetX + x, y, offsetZ + z);
+//					}
+//				}
+//			}
+//		}
+		
+		if(o != null)
+		{
+			gl.glTranslated(offsetX, 0, offsetZ);
+			
+			for(int i = -1; i < 17; i++)
+			{
+				gl.glColor3f(0, 0, 0);
+				Helper3D.drawBlock(gl, i, -2, -1);
+				gl.glColor3f(0, 0, 0);
+				Helper3D.drawBlock(gl, i, -2, 16);
+				gl.glColor3f(0, 0, 0);
+				Helper3D.drawBlock(gl, -1, -2, i);
+				gl.glColor3f(0, 0, 0);
+				Helper3D.drawBlock(gl, 16, -2, i);
 			}
+			
+			o.draw(gl, blockModels);
 		}
 		
 		gl.glFlush();
