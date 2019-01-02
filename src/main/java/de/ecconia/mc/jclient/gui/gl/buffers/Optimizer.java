@@ -9,9 +9,13 @@ import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
 
 public class Optimizer
 {
-	public List<Face> xFaces = new ArrayList<>();
-	public List<Face> yFaces = new ArrayList<>();
-	public List<Face> zFaces = new ArrayList<>();
+	public List<Face> xpFaces = new ArrayList<>();
+	public List<Face> ypFaces = new ArrayList<>();
+	public List<Face> zpFaces = new ArrayList<>();
+	
+	public List<Face> xmFaces = new ArrayList<>();
+	public List<Face> ymFaces = new ArrayList<>();
+	public List<Face> zmFaces = new ArrayList<>();
 	
 	public Optimizer(int[][][] blocks)
 	{
@@ -23,7 +27,7 @@ public class Optimizer
 				
 				if(block != 0)
 				{
-					yFaces.add(new Face(block, x, 0, z));
+					ymFaces.add(new Face(block, x, 0, z));
 				}
 			}
 		}
@@ -43,7 +47,7 @@ public class Optimizer
 							int block2 = blocks[x][z][y - 1];
 							if(block2 != 0)
 							{
-								yFaces.add(new Face(block2, x, y, z));
+								ypFaces.add(new Face(block2, x, y, z));
 							}
 						}
 						
@@ -52,7 +56,7 @@ public class Optimizer
 							int block2 = blocks[x][z][y + 1];
 							if(block2 != 0)
 							{
-								yFaces.add(new Face(block2, x, y + 1, z));
+								ymFaces.add(new Face(block2, x, y + 1, z));
 							}
 						}
 						
@@ -61,7 +65,7 @@ public class Optimizer
 							int block2 = blocks[x][z + 1][y];
 							if(block2 != 0)
 							{
-								zFaces.add(new Face(block2, x, y, z + 1));
+								zmFaces.add(new Face(block2, x, y, z + 1));
 							}
 						}
 						
@@ -70,7 +74,7 @@ public class Optimizer
 							int block2 = blocks[x][z - 1][y];
 							if(block2 != 0)
 							{
-								zFaces.add(new Face(block2, x, y, z));
+								zpFaces.add(new Face(block2, x, y, z));
 							}
 						}
 						
@@ -79,7 +83,7 @@ public class Optimizer
 							int block2 = blocks[x + 1][z][y];
 							if(block2 != 0)
 							{
-								xFaces.add(new Face(block2, x + 1, y, z));
+								xmFaces.add(new Face(block2, x + 1, y, z));
 							}
 						}
 						
@@ -88,7 +92,7 @@ public class Optimizer
 							int block2 = blocks[x - 1][z][y];
 							if(block2 != 0)
 							{
-								xFaces.add(new Face(block2, x, y, z));
+								xpFaces.add(new Face(block2, x, y, z));
 							}
 						}
 					}
@@ -99,73 +103,230 @@ public class Optimizer
 	
 	public void draw(GL2 gl, BlockLib lib)
 	{
-		for(Face f : yFaces)
+		for(Face f : ymFaces)
 		{
 			gl.glPushMatrix();
 			
 			lib.get(f.type).draw(gl, 0, 0, 0);
 			gl.glTranslated(f.x, f.y - 0.5f, f.z);
 			
-			gl.glBegin(GL2.GL_QUADS);
-			drawFaceY(gl);
-			gl.glEnd();
+			drawFaceYM(gl);
 			
 			gl.glPopMatrix();
 		}
 		
-		for(Face f : xFaces)
+		for(Face f : xmFaces)
 		{
 			gl.glPushMatrix();
 			
 			lib.get(f.type).draw(gl, 0, 0, 0);
 			gl.glTranslated(f.x - 0.5f, f.y, f.z);
 			
-			gl.glBegin(GL2.GL_QUADS);
-			drawFaceX(gl);
-			gl.glEnd();
+			drawFaceXM(gl);
 			
 			gl.glPopMatrix();
 		}
 		
-		for(Face f : zFaces)
+		for(Face f : zmFaces)
 		{
 			gl.glPushMatrix();
 			
 			lib.get(f.type).draw(gl, 0, 0, 0);
 			gl.glTranslated(f.x, f.y, f.z - 0.5f);
 			
-			gl.glBegin(GL2.GL_QUADS);
-			drawFaceZ(gl);
-			gl.glEnd();
+			drawFaceZM(gl);
+			
+			gl.glPopMatrix();
+		}
+		
+		for(Face f : ypFaces)
+		{
+			gl.glPushMatrix();
+			
+			lib.get(f.type).draw(gl, 0, 0, 0);
+			gl.glTranslated(f.x, f.y - 0.5f, f.z);
+			
+			drawFaceYP(gl);
+			
+			gl.glPopMatrix();
+		}
+		
+		for(Face f : xpFaces)
+		{
+			gl.glPushMatrix();
+			
+			lib.get(f.type).draw(gl, 0, 0, 0);
+			gl.glTranslated(f.x - 0.5f, f.y, f.z);
+			
+			drawFaceXP(gl);
+			
+			gl.glPopMatrix();
+		}
+		
+		for(Face f : zpFaces)
+		{
+			gl.glPushMatrix();
+			
+			lib.get(f.type).draw(gl, 0, 0, 0);
+			gl.glTranslated(f.x, f.y, f.z - 0.5f);
+			
+			drawFaceZP(gl);
 			
 			gl.glPopMatrix();
 		}
 	}
 	
 	private final static double blockRadius = 0.5;
+	private final static double gridOffset = 0.01;
 	
-	private void drawFaceY(GL2 gl)
+	private void drawFaceYM(GL2 gl)
 	{
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex3d(blockRadius, 0, blockRadius);
 		gl.glVertex3d(blockRadius, 0, -blockRadius);
 		gl.glVertex3d(-blockRadius, 0, -blockRadius);
 		gl.glVertex3d(-blockRadius, 0, blockRadius);
+		gl.glEnd();
+		
+		gl.glColor3f(0, 0, 0);
+		gl.glBegin(GL2.GL_LINES);
+		gl.glVertex3d(blockRadius, -gridOffset, blockRadius);
+		gl.glVertex3d(-blockRadius, -gridOffset, -blockRadius);
+		gl.glVertex3d(-blockRadius, -gridOffset, blockRadius);
+		gl.glVertex3d(blockRadius, -gridOffset, -blockRadius);
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glVertex3d(blockRadius, -gridOffset, blockRadius);
+		gl.glVertex3d(blockRadius, -gridOffset, -blockRadius);
+		gl.glVertex3d(-blockRadius, -gridOffset, -blockRadius);
+		gl.glVertex3d(-blockRadius, -gridOffset, blockRadius);
+		gl.glEnd();
 	}
 	
-	private void drawFaceX(GL2 gl)
+	private void drawFaceXM(GL2 gl)
 	{
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex3d(0, blockRadius, blockRadius);
 		gl.glVertex3d(0, blockRadius, -blockRadius);
 		gl.glVertex3d(0, -blockRadius, -blockRadius);
 		gl.glVertex3d(0, -blockRadius, blockRadius);
+		gl.glEnd();
+		
+		gl.glColor3f(0, 0, 0);
+		gl.glBegin(GL2.GL_LINES);
+		gl.glVertex3d(-gridOffset, blockRadius, blockRadius);
+		gl.glVertex3d(-gridOffset, -blockRadius, -blockRadius);
+		gl.glVertex3d(-gridOffset, -blockRadius, blockRadius);
+		gl.glVertex3d(-gridOffset, blockRadius, -blockRadius);
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glVertex3d(-gridOffset, blockRadius, blockRadius);
+		gl.glVertex3d(-gridOffset, blockRadius, -blockRadius);
+		gl.glVertex3d(-gridOffset, -blockRadius, -blockRadius);
+		gl.glVertex3d(-gridOffset, -blockRadius, blockRadius);
+		gl.glEnd();
 	}
 	
-	private void drawFaceZ(GL2 gl)
+	private void drawFaceZM(GL2 gl)
 	{
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex3d(blockRadius, blockRadius, 0);
 		gl.glVertex3d(blockRadius, -blockRadius, 0);
 		gl.glVertex3d(-blockRadius, -blockRadius, 0);
 		gl.glVertex3d(-blockRadius, blockRadius, 0);
+		gl.glEnd();
+		
+		gl.glColor3f(0, 0, 0);
+		gl.glBegin(GL2.GL_LINES);
+		gl.glVertex3d(blockRadius, blockRadius, -gridOffset);
+		gl.glVertex3d(-blockRadius, -blockRadius, -gridOffset);
+		gl.glVertex3d(-blockRadius, blockRadius, -gridOffset);
+		gl.glVertex3d(blockRadius, -blockRadius, -gridOffset);
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glVertex3d(blockRadius, blockRadius, -gridOffset);
+		gl.glVertex3d(blockRadius, -blockRadius, -gridOffset);
+		gl.glVertex3d(-blockRadius, -blockRadius, -gridOffset);
+		gl.glVertex3d(-blockRadius, blockRadius, -gridOffset);
+		gl.glEnd();
+	}
+	
+	private void drawFaceYP(GL2 gl)
+	{
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glVertex3d(blockRadius, 0, blockRadius);
+		gl.glVertex3d(blockRadius, 0, -blockRadius);
+		gl.glVertex3d(-blockRadius, 0, -blockRadius);
+		gl.glVertex3d(-blockRadius, 0, blockRadius);
+		gl.glEnd();
+		
+		gl.glColor3f(0, 0, 0);
+		gl.glBegin(GL2.GL_LINES);
+		gl.glVertex3d(blockRadius, gridOffset, blockRadius);
+		gl.glVertex3d(-blockRadius, gridOffset, -blockRadius);
+		gl.glVertex3d(-blockRadius, gridOffset, blockRadius);
+		gl.glVertex3d(blockRadius, gridOffset, -blockRadius);
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glVertex3d(blockRadius, gridOffset, blockRadius);
+		gl.glVertex3d(blockRadius, gridOffset, -blockRadius);
+		gl.glVertex3d(-blockRadius, gridOffset, -blockRadius);
+		gl.glVertex3d(-blockRadius, gridOffset, blockRadius);
+		gl.glEnd();
+	}
+	
+	private void drawFaceXP(GL2 gl)
+	{
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glVertex3d(0, blockRadius, blockRadius);
+		gl.glVertex3d(0, blockRadius, -blockRadius);
+		gl.glVertex3d(0, -blockRadius, -blockRadius);
+		gl.glVertex3d(0, -blockRadius, blockRadius);
+		gl.glEnd();
+		
+		gl.glColor3f(0, 0, 0);
+		gl.glBegin(GL2.GL_LINES);
+		gl.glVertex3d(gridOffset, blockRadius, blockRadius);
+		gl.glVertex3d(gridOffset, -blockRadius, -blockRadius);
+		gl.glVertex3d(gridOffset, -blockRadius, blockRadius);
+		gl.glVertex3d(gridOffset, blockRadius, -blockRadius);
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glVertex3d(gridOffset, blockRadius, blockRadius);
+		gl.glVertex3d(gridOffset, blockRadius, -blockRadius);
+		gl.glVertex3d(gridOffset, -blockRadius, -blockRadius);
+		gl.glVertex3d(gridOffset, -blockRadius, blockRadius);
+		gl.glEnd();
+	}
+	
+	private void drawFaceZP(GL2 gl)
+	{
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glVertex3d(blockRadius, blockRadius, 0);
+		gl.glVertex3d(blockRadius, -blockRadius, 0);
+		gl.glVertex3d(-blockRadius, -blockRadius, 0);
+		gl.glVertex3d(-blockRadius, blockRadius, 0);
+		gl.glEnd();
+		
+		gl.glColor3f(0, 0, 0);
+		gl.glBegin(GL2.GL_LINES);
+		gl.glVertex3d(blockRadius, blockRadius, gridOffset);
+		gl.glVertex3d(-blockRadius, -blockRadius, gridOffset);
+		gl.glVertex3d(-blockRadius, blockRadius, gridOffset);
+		gl.glVertex3d(blockRadius, -blockRadius, gridOffset);
+		gl.glEnd();
+		
+		gl.glBegin(GL2.GL_LINE_LOOP);
+		gl.glVertex3d(blockRadius, blockRadius, gridOffset);
+		gl.glVertex3d(blockRadius, -blockRadius, gridOffset);
+		gl.glVertex3d(-blockRadius, -blockRadius, gridOffset);
+		gl.glVertex3d(-blockRadius, blockRadius, gridOffset);
+		gl.glEnd();
 	}
 	
 	private static class Face
