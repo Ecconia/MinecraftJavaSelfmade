@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient.gui.gl.buffers;
+package de.ecconia.mc.jclient.gui.gl.chunkrenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import com.jogamp.opengl.GL2;
 
 import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
 
-public class Optimizer
+public class FaceReducedChunkRenderer extends ChunkRenderer
 {
 	public List<Face> xpFaces = new ArrayList<>();
 	public List<Face> ypFaces = new ArrayList<>();
@@ -17,8 +17,14 @@ public class Optimizer
 	public List<Face> ymFaces = new ArrayList<>();
 	public List<Face> zmFaces = new ArrayList<>();
 	
-	public Optimizer(int[][][] blocks)
+	private final BlockLib lib;
+	
+	public FaceReducedChunkRenderer(int cx, int cy, int[][][] blocks, BlockLib blockModels)
 	{
+		super(cx, cy);
+		
+		this.lib = blockModels;
+		
 		for(int x = 0; x < 16; x++)
 		{
 			for(int z = 0; z < 16; z++)
@@ -101,8 +107,11 @@ public class Optimizer
 		}
 	}
 	
-	public void draw(GL2 gl, BlockLib lib)
+	@Override
+	public void render(GL2 gl)
 	{
+		gl.glTranslated(offsetX, 0, offsetZ);
+		
 		for(Face f : ymFaces)
 		{
 			gl.glPushMatrix();
