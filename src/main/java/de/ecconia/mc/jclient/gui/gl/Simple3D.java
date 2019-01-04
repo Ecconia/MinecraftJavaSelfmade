@@ -12,8 +12,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
 import javax.swing.JPanel;
 
@@ -33,6 +32,7 @@ import de.ecconia.mc.jclient.gui.gl.chunkrenderer.FaceReducedChunkRenderer;
 import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
 import de.ecconia.mc.jclient.gui.input.KeyDebouncer;
 import de.ecconia.mc.jclient.gui.monitor.L;
+import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
 
 @SuppressWarnings("serial")
 public class Simple3D extends JPanel implements GLEventListener
@@ -53,7 +53,7 @@ public class Simple3D extends JPanel implements GLEventListener
 	//World data:
 	
 	private BlockLib blockModels = new BlockLib();
-	private final List<ChunkRenderer> chunks = new ArrayList<>();
+	private final XYStorage<ChunkRenderer> chunks = new XYStorage<>();
 	
 	//////////////////////////////////////
 	//Mouse capture stuff:
@@ -163,7 +163,8 @@ public class Simple3D extends JPanel implements GLEventListener
 				{
 					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") will now be processed to display it.");
 					int[][][] blocks = chunk.toBlockArray();
-					chunks.add(new FaceReducedChunkRenderer(x, z, blocks, blockModels));
+					//TBI: Maybe only put, if not there?
+					chunks.put(x, z, new FaceReducedChunkRenderer(x, z, blocks, blockModels));
 				}
 				else
 				{
@@ -375,10 +376,11 @@ public class Simple3D extends JPanel implements GLEventListener
 		gl.glTranslatef(-posX, -posY - 1, -posZ);
 		
 		//Print chunks:
-		for(ChunkRenderer chunk : chunks)
+		Iterator<ChunkRenderer> it = chunks.iterator();
+		while(it.hasNext())
 		{
 			gl.glPushMatrix();
-			chunk.render(gl);
+			it.next().render(gl);
 			gl.glPopMatrix();
 		}
 		
