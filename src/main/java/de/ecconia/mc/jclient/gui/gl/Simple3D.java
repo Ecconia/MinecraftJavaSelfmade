@@ -27,11 +27,11 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.data.world.Chunk;
 import de.ecconia.mc.jclient.gui.gl.chunkrenderer.ChunkRenderer;
 import de.ecconia.mc.jclient.gui.gl.chunkrenderer.FaceReducedChunkRenderer;
 import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
 import de.ecconia.mc.jclient.gui.input.KeyDebouncer;
-import de.ecconia.mc.jclient.network.processor.WorldPacketProcessor;
 import de.ecconia.mc.jclient.gui.monitor.L;
 
 @SuppressWarnings("serial")
@@ -144,7 +144,7 @@ public class Simple3D extends JPanel implements GLEventListener
 	
 	private static int chunkProcessor = 1;
 	
-	public Simple3D(WorldPacketProcessor worldPacketProcessor, PrimitiveDataDude dataDude)
+	public Simple3D(PrimitiveDataDude dataDude)
 	{
 		dataDude.setChunkPosHandler((x, z) -> {
 			//TODO: Threadsafe!
@@ -158,8 +158,18 @@ public class Simple3D extends JPanel implements GLEventListener
 					e1.printStackTrace();
 				}
 				
-				int[][][] blocks = worldPacketProcessor.getProcessedChunk(x, z);
-				chunks.add(new FaceReducedChunkRenderer(x, z, blocks, blockModels));
+				Chunk chunk = dataDude.getCurrentServer().getWorldManager().getChunk(x, z);
+				if(chunk != null)
+				{
+					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") will now be processed to display it.");
+					int[][][] blocks = chunk.toBlockArray();
+					chunks.add(new FaceReducedChunkRenderer(x, z, blocks, blockModels));
+				}
+				else
+				{
+					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
+					System.out.println("Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
+				}
 			}, "Chunk processor # " + chunkProcessor++).start();
 		});
 		

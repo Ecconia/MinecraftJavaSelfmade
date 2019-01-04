@@ -20,7 +20,7 @@ public class WorldPacketProcessor extends PacketThread
 		
 		cMap = new ChunkMap();
 		L.addCustomPanel("Chunks", cMap);
-		L.addCustomPanel("3D", new Simple3D(this, dataDude));
+		L.addCustomPanel("3D", new Simple3D(dataDude));
 	}
 	
 	@Override
@@ -89,11 +89,13 @@ public class WorldPacketProcessor extends PacketThread
 				{
 					bitsPerBlock = 4;
 				}
+				
 				//Palette
+				int[] palette = null;
 				if(bitsPerBlock <= 8)
 				{
 					int length = dataReader.readCInt();
-					int[] palette = new int[length];
+					palette = new int[length];
 					for(int j = 0; j < length; j++)
 					{
 						palette[j] = dataReader.readCInt();
@@ -117,7 +119,7 @@ public class WorldPacketProcessor extends PacketThread
 				
 				//Seems that all the 4-8 bits allways fill up the longs.
 				//System.out.println(">>> Bits: " + bitsPerBlock + " -> " + (4096 * bitsPerBlock) + "/" + (dataLongs.length * 8 * 8));
-				subChunks[i] = new SubChunk(bitsPerBlock, dataLongs);
+				subChunks[i] = new SubChunk(bitsPerBlock, palette, dataLongs);
 				
 				//Read Block light.
 				for(int j = 0; j < 2048; j++)
@@ -227,88 +229,5 @@ public class WorldPacketProcessor extends PacketThread
 	private void logData(String message)
 	{
 		L.writeLineOnChannel("C: World", message);
-	}
-	
-	public int[][][] getProcessedChunk(int cx, int cz)
-	{
-		Chunk chunk = dataDude.getCurrentServer().getWorldManager().getChunk(cx, cz);
-		int[][][] blocks = new int[16][16][256];
-		
-		if(chunk == null)
-		{
-			L.writeLineOnChannel("3D-Text", "Chunk (" + cx + ", " + cz + ") is not loaded yet. Can not display it.");
-			return blocks;
-		}
-		else
-		{
-			L.writeLineOnChannel("3D-Text", "Chunk (" + cx + ", " + cz + ") will now be processed to display it.");
-		}
-		
-		for(int i = 0; i < 16; i++)
-		{
-			int yOffset = i * 16;
-			
-			SubChunk subChunk = chunk.getChunkMap()[i];
-			if(subChunk.getBitsPerBlock() == 0)
-			{
-				for(int y = 0; y < 16; y++)
-				{
-					for(int x = 0; x < 16; x++)
-					{
-						for(int z = 0; z < 16; z++)
-						{
-							//TODO: Optimize access!
-							blocks[x][z][y + yOffset] = 0;
-						}
-					}
-				}
-			}
-			else
-			{
-				long[] longs = subChunk.getBlocks();
-				
-				int bitsPerBlock = subChunk.getBitsPerBlock();
-				int maxBit = 1 << bitsPerBlock;
-				
-				long longProbeBit = 1;
-				int longProbeBitNumber = 1;
-				int longNumber = 0;
-				
-				for(int y = 0; y < 16; y++)
-				{
-					for(int z = 0; z < 16; z++)
-					{
-						for(int x = 0; x < 16; x++)
-						{
-							int tmp = 0;
-							
-							for(int cBit = 1; cBit < maxBit; cBit <<= 1)
-							{
-								if(longProbeBitNumber > 64)
-								{
-									longProbeBit = 1;
-									longProbeBitNumber = 1;
-									longNumber++;
-								}
-								
-								if((longs[longNumber] & longProbeBit) > 0)
-								{
-									tmp |= cBit;
-								}
-								
-								//Shift:
-								longProbeBit <<= 1;
-								longProbeBitNumber++;
-							}
-							
-							//TODO: Optimize access!
-							blocks[x][z][y + yOffset] = tmp;
-						}
-					}
-				}
-			}
-		}
-		
-		return blocks;
 	}
 }
