@@ -17,6 +17,8 @@ public class FaceReducedChunkRenderer extends ChunkRenderer
 	public List<Face> ymFaces = new ArrayList<>();
 	public List<Face> zmFaces = new ArrayList<>();
 	
+	public static final boolean printGrid = true;
+	
 	private final BlockLib lib;
 	
 	public FaceReducedChunkRenderer(int cx, int cy, int[][][] blocks, BlockLib blockModels)
@@ -197,20 +199,23 @@ public class FaceReducedChunkRenderer extends ChunkRenderer
 		gl.glVertex3d(-blockRadius, 0, blockRadius);
 		gl.glEnd();
 		
-		gl.glColor3f(0, 0, 0);
-		gl.glBegin(GL2.GL_LINES);
-		gl.glVertex3d(blockRadius, -gridOffset, blockRadius);
-		gl.glVertex3d(-blockRadius, -gridOffset, -blockRadius);
-		gl.glVertex3d(-blockRadius, -gridOffset, blockRadius);
-		gl.glVertex3d(blockRadius, -gridOffset, -blockRadius);
-		gl.glEnd();
-		
-		gl.glBegin(GL2.GL_LINE_LOOP);
-		gl.glVertex3d(blockRadius, -gridOffset, blockRadius);
-		gl.glVertex3d(blockRadius, -gridOffset, -blockRadius);
-		gl.glVertex3d(-blockRadius, -gridOffset, -blockRadius);
-		gl.glVertex3d(-blockRadius, -gridOffset, blockRadius);
-		gl.glEnd();
+		if(printGrid)
+		{
+			gl.glColor3f(0, 0, 0);
+			gl.glBegin(GL2.GL_LINES);
+			gl.glVertex3d(blockRadius, -gridOffset, blockRadius);
+			gl.glVertex3d(-blockRadius, -gridOffset, -blockRadius);
+			gl.glVertex3d(-blockRadius, -gridOffset, blockRadius);
+			gl.glVertex3d(blockRadius, -gridOffset, -blockRadius);
+			gl.glEnd();
+			
+			gl.glBegin(GL2.GL_LINE_LOOP);
+			gl.glVertex3d(blockRadius, -gridOffset, blockRadius);
+			gl.glVertex3d(blockRadius, -gridOffset, -blockRadius);
+			gl.glVertex3d(-blockRadius, -gridOffset, -blockRadius);
+			gl.glVertex3d(-blockRadius, -gridOffset, blockRadius);
+			gl.glEnd();
+		}
 	}
 	
 	private void drawFaceXM(GL2 gl)
@@ -221,21 +226,24 @@ public class FaceReducedChunkRenderer extends ChunkRenderer
 		gl.glVertex3d(0, -blockRadius, -blockRadius);
 		gl.glVertex3d(0, -blockRadius, blockRadius);
 		gl.glEnd();
-		
-		gl.glColor3f(0, 0, 0);
-		gl.glBegin(GL2.GL_LINES);
-		gl.glVertex3d(-gridOffset, blockRadius, blockRadius);
-		gl.glVertex3d(-gridOffset, -blockRadius, -blockRadius);
-		gl.glVertex3d(-gridOffset, -blockRadius, blockRadius);
-		gl.glVertex3d(-gridOffset, blockRadius, -blockRadius);
-		gl.glEnd();
-		
-		gl.glBegin(GL2.GL_LINE_LOOP);
-		gl.glVertex3d(-gridOffset, blockRadius, blockRadius);
-		gl.glVertex3d(-gridOffset, blockRadius, -blockRadius);
-		gl.glVertex3d(-gridOffset, -blockRadius, -blockRadius);
-		gl.glVertex3d(-gridOffset, -blockRadius, blockRadius);
-		gl.glEnd();
+
+		if(printGrid)
+		{
+			gl.glColor3f(0, 0, 0);
+			gl.glBegin(GL2.GL_LINES);
+			gl.glVertex3d(-gridOffset, blockRadius, blockRadius);
+			gl.glVertex3d(-gridOffset, -blockRadius, -blockRadius);
+			gl.glVertex3d(-gridOffset, -blockRadius, blockRadius);
+			gl.glVertex3d(-gridOffset, blockRadius, -blockRadius);
+			gl.glEnd();
+			
+			gl.glBegin(GL2.GL_LINE_LOOP);
+			gl.glVertex3d(-gridOffset, blockRadius, blockRadius);
+			gl.glVertex3d(-gridOffset, blockRadius, -blockRadius);
+			gl.glVertex3d(-gridOffset, -blockRadius, -blockRadius);
+			gl.glVertex3d(-gridOffset, -blockRadius, blockRadius);
+			gl.glEnd();
+		}
 	}
 	
 	private void drawFaceZM(GL2 gl)
@@ -246,21 +254,24 @@ public class FaceReducedChunkRenderer extends ChunkRenderer
 		gl.glVertex3d(-blockRadius, -blockRadius, 0);
 		gl.glVertex3d(-blockRadius, blockRadius, 0);
 		gl.glEnd();
-		
-		gl.glColor3f(0, 0, 0);
-		gl.glBegin(GL2.GL_LINES);
-		gl.glVertex3d(blockRadius, blockRadius, -gridOffset);
-		gl.glVertex3d(-blockRadius, -blockRadius, -gridOffset);
-		gl.glVertex3d(-blockRadius, blockRadius, -gridOffset);
-		gl.glVertex3d(blockRadius, -blockRadius, -gridOffset);
-		gl.glEnd();
-		
-		gl.glBegin(GL2.GL_LINE_LOOP);
-		gl.glVertex3d(blockRadius, blockRadius, -gridOffset);
-		gl.glVertex3d(blockRadius, -blockRadius, -gridOffset);
-		gl.glVertex3d(-blockRadius, -blockRadius, -gridOffset);
-		gl.glVertex3d(-blockRadius, blockRadius, -gridOffset);
-		gl.glEnd();
+
+		if(printGrid)
+		{
+			gl.glColor3f(0, 0, 0);
+			gl.glBegin(GL2.GL_LINES);
+			gl.glVertex3d(blockRadius, blockRadius, -gridOffset);
+			gl.glVertex3d(-blockRadius, -blockRadius, -gridOffset);
+			gl.glVertex3d(-blockRadius, blockRadius, -gridOffset);
+			gl.glVertex3d(blockRadius, -blockRadius, -gridOffset);
+			gl.glEnd();
+			
+			gl.glBegin(GL2.GL_LINE_LOOP);
+			gl.glVertex3d(blockRadius, blockRadius, -gridOffset);
+			gl.glVertex3d(blockRadius, -blockRadius, -gridOffset);
+			gl.glVertex3d(-blockRadius, -blockRadius, -gridOffset);
+			gl.glVertex3d(-blockRadius, blockRadius, -gridOffset);
+			gl.glEnd();
+		}
 	}
 	
 	private void drawFaceYP(GL2 gl)
@@ -271,21 +282,24 @@ public class FaceReducedChunkRenderer extends ChunkRenderer
 		gl.glVertex3d(-blockRadius, 0, -blockRadius);
 		gl.glVertex3d(-blockRadius, 0, blockRadius);
 		gl.glEnd();
-		
-		gl.glColor3f(0, 0, 0);
-		gl.glBegin(GL2.GL_LINES);
-		gl.glVertex3d(blockRadius, gridOffset, blockRadius);
-		gl.glVertex3d(-blockRadius, gridOffset, -blockRadius);
-		gl.glVertex3d(-blockRadius, gridOffset, blockRadius);
-		gl.glVertex3d(blockRadius, gridOffset, -blockRadius);
-		gl.glEnd();
-		
-		gl.glBegin(GL2.GL_LINE_LOOP);
-		gl.glVertex3d(blockRadius, gridOffset, blockRadius);
-		gl.glVertex3d(blockRadius, gridOffset, -blockRadius);
-		gl.glVertex3d(-blockRadius, gridOffset, -blockRadius);
-		gl.glVertex3d(-blockRadius, gridOffset, blockRadius);
-		gl.glEnd();
+
+		if(printGrid)
+		{
+			gl.glColor3f(0, 0, 0);
+			gl.glBegin(GL2.GL_LINES);
+			gl.glVertex3d(blockRadius, gridOffset, blockRadius);
+			gl.glVertex3d(-blockRadius, gridOffset, -blockRadius);
+			gl.glVertex3d(-blockRadius, gridOffset, blockRadius);
+			gl.glVertex3d(blockRadius, gridOffset, -blockRadius);
+			gl.glEnd();
+			
+			gl.glBegin(GL2.GL_LINE_LOOP);
+			gl.glVertex3d(blockRadius, gridOffset, blockRadius);
+			gl.glVertex3d(blockRadius, gridOffset, -blockRadius);
+			gl.glVertex3d(-blockRadius, gridOffset, -blockRadius);
+			gl.glVertex3d(-blockRadius, gridOffset, blockRadius);
+			gl.glEnd();
+		}
 	}
 	
 	private void drawFaceXP(GL2 gl)
@@ -296,21 +310,24 @@ public class FaceReducedChunkRenderer extends ChunkRenderer
 		gl.glVertex3d(0, -blockRadius, -blockRadius);
 		gl.glVertex3d(0, -blockRadius, blockRadius);
 		gl.glEnd();
-		
-		gl.glColor3f(0, 0, 0);
-		gl.glBegin(GL2.GL_LINES);
-		gl.glVertex3d(gridOffset, blockRadius, blockRadius);
-		gl.glVertex3d(gridOffset, -blockRadius, -blockRadius);
-		gl.glVertex3d(gridOffset, -blockRadius, blockRadius);
-		gl.glVertex3d(gridOffset, blockRadius, -blockRadius);
-		gl.glEnd();
-		
-		gl.glBegin(GL2.GL_LINE_LOOP);
-		gl.glVertex3d(gridOffset, blockRadius, blockRadius);
-		gl.glVertex3d(gridOffset, blockRadius, -blockRadius);
-		gl.glVertex3d(gridOffset, -blockRadius, -blockRadius);
-		gl.glVertex3d(gridOffset, -blockRadius, blockRadius);
-		gl.glEnd();
+
+		if(printGrid)
+		{
+			gl.glColor3f(0, 0, 0);
+			gl.glBegin(GL2.GL_LINES);
+			gl.glVertex3d(gridOffset, blockRadius, blockRadius);
+			gl.glVertex3d(gridOffset, -blockRadius, -blockRadius);
+			gl.glVertex3d(gridOffset, -blockRadius, blockRadius);
+			gl.glVertex3d(gridOffset, blockRadius, -blockRadius);
+			gl.glEnd();
+			
+			gl.glBegin(GL2.GL_LINE_LOOP);
+			gl.glVertex3d(gridOffset, blockRadius, blockRadius);
+			gl.glVertex3d(gridOffset, blockRadius, -blockRadius);
+			gl.glVertex3d(gridOffset, -blockRadius, -blockRadius);
+			gl.glVertex3d(gridOffset, -blockRadius, blockRadius);
+			gl.glEnd();
+		}
 	}
 	
 	private void drawFaceZP(GL2 gl)
@@ -321,21 +338,24 @@ public class FaceReducedChunkRenderer extends ChunkRenderer
 		gl.glVertex3d(-blockRadius, -blockRadius, 0);
 		gl.glVertex3d(-blockRadius, blockRadius, 0);
 		gl.glEnd();
-		
-		gl.glColor3f(0, 0, 0);
-		gl.glBegin(GL2.GL_LINES);
-		gl.glVertex3d(blockRadius, blockRadius, gridOffset);
-		gl.glVertex3d(-blockRadius, -blockRadius, gridOffset);
-		gl.glVertex3d(-blockRadius, blockRadius, gridOffset);
-		gl.glVertex3d(blockRadius, -blockRadius, gridOffset);
-		gl.glEnd();
-		
-		gl.glBegin(GL2.GL_LINE_LOOP);
-		gl.glVertex3d(blockRadius, blockRadius, gridOffset);
-		gl.glVertex3d(blockRadius, -blockRadius, gridOffset);
-		gl.glVertex3d(-blockRadius, -blockRadius, gridOffset);
-		gl.glVertex3d(-blockRadius, blockRadius, gridOffset);
-		gl.glEnd();
+
+		if(printGrid)
+		{
+			gl.glColor3f(0, 0, 0);
+			gl.glBegin(GL2.GL_LINES);
+			gl.glVertex3d(blockRadius, blockRadius, gridOffset);
+			gl.glVertex3d(-blockRadius, -blockRadius, gridOffset);
+			gl.glVertex3d(-blockRadius, blockRadius, gridOffset);
+			gl.glVertex3d(blockRadius, -blockRadius, gridOffset);
+			gl.glEnd();
+			
+			gl.glBegin(GL2.GL_LINE_LOOP);
+			gl.glVertex3d(blockRadius, blockRadius, gridOffset);
+			gl.glVertex3d(blockRadius, -blockRadius, gridOffset);
+			gl.glVertex3d(-blockRadius, -blockRadius, gridOffset);
+			gl.glVertex3d(-blockRadius, blockRadius, gridOffset);
+			gl.glEnd();
+		}
 	}
 	
 	private static class Face
