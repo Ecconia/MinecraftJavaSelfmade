@@ -32,6 +32,7 @@ import de.ecconia.mc.jclient.gui.gl.chunkrenderer.FaceReducedChunkRenderer;
 import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
 import de.ecconia.mc.jclient.gui.input.KeyDebouncer;
 import de.ecconia.mc.jclient.network.processor.WorldPacketProcessor;
+import de.ecconia.mc.jclient.gui.monitor.L;
 
 @SuppressWarnings("serial")
 public class Simple3D extends JPanel implements GLEventListener
@@ -198,7 +199,7 @@ public class Simple3D extends JPanel implements GLEventListener
 			public void mousePressed(MouseEvent e)
 			{
 				//TODO: Fix this issue, the other one should capture the mouse.
-				System.out.println("Pressed canvas");
+				L.writeLineOnChannel("3D-Text", "Pressed canvas.");
 				captureMouse(e.getXOnScreen(), e.getYOnScreen());
 			}
 			
@@ -228,7 +229,7 @@ public class Simple3D extends JPanel implements GLEventListener
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
-				System.out.println("Clicked the window!");
+				L.writeLineOnChannel("3D-Text", "Pressed panel.");
 				captureMouse(e.getXOnScreen(), e.getYOnScreen());
 			}
 			
@@ -255,7 +256,7 @@ public class Simple3D extends JPanel implements GLEventListener
 			{
 				if(isCaptured)
 				{
-					System.out.println("Focus lost, free mouse!");
+					L.writeLineOnChannel("3D-Text", "Focus lost -> free mouse.");
 					freeMouse();
 				}
 			}
@@ -274,7 +275,7 @@ public class Simple3D extends JPanel implements GLEventListener
 				if(keyCode == 18)
 				{
 					//Free mouse, if captured.
-					System.out.println("Free Mouse, cause ALT.");
+					L.writeLineOnChannel("3D-Text", "Alt pressed -> free mouse.");
 					freeMouse();
 				}
 			}

@@ -107,7 +107,6 @@ public class PrimitiveDataDude
 	
 	public void newPosition(int x, int y, int z)
 	{
-		System.out.println("Recieved position: (" + x + ", " + y + ", " + z + ")");
 		playerPosHandler.updatePlayerCoords(x, y, z);
 		
 		int newChunkX = McMathHelper.toChunkPos(x);
@@ -118,7 +117,7 @@ public class PrimitiveDataDude
 			chunkX = newChunkX;
 			chunkZ = newChunkZ;
 			
-			System.out.println("New chunk location: " + chunkX + " " + chunkZ);
+			L.writeLineOnChannel("3D-Text", "New chunk location: " + chunkX + " " + chunkZ);
 			
 			//Event:
 			worldHandler.updateChunkCoords(newChunkX, newChunkZ);
@@ -141,6 +140,7 @@ public class PrimitiveDataDude
 		this.y = y;
 		this.z = z;
 		
+		L.writeLineOnChannel("3D-Text", "Recieved position: (" + x + ", " + y + ", " + z + ")");
 		newPosition(x, y, z);
 	}
 	
@@ -192,7 +192,7 @@ public class PrimitiveDataDude
 	public void walkTo(int posX, int posY, int posZ)
 	{
 		MessageBuilder mb = new MessageBuilder();
-		System.out.println("Walking to: (" + posX + ", " + posY + ", " + posZ + ")");
+		L.writeLineOnChannel("3D-Text", "Walking to: (" + posX + ", " + posY + ", " + posZ + ")");
 		
 		mb.addDouble(posX);
 		mb.addDouble(posY);
