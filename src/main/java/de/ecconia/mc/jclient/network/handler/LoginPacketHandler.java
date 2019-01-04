@@ -4,6 +4,7 @@ import java.security.PublicKey;
 
 import javax.crypto.SecretKey;
 
+import de.ecconia.mc.jclient.Logger;
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.network.connector.PacketHandler;
@@ -32,36 +33,41 @@ public class LoginPacketHandler implements PacketHandler
 		{
 			PacketReader reader = new PacketReader(bytes);
 			int id = reader.readCInt();
-			System.out.println(">>> Packet with ID:" + id + " Size:" + reader.remaining());
+//			System.out.println(">>> Packet with ID:" + id + " Size:" + reader.remaining());
 			
 			//State for login packets
 			if(id == 0)
 			{
 				//Error packet!
-				System.out.println("Packet: Error");
-				System.out.println("String: " + reader.readString());
+				System.out.println("Error packet while logging in:");
+				System.out.println("Message: " + reader.readString());
 			}
 			else if(id == 1)
 			{
 				//Encryption request packet!
-				System.out.println("Packet: Encryption request");
+//				System.out.println("Packet: Encryption request");
 				
 				String serverCode;
 				byte[] pubkeyBytes;
 				byte[] verifyToken;
 				{
 					serverCode = reader.readString();
-					System.out.println("> ServerID: >" + serverCode + "<");
+					if(!serverCode.isEmpty())
+					{
+						Logger.important("The server ID was not empty! >" + serverCode + "<");
+						PrintUtils.printBytes(serverCode.getBytes());
+					}
+//					System.out.println("> ServerID: >" + serverCode + "<");
 					
 					int lengthPubKey = reader.readCInt();
-					System.out.println("> Pubkey (" + lengthPubKey + "):");
+//					System.out.println("> Pubkey (" + lengthPubKey + "):");
 					pubkeyBytes = reader.readBytes(lengthPubKey);
-					PrintUtils.printBytes(pubkeyBytes);
+//					PrintUtils.printBytes(pubkeyBytes);
 					
 					int lengthVerifyToken = reader.readCInt();
-					System.out.println("> Verify token (" + lengthVerifyToken + "):");
+//					System.out.println("> Verify token (" + lengthVerifyToken + "):");
 					verifyToken = reader.readBytes(lengthVerifyToken);
-					PrintUtils.printBytes(verifyToken);
+//					PrintUtils.printBytes(verifyToken);
 				}
 				
 				SecretKey sharedKey = SyncCryptUnit.generateKey();
@@ -69,10 +75,10 @@ public class LoginPacketHandler implements PacketHandler
 				String serverHash = AsyncCryptTools.generateHashFromBytes(serverCode, sharedKey.getEncoded(), serverPublicKey.getEncoded());
 				
 				//Auth-Server request.
-				System.out.println();
-				System.out.println(">>Contacting auth server...");
+//				System.out.println();
+//				System.out.println(">>Contacting auth server...");
 				AuthServer.join(serverHash);
-				System.out.println(">>Done.");
+//				System.out.println(">>Done.");
 				
 				byte[] sharedSecret = AsyncCryptTools.encryptBytes(serverPublicKey, sharedKey.getEncoded());
 				byte[] clientVerifyToken = AsyncCryptTools.encryptBytes(serverPublicKey, verifyToken);
@@ -90,10 +96,10 @@ public class LoginPacketHandler implements PacketHandler
 				
 				con.enableEncryption(sharedKey);
 				
-				System.out.println();
+//				System.out.println();
 				System.out.println("Established connection, logged in.");
-				System.out.println("Now switching to Play protocol.");
-				System.out.println();
+//				System.out.println("Now switching to Play protocol.");
+//				System.out.println();
 				System.out.println("-----------------------------------------");
 				
 				dataDude.connectedToServer();
