@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class KeyDebouncer implements KeyListener
 {
-	private final static int midDelay = 500;
+	private final static int midDelay = 10;
 	
 	private final KeyPress handler;
 	private final Map<Integer, Long> pressed = new HashMap<>();
