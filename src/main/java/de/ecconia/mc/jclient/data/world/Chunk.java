@@ -114,8 +114,9 @@ public class Chunk
 				
 				if(subChunk.getPalette() != null)
 				{
-					DebugPalette debug = new DebugPalette(subChunk.getPalette());
-					debug.test(blocks, yOffset);
+					//TBI: More investigation!
+//					DebugPalette debug = new DebugPalette(subChunk.getPalette());
+//					debug.test(blocks, yOffset);
 					
 					for(int y = 0; y < 16; y++)
 					{
