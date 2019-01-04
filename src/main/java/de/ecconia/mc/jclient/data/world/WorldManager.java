@@ -52,11 +52,25 @@ public class WorldManager
 	{
 		if(playerWorld == null)
 		{
-			Logger.perr("Received load chunks packet before a respawn packet.");
+			Logger.perr("Received load chunk packet before a respawn packet.");
 			return; //Ignore
 		}
 		
 		playerWorld.loadChunk(chunk);
+	}
+	
+	/**
+	 * Called when chunks subchunks get updated instead of the whole one.
+	 */
+	public void updateChunk(Chunk chunk)
+	{
+		if(playerWorld == null)
+		{
+			Logger.perr("Received update chunk packet before a respawn packet.");
+			return; //Ignore
+		}
+		
+		playerWorld.updateChunk(chunk);
 	}
 	
 	/**

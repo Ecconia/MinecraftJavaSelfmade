@@ -158,7 +158,14 @@ public class WorldPacketProcessor extends PacketThread
 			int nbtAmount = reader.readCInt();
 			logData(">> NBT Entries: " + nbtAmount + " Size: " + reader.remaining() + " bytes");
 			
-			dataDude.getCurrentServer().getWorldManager().loadChunk(chunk);
+			if(wholeChunk)
+			{
+				dataDude.getCurrentServer().getWorldManager().loadChunk(chunk);
+			}
+			else
+			{
+				dataDude.getCurrentServer().getWorldManager().updateChunk(chunk);
+			}
 		}
 		else if(id == 0x0B)
 		{
