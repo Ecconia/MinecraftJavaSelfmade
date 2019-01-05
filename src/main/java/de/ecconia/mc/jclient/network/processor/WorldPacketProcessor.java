@@ -35,8 +35,8 @@ public class WorldPacketProcessor extends PacketThread
 			
 			logData("Loaded chunk:");
 			int x = reader.readInt();
-			int y = reader.readInt();
-			logData("> X: " + x + " Y: " + y);
+			int z = reader.readInt();
+			logData("> X: " + x + " Z: " + z);
 			
 			boolean wholeChunk = reader.readBoolean();
 			logData("> Whole chunk: " + wholeChunk);
@@ -64,9 +64,7 @@ public class WorldPacketProcessor extends PacketThread
 			int subChunkBitMap = reader.readCInt();
 			logData("> Subchunk map: " + asBin(subChunkBitMap, 16));
 			
-			cMap.load(x, y);
-			
-			Chunk chunk = new Chunk(x, y);
+			Chunk chunk = new Chunk(x, z);
 			
 			int chunkDataSize = reader.readCInt();
 			//For now lets read all the bytes, cause its defined this way.
@@ -163,11 +161,25 @@ public class WorldPacketProcessor extends PacketThread
 			if(wholeChunk)
 			{
 				dataDude.getCurrentServer().getWorldManager().loadChunk(chunk);
+				cMap.load(x, z);
 			}
 			else
 			{
 				dataDude.getCurrentServer().getWorldManager().updateChunk(chunk);
+				cMap.update(x, z);
 			}
+		}
+		else if(id == 0x1F)
+		{
+			logPacket("Unload chunk");
+			
+			logData("Unloaded chunk:");
+			int x = reader.readInt();
+			int z = reader.readInt();
+			logData("> X: " + x + " Y: " + z);
+			
+			dataDude.getCurrentServer().getWorldManager().unloadChunk(x, z);
+			cMap.unload(x, z);
 		}
 		else if(id == 0x0B)
 		{
@@ -176,13 +188,6 @@ public class WorldPacketProcessor extends PacketThread
 		else if(id == 0x0F)
 		{
 			logPacket("Block change multi");
-		}
-		else if(id == 0x1F)
-		{
-			logPacket("Unload chunk");
-			
-			logData("Unloaded chunk:");
-			logData("> X: " + reader.readInt() + " Y: " + reader.readInt());
 		}
 		else
 		{

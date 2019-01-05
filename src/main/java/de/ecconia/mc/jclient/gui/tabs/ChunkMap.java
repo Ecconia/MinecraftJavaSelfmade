@@ -2,7 +2,6 @@ package de.ecconia.mc.jclient.gui.tabs;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.util.Iterator;
 
 import javax.swing.JPanel;
@@ -19,7 +18,7 @@ public class ChunkMap extends JPanel
 	private int zMin = Integer.MAX_VALUE;
 	private int zMax = Integer.MIN_VALUE;
 	
-	private final XYStorage<Point> chunks = new XYStorage<>();
+	private final XYStorage<ChunkEntry> chunks = new XYStorage<>();
 	
 	public ChunkMap()
 	{
@@ -27,7 +26,7 @@ public class ChunkMap extends JPanel
 	
 	public void load(int x, int z)
 	{
-		chunks.put(x, z, new Point(x, z));
+		chunks.put(x, z, new ChunkEntry(x, z));
 		
 		if(xMin > x)
 		{
@@ -56,7 +55,31 @@ public class ChunkMap extends JPanel
 	
 	public void unload(int x, int z)
 	{
-		throw new RuntimeException("Impl missing.");
+		ChunkEntry chunk = chunks.get(x, z);
+		if(chunk != null)
+		{
+			chunk.loaded = false;
+			repaint();
+		}
+	}
+	
+	public void update(int x, int z)
+	{
+		//TODO: Update timestamp.
+	}
+	
+	private static class ChunkEntry
+	{
+		//TODO: Timestamp, to highlight, when the last update did occur.
+		public boolean loaded = true;
+		public final int x;
+		public final int z;
+		
+		public ChunkEntry(int x, int z)
+		{
+			this.x = x;
+			this.z = z;
+		}
 	}
 	
 	@Override
@@ -78,6 +101,8 @@ public class ChunkMap extends JPanel
 		int aw = xAmount * a;
 		int ah = yAmount * a;
 		
+		g.clearRect(0, 0, w, h);
+		
 		g.setColor(Color.blue);
 		
 		int y = 0;
@@ -94,12 +119,12 @@ public class ChunkMap extends JPanel
 			x += a;
 		}
 		
-		g.setColor(Color.red);
-		Iterator<Point> it = chunks.iterator();
+		Iterator<ChunkEntry> it = chunks.iterator();
 		while(it.hasNext())
 		{
-			Point p = it.next();
-			g.fillRect((p.x - xMin) * a + 1, (p.y - zMin) * a + 1, a - 1, a - 1);
+			ChunkEntry p = it.next();
+			g.setColor(p.loaded ? Color.green : Color.red);
+			g.fillRect((p.x - xMin) * a + 1, (p.z - zMin) * a + 1, a - 1, a - 1);
 		}
 	}
 }

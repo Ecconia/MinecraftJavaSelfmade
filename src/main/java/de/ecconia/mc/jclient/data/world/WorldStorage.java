@@ -21,14 +21,12 @@ public class WorldStorage
 		int x = chunk.getX();
 		int z = chunk.getZ();
 		
-		/*Chunk oldChunk = */chunks.put(x, z, chunk);
+		Chunk oldChunk = chunks.put(x, z, chunk);
 		
-		//if(oldChunk != null && oldChunk.isLoaded())
-		//{
-			//Logger.perr("Received load chunk packet, but the old chunk was still loaded. (" + x + ", " + z + ")");
-			//Ignore this issue, cause MC does it by default.
-			//Appears that it just has to be overwritten then.
-		//}
+		if(oldChunk != null && oldChunk.isLoaded())
+		{
+			Logger.perr("Received load chunk packet, but the old chunk was still loaded. (" + x + ", " + z + ")");
+		}
 	}
 	
 	public void updateChunk(Chunk chunk)
