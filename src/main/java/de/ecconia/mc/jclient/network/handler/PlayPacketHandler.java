@@ -1,5 +1,6 @@
 package de.ecconia.mc.jclient.network.handler;
 
+import de.ecconia.mc.jclient.Logger;
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.connector.Connector;
@@ -22,7 +23,7 @@ public class PlayPacketHandler implements PacketHandler
 	private final PacketThread pingThread;
 	private final Connector con;
 	
-	public PlayPacketHandler(Connector con, PrimitiveDataDude dataDude)
+	public PlayPacketHandler(PrimitiveDataDude dataDude)
 	{
 		this.con = dataDude.getCon();
 		this.pingThread = new PingPacketProcessor(dataDude);

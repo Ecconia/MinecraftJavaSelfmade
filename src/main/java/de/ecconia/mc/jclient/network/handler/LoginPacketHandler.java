@@ -20,9 +20,9 @@ public class LoginPacketHandler implements PacketHandler
 	private final Connector con;
 	private final PrimitiveDataDude dataDude;
 	
-	public LoginPacketHandler(Connector con, PrimitiveDataDude dataDude)
+	public LoginPacketHandler(PrimitiveDataDude dataDude)
 	{
-		this.con = con;
+		this.con = dataDude.getCon();
 		this.dataDude = dataDude;
 	}
 	
@@ -103,7 +103,7 @@ public class LoginPacketHandler implements PacketHandler
 				System.out.println("-----------------------------------------");
 				
 				dataDude.connectedToServer();
-				con.setHandler(new PlayPacketHandler(con, dataDude));
+				con.setHandler(new PlayPacketHandler(dataDude));
 			}
 		}
 		catch(Exception e)

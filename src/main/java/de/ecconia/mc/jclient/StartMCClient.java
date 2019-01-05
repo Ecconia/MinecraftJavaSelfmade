@@ -19,6 +19,7 @@ public class StartMCClient
 			
 			cd = new CD("s.redstone-server.info");
 //			cd = new CD("localhost");
+//			cd = new CD("localhost", false);
 			
 			Connector con = new Connector(cd.domain, cd.port, (connector) -> {
 				MessageBuilder mb = new MessageBuilder();
@@ -40,7 +41,15 @@ public class StartMCClient
 			
 			PrimitiveDataDude dataDude = new PrimitiveDataDude(con);
 			
-			con.setHandler(new LoginPacketHandler(dataDude));
+			if(cd.online)
+			{
+				con.setHandler(new LoginPacketHandler(dataDude));
+			}
+			else
+			{
+				con.setHandler(new PlayPacketHandler(dataDude));
+			}
+			con.connect();
 		}
 		catch(FatalException e)
 		{
@@ -53,6 +62,7 @@ public class StartMCClient
 		public String domain;
 		public int port = 25565;
 		public int version = 404;
+		public boolean online = true;
 		
 		public CD(String domain)
 		{
@@ -74,6 +84,23 @@ public class StartMCClient
 			this(domain);
 			
 			this.version = version;
+		}
+		
+		@SuppressWarnings("unused") //May be used may not be used.
+		public CD(String domain, boolean online)
+		{
+			this(domain);
+			
+			this.online = online;
+		}
+		
+		@SuppressWarnings("unused") //May be used may not be used.
+		public CD(String domain, int version, boolean online)
+		{
+			this(domain);
+			
+			this.version = version;
+			this.online = online;
 		}
 	}
 }
