@@ -11,6 +11,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
+import de.ecconia.mc.jclient.FatalException;
+
 public class SyncCryptUnit
 {
 	private final Cipher decryptCipher;
@@ -86,7 +88,7 @@ public class SyncCryptUnit
 		catch(NoSuchAlgorithmException e)
 		{
 			//Do not capture this, terminate everything.
-			throw new Error("ERROR: Exception while gnerating synced encryption key: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+			throw new FatalException("ERROR: Exception while gnerating synced encryption key: " + e.getClass().getSimpleName() + " - " + e.getMessage());
 		}
 	}
 }

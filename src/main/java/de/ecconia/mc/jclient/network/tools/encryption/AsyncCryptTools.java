@@ -15,6 +15,8 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import de.ecconia.mc.jclient.FatalException;
+
 public class AsyncCryptTools
 {
 	public static PublicKey bytesToPublicKey(byte[] pubkeyBytes)
@@ -26,7 +28,7 @@ public class AsyncCryptTools
 		catch(InvalidKeySpecException | NoSuchAlgorithmException e)
 		{
 			//Do not capture this, terminate everything.
-			throw new Error("ERROR: Exception while converting bytes to public key: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+			throw new FatalException("ERROR: Exception while converting bytes to public key: " + e.getClass().getSimpleName() + " - " + e.getMessage());
 		}
 	}
 	
@@ -43,7 +45,7 @@ public class AsyncCryptTools
 		catch(NoSuchAlgorithmException | UnsupportedEncodingException e)
 		{
 			//Do not capture this, terminate everything.
-			throw new Error("ERROR: Exception while creating server-hash: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+			throw new FatalException("ERROR: Exception while creating server-hash: " + e.getClass().getSimpleName() + " - " + e.getMessage());
 		}
 	}
 	
@@ -58,7 +60,7 @@ public class AsyncCryptTools
 		catch(InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e)
 		{
 			//Do not capture this, terminate everything.
-			throw new Error("ERROR: Exception while async encrypting data: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+			throw new FatalException("ERROR: Exception while async encrypting data: " + e.getClass().getSimpleName() + " - " + e.getMessage());
 		}
 	}
 }

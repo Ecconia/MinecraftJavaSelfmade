@@ -108,8 +108,7 @@ public class LoginPacketHandler implements PacketHandler
 		}
 		catch(Exception e)
 		{
-			System.out.println("ERROR: Exception while reading packet: " + e.getClass().getSimpleName() + " - " + e.getMessage());
-			e.printStackTrace(System.out);
+			Logger.ex("while reading packet", e);
 		}
 	}
 }

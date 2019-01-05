@@ -25,4 +25,15 @@ public class Logger
 		System.out.println("IMPORTANT: " + message);
 		System.out.println("#######################################");
 	}
+	
+	public static void ex(String when, Throwable e)
+	{
+		StackTraceElement root = Thread.currentThread().getStackTrace()[2];
+		System.out.println("EXCEPTION " + when + ": " + e.getClass().getSimpleName() + " @(" + root.getClassName() + ":" + root.getLineNumber() + ")");
+		System.out.println("- Message: " + e.getMessage());
+		for(StackTraceElement el : e.getStackTrace())
+		{
+			System.out.println(" -> " + el.getClassName() + "." + el.getMethodName() + "(" + el.getFileName() + ":" + el.getLineNumber() + ")");
+		}
+	}
 }

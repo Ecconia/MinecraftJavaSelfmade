@@ -7,8 +7,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 
 import de.ecconia.mc.jclient.Credentials;
+import de.ecconia.mc.jclient.FatalException;
 
 public class AuthServer
 {
@@ -27,16 +29,24 @@ public class AuthServer
 //		System.out.println("Link: " + link);
 //		System.out.println("Message: " + message);
 		
-		String response = request(link, message);
-		if(!response.isEmpty())
+		try
 		{
-			System.out.println("Auth server send something on join attempt: " + response);
-			System.out.println("Thats probably an error, termination incomming.");
-			throw new Error("Auth server couldn't shut up.");
+			String response = request(link, message);
+			
+			if(!response.isEmpty())
+			{
+				System.out.println("Auth server send something on join attempt: " + response);
+				System.out.println("Thats probably an error, termination incomming.");
+				throw new FatalException("Auth server couldn't shut up.");
+			}
+		}
+		catch(UnknownHostException e)
+		{
+			throw new FatalException("Could not connect to auth server. Online?");
 		}
 	}
 	
-	public static String request(String url, String content)
+	public static String request(String url, String content) throws UnknownHostException
 	{
 		byte[] payload = content.getBytes();
 		
@@ -70,6 +80,10 @@ public class AuthServer
 			String res = inStream.readLine();
 			inStream.close();
 			return res;
+		}
+		catch(UnknownHostException e)
+		{
+			throw e;
 		}
 		catch(IOException e)
 		{

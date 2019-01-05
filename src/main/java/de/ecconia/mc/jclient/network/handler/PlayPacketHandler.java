@@ -78,8 +78,7 @@ public class PlayPacketHandler implements PacketHandler
 		}
 		catch(Exception e)
 		{
-			System.out.println("> ERROR: Exception while reading/enqueuing packet: " + e.getClass().getSimpleName() + " - " + e.getMessage());
-			e.printStackTrace(System.out);
+			Logger.ex("while reading/enqueuing packet", e);
 		}
 	}
 	

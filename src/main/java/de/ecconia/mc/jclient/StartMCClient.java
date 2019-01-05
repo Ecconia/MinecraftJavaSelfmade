@@ -3,6 +3,7 @@ package de.ecconia.mc.jclient;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.network.handler.LoginPacketHandler;
+import de.ecconia.mc.jclient.network.handler.PlayPacketHandler;
 import old.packet.MessageBuilder;
 
 public class StartMCClient
@@ -11,34 +12,40 @@ public class StartMCClient
 	
 	public static void main(String[] args)
 	{
-		Credentials.load();
-		L.init();
-
-		cd = new CD("s.redstone-server.info");
-//		cd = new CD("localhost");
-		
-		Connector con = new Connector(cd.domain, cd.port, (connector) ->  {
-			MessageBuilder mb = new MessageBuilder();
+		try
+		{
+			Credentials.load();
+			L.init();
 			
-			mb.addCInt(cd.version);
-			mb.addString("The-Cake-Is-A-Lie-Or-The-URL-I-Choose");
-			mb.addShort(666);
-			mb.addCInt(2);
+			cd = new CD("s.redstone-server.info");
+//			cd = new CD("localhost");
 			
-			mb.prependCInt(0);
-			connector.sendPacket(mb.asBytes());
+			Connector con = new Connector(cd.domain, cd.port, (connector) -> {
+				MessageBuilder mb = new MessageBuilder();
+				
+				mb.addCInt(cd.version);
+				mb.addString("The-Cake-Is-A-Lie-Or-The-URL-I-Choose");
+				mb.addShort(666);
+				mb.addCInt(2);
+				
+				mb.prependCInt(0);
+				connector.sendPacket(mb.asBytes());
+				
+				mb = new MessageBuilder();
+				mb.addString(Credentials.username);
+				
+				mb.prependCInt(0);
+				connector.sendPacket(mb.asBytes());
+			});
 			
-			mb = new MessageBuilder();
-			mb.addString(Credentials.username);
+			PrimitiveDataDude dataDude = new PrimitiveDataDude(con);
 			
-			mb.prependCInt(0);
-			connector.sendPacket(mb.asBytes());
-		});
-		
-		PrimitiveDataDude dataDude = new PrimitiveDataDude(con);
-		
-		con.setHandler(new LoginPacketHandler(con, dataDude));
-		con.connect();
+			con.setHandler(new LoginPacketHandler(dataDude));
+		}
+		catch(FatalException e)
+		{
+			Logger.ex("somewhere while runtime", e);
+		}
 	}
 	
 	private static class CD

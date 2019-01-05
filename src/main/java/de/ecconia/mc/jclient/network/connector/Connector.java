@@ -8,6 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.crypto.SecretKey;
 
+import de.ecconia.mc.jclient.Logger;
 import de.ecconia.mc.jclient.network.connector.inner.DecryptionReader;
 import de.ecconia.mc.jclient.network.connector.inner.NormalReader;
 import de.ecconia.mc.jclient.network.connector.inner.Reader;
@@ -60,12 +61,12 @@ public class Connector
 		}
 		catch(UnknownHostException e)
 		{
-			e.printStackTrace();
+			Logger.ex("connecting to server", e);
 			return;
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
+			Logger.ex("connecting to server", e);
 			return;
 		}
 		
@@ -93,6 +94,9 @@ public class Connector
 				}
 			}
 		}, "SendingThread");
+		sendingThread.setUncaughtExceptionHandler((t, ex) -> {
+			Logger.ex("on Thread " + t.getName() + ", now its dead", ex);
+		});
 		sendingThread.start();
 		
 		Thread readingThread = new Thread(() -> {
@@ -102,10 +106,11 @@ public class Connector
 				readPacket();
 			}
 		}, "ReadingThread");
-		readingThread.start();
 		readingThread.setUncaughtExceptionHandler((t, ex) -> {
+			Logger.ex("on Thread " + t.getName() + ", now its dead", ex);
 			System.out.println("Total amount of bytes read: " + r.getBytesRead());
 		});
+		readingThread.start();
 		
 		connectedHandler.connected(this);
 	}
