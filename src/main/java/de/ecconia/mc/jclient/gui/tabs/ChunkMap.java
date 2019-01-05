@@ -3,11 +3,12 @@ package de.ecconia.mc.jclient.gui.tabs;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
 
 @SuppressWarnings("serial")
 public class ChunkMap extends JPanel
@@ -15,18 +16,18 @@ public class ChunkMap extends JPanel
 	private int xMin = Integer.MAX_VALUE;
 	private int xMax = Integer.MIN_VALUE;
 	
-	private int yMin = Integer.MAX_VALUE;
-	private int yMax = Integer.MIN_VALUE;
+	private int zMin = Integer.MAX_VALUE;
+	private int zMax = Integer.MIN_VALUE;
 	
-	private final List<Point> chunks = new ArrayList<>();
+	private final XYStorage<Point> chunks = new XYStorage<>();
 	
 	public ChunkMap()
 	{
 	}
 	
-	public void load(int x, int y)
+	public void load(int x, int z)
 	{
-		chunks.add(new Point(x, y));
+		chunks.put(x, z, new Point(x, z));
 		
 		if(xMin > x)
 		{
@@ -38,14 +39,14 @@ public class ChunkMap extends JPanel
 			xMax = x;
 		}
 		
-		if(yMin > y)
+		if(zMin > z)
 		{
-			yMin = y;
+			zMin = z;
 		}
 		
-		if(yMax < y)
+		if(zMax < z)
 		{
-			yMax = y;
+			zMax = z;
 		}
 		
 		SwingUtilities.invokeLater(() -> {
@@ -53,7 +54,7 @@ public class ChunkMap extends JPanel
 		});
 	}
 	
-	public void unload(int x, int y)
+	public void unload(int x, int z)
 	{
 		throw new RuntimeException("Impl missing.");
 	}
@@ -65,7 +66,7 @@ public class ChunkMap extends JPanel
 		int w = getWidth() - 1;
 		
 		int xAmount = xMax - xMin + 1;
-		int yAmount = yMax - yMin + 1;
+		int yAmount = zMax - zMin + 1;
 		
 		int a;
 		{
@@ -94,9 +95,11 @@ public class ChunkMap extends JPanel
 		}
 		
 		g.setColor(Color.red);
-		for(Point p : chunks)
+		Iterator<Point> it = chunks.iterator();
+		while(it.hasNext())
 		{
-			g.fillRect((p.x - xMin) * a + 1, (p.y - yMin) * a + 1, a - 1, a - 1);
+			Point p = it.next();
+			g.fillRect((p.x - xMin) * a + 1, (p.y - zMin) * a + 1, a - 1, a - 1);
 		}
 	}
 }

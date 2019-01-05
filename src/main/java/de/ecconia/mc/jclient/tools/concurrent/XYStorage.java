@@ -43,8 +43,7 @@ public class XYStorage<T>
 				return null;
 			}
 			
-			T type = zList.get(z);
-			return type;
+			return zList.get(z);
 		}
 		finally
 		{
@@ -68,6 +67,10 @@ public class XYStorage<T>
 				{
 					inner = outer.next().values().iterator();
 					makeNext();
+				}
+				else
+				{
+					lock.unlock();
 				}
 			}
 			
