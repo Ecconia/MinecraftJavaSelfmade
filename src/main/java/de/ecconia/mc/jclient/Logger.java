@@ -30,7 +30,10 @@ public class Logger
 	{
 		StackTraceElement root = Thread.currentThread().getStackTrace()[2];
 		System.out.println("EXCEPTION " + when + ": " + e.getClass().getSimpleName() + " @(" + root.getClassName() + ":" + root.getLineNumber() + ")");
-		System.out.println("- Message: " + e.getMessage());
+		if(e.getMessage() != null)
+		{
+			System.out.println("- Message: " + e.getMessage());
+		}
 		for(StackTraceElement el : e.getStackTrace())
 		{
 			System.out.println(" -> " + el.getClassName() + "." + el.getMethodName() + "(" + el.getFileName() + ":" + el.getLineNumber() + ")");
