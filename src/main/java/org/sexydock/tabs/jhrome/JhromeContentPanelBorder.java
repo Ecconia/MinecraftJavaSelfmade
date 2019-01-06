@@ -86,7 +86,6 @@ public class JhromeContentPanelBorder implements Border
 	@Override
 	public boolean isBorderOpaque()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 	

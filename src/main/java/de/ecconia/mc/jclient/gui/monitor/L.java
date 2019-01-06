@@ -15,7 +15,7 @@ public class L
 	{
 		logger.addCustomPanel(name, panel);
 	}
-
+	
 	public static void init()
 	{
 	}

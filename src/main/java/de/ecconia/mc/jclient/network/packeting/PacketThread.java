@@ -37,7 +37,7 @@ public abstract class PacketThread extends Thread
 				{
 					process(packet);
 				}
-				catch (Exception e)
+				catch(Exception e)
 				{
 					System.out.println("Error while parsing packet with ID: " + packet.getId() + " on " + getName());
 					System.out.println("Content:");

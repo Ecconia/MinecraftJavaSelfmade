@@ -128,12 +128,12 @@ public class PacketReader
 		
 		return ret;
 	}
-
+	
 	public int readUByte()
 	{
 		return nextUnsigned();
 	}
-
+	
 	public UUID readUUID()
 	{
 		return new UUID(readLong(), readLong());

@@ -32,7 +32,7 @@ public class DebugPalette
 			}
 		}
 		
-		types = new boolean[highest+1];
+		types = new boolean[highest + 1];
 		
 		for(int a = 0; a < 16; a++)
 		{

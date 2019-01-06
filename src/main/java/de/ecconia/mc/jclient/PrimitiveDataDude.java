@@ -188,7 +188,7 @@ public class PrimitiveDataDude
 	{
 		return con;
 	}
-
+	
 	public void walkTo(int posX, int posY, int posZ)
 	{
 		MessageBuilder mb = new MessageBuilder();

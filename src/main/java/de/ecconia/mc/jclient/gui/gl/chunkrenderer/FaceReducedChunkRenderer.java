@@ -226,7 +226,7 @@ public class FaceReducedChunkRenderer extends ChunkRenderer
 		gl.glVertex3d(0, -blockRadius, -blockRadius);
 		gl.glVertex3d(0, -blockRadius, blockRadius);
 		gl.glEnd();
-
+		
 		if(printGrid)
 		{
 			gl.glColor3f(0, 0, 0);
@@ -254,7 +254,7 @@ public class FaceReducedChunkRenderer extends ChunkRenderer
 		gl.glVertex3d(-blockRadius, -blockRadius, 0);
 		gl.glVertex3d(-blockRadius, blockRadius, 0);
 		gl.glEnd();
-
+		
 		if(printGrid)
 		{
 			gl.glColor3f(0, 0, 0);
@@ -282,7 +282,7 @@ public class FaceReducedChunkRenderer extends ChunkRenderer
 		gl.glVertex3d(-blockRadius, 0, -blockRadius);
 		gl.glVertex3d(-blockRadius, 0, blockRadius);
 		gl.glEnd();
-
+		
 		if(printGrid)
 		{
 			gl.glColor3f(0, 0, 0);
@@ -310,7 +310,7 @@ public class FaceReducedChunkRenderer extends ChunkRenderer
 		gl.glVertex3d(0, -blockRadius, -blockRadius);
 		gl.glVertex3d(0, -blockRadius, blockRadius);
 		gl.glEnd();
-
+		
 		if(printGrid)
 		{
 			gl.glColor3f(0, 0, 0);
@@ -338,7 +338,7 @@ public class FaceReducedChunkRenderer extends ChunkRenderer
 		gl.glVertex3d(-blockRadius, -blockRadius, 0);
 		gl.glVertex3d(-blockRadius, blockRadius, 0);
 		gl.glEnd();
-
+		
 		if(printGrid)
 		{
 			gl.glColor3f(0, 0, 0);
