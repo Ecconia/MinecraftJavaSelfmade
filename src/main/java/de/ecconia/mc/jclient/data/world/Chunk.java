@@ -97,7 +97,7 @@ public class Chunk
 									longNumber++;
 								}
 								
-								if((longs[longNumber] & longProbeBit) > 0)
+								if((longs[longNumber] & longProbeBit) != 0)
 								{
 									tmp |= cBit;
 								}
