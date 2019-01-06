@@ -35,9 +35,19 @@ public class AuthServer
 			
 			if(!response.isEmpty())
 			{
-				System.out.println("Auth server send something on join attempt: " + response);
-				System.out.println("Thats probably an error, termination incomming.");
-				throw new FatalException("Auth server couldn't shut up.");
+				if(response.equals("{\"error\":\"ForbiddenOperationException\",\"errorMessage\":\"Invalid token\"}"))
+				{
+					//TODO: Update somehow, this is no good solution, will do until the login process is this derpy.
+					System.err.println("Invalid access token, please update!");
+					System.err.println("Terminating!");
+					System.exit(0);
+				}
+				else
+				{
+					System.out.println("Auth server send something on join attempt: " + response);
+					System.out.println("Thats probably an error, termination incomming.");
+					throw new FatalException("Auth server couldn't shut up.");
+				}
 			}
 		}
 		catch(UnknownHostException e)
