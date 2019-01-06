@@ -8,7 +8,9 @@ public class BlockLib
 	
 	public BlockLib()
 	{
-		lib = new BlockModel[0];
+		//TODO: Keep updated?
+		//Max block states in version 1.13.2
+		lib = new BlockModel[8599];
 	}
 	
 	public BlockModel get(int blockID)
