@@ -1,25 +1,22 @@
 package de.ecconia.mc.jclient.network.processor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.gui.monitor.L;
-import de.ecconia.mc.jclient.gui.tabs.Statscreen;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
 
 public class PlayersPacketProcessor extends PacketThread
 {
-	private final Statscreen screen = new Statscreen();
-	
 	public PlayersPacketProcessor(PrimitiveDataDude dataDude)
 	{
 		super("PlayersThread", dataDude);
-		
-		L.addCustomPanel("PlayerList", screen);
 	}
 	
 	@Override
@@ -166,10 +163,9 @@ public class PlayersPacketProcessor extends PacketThread
 					String name = reader.readString();
 					logData("> - Name: " + name);
 					
-					screen.addKey("player." + uuid, "", uuid + " - " + name);
-					
 					//TODO: Debug screen this info here:
 					int propertyAmount = reader.readCInt();
+					Map<String, String> properties = new HashMap<>(propertyAmount);
 					for(int j = 0; j < propertyAmount; j++)
 					{
 						String pName = reader.readString();
@@ -181,47 +177,46 @@ public class PlayersPacketProcessor extends PacketThread
 							signature = reader.readString();
 						}
 						logData("> - Prop: " + pName + " = " + pValue + " :: " + signature);
+						properties.put(pName, pValue);
 					}
 					
 					int gamemode = reader.readCInt();
 					logData("> - Gamemode: " + gamemode);
-					screen.addKey("playergm." + uuid, "GM: ", gamemode);
 					
 					int ping = reader.readCInt();
 					logData("> - Ping: " + ping);
-					screen.addKey("playerping." + uuid, "Ping: ", ping);
 					
 					boolean hasDisplayName = reader.readBoolean();
 					String displayname = hasDisplayName ? reader.readString() : null;
 					logData("> - Display: " + displayname);
-					screen.addKey("playerdisplay." + uuid, "Name: ", displayname);
+					
+					dataDude.getCurrentServer().getPlayerList().newPlayerEntry(uuid, name, properties, gamemode, ping, displayname);
 				}
 				else if(mode == 1)
 				{
 					int gamemode = reader.readCInt();
 					logData("> - Gamemode: " + gamemode);
-					screen.updateKey("playergm." + uuid, gamemode);
+					
+					dataDude.getCurrentServer().getPlayerList().updatePlayerGamemode(uuid, gamemode);
 				}
 				else if(mode == 2)
 				{
 					int ping = reader.readCInt();
 					logData("> - Ping: " + ping);
-					screen.updateKey("playerping." + uuid, ping);
+					
+					dataDude.getCurrentServer().getPlayerList().updatePlayerPing(uuid, ping);
 				}
 				else if(mode == 3)
 				{
 					boolean hasDisplayName = reader.readBoolean();
 					String displayname = hasDisplayName ? reader.readString() : null;
 					logData("> - Display: " + displayname);
-					screen.updateKey("playerdisplay." + uuid, displayname);
+					
+					dataDude.getCurrentServer().getPlayerList().updatePlayerDisplayName(uuid, displayname);
 				}
 				else if(mode == 4)
 				{
-					//Remove.
-					screen.removeKey("player." + uuid);
-					screen.removeKey("playerping." + uuid);
-					screen.removeKey("playergm." + uuid);
-					screen.removeKey("playerdisplay." + uuid);
+					dataDude.getCurrentServer().getPlayerList().removePlayerEntry(uuid);
 				}
 			}
 		}
@@ -234,8 +229,7 @@ public class PlayersPacketProcessor extends PacketThread
 			String footer = reader.readString();
 			logData("Setting Footer to: " + footer);
 			
-			screen.addKey("header", "Header: ", header);
-			screen.addKey("footer", "Footer: ", footer);
+			dataDude.getCurrentServer().getPlayerList().setHeaderFooter(header, footer);
 		}
 		else
 		{
