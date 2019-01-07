@@ -7,7 +7,6 @@ import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
-import de.ecconia.mc.jclient.tools.McMathHelper;
 import de.ecconia.mc.jclient.tools.json.JSONException;
 import old.packet.MessageBuilder;
 
@@ -44,7 +43,7 @@ public class GenericPacketProcessor extends PacketThread
 			
 			logData("Player Teleport: (" + x + ", " + y + ", " + z + " | " + yaw + ", " + pitch + ") Masq: " + Integer.toBinaryString(flags) + " ID: " + tpID);
 			
-			dataDude.setPosition(McMathHelper.toBlockPos(x), McMathHelper.toBlockPos(y), McMathHelper.toBlockPos(z));
+			dataDude.setPosition(x, y, z);
 			
 			MessageBuilder mb = new MessageBuilder();
 			mb.addCInt(tpID);

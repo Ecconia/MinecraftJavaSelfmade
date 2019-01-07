@@ -16,9 +16,9 @@ public class PrimitiveDataDude
 	private final Connector con;
 	private ChatPane chatWindow;
 	
-	private int x;
-	private int y;
-	private int z;
+	private double x;
+	private double y;
+	private double z;
 	
 	public PrimitiveDataDude(Connector con)
 	{
@@ -105,12 +105,12 @@ public class PrimitiveDataDude
 		this.playerPosHandler = playerPosHandler;
 	}
 	
-	public void newPosition(int x, int y, int z)
+	public void newPosition(double x, double y, double z)
 	{
 		playerPosHandler.updatePlayerCoords(x, y, z);
 		
-		int newChunkX = McMathHelper.toChunkPos(x);
-		int newChunkZ = McMathHelper.toChunkPos(z);
+		int newChunkX = McMathHelper.toChunkPos(McMathHelper.toBlockPos(x));
+		int newChunkZ = McMathHelper.toChunkPos(McMathHelper.toBlockPos(z));
 		
 		if(newChunkX != chunkX || newChunkZ != chunkZ)
 		{
@@ -131,15 +131,16 @@ public class PrimitiveDataDude
 	
 	public static interface UpdatePlayerPos
 	{
-		public void updatePlayerCoords(int x, int y, int z);
+		public void updatePlayerCoords(double x, double y, double z);
 	}
 	
-	public void setPosition(int x, int y, int z)
+	public void setPosition(double x, double y, double z)
 	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		
+		//TODO: Crop to relevant length:
 		L.writeLineOnChannel("3D-Text", "Recieved position: (" + x + ", " + y + ", " + z + ")");
 		newPosition(x, y, z);
 	}
@@ -189,9 +190,10 @@ public class PrimitiveDataDude
 		return con;
 	}
 	
-	public void walkTo(int posX, int posY, int posZ)
+	public void walkTo(double posX, double posY, double posZ)
 	{
 		MessageBuilder mb = new MessageBuilder();
+		//TODO: Crop to relevant length:
 		L.writeLineOnChannel("3D-Text", "Walking to: (" + posX + ", " + posY + ", " + posZ + ")");
 		
 		mb.addDouble(posX);

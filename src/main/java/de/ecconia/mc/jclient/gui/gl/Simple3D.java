@@ -45,9 +45,9 @@ public class Simple3D extends JPanel implements GLEventListener
 	private float rotation = 30;
 	private float neck = 20f;
 	
-	private int posX = 0;
-	private int posY = 0;
-	private int posZ = 0;
+	private double posX = 0D;
+	private double posY = 0D;
+	private double posZ = 0D;
 	
 	//////////////////////////////////////
 	//World data:
@@ -297,32 +297,32 @@ public class Simple3D extends JPanel implements GLEventListener
 				//TODO: Fix directions, forward/backward/left/right
 				if(keyChar == 'a')
 				{
-					posX++;
+					posX += 0.1f;
 					dataDude.walkTo(posX, posY, posZ);
 				}
 				else if(keyChar == 'd')
 				{
-					posX--;
+					posX -= 0.1f;
 					dataDude.walkTo(posX, posY, posZ);
 				}
 				else if(keyChar == 'w')
 				{
-					posZ++;
+					posZ += 0.1f;
 					dataDude.walkTo(posX, posY, posZ);
 				}
 				else if(keyChar == 's')
 				{
-					posZ--;
+					posZ -= 0.1f;
 					dataDude.walkTo(posX, posY, posZ);
 				}
 				else if(keyChar == 'q')
 				{
-					posY++;
+					posY += 0.1f;
 					dataDude.walkTo(posX, posY, posZ);
 				}
 				else if(keyChar == 'e')
 				{
-					posY--;
+					posY -= 0.1f;
 					dataDude.walkTo(posX, posY, posZ);
 				}
 			}
@@ -374,7 +374,7 @@ public class Simple3D extends JPanel implements GLEventListener
 		gl.glRotatef(neck, 1, 0, 0);
 		gl.glRotatef(rotation, 0.0f, 1.0f, 0.0f);
 		//Actual player position:
-		gl.glTranslatef(-posX, -posY, -posZ);
+		gl.glTranslated(-posX, -posY, -posZ);
 		//World offset to align to player position:
 		gl.glTranslatef(0.5f, -1.04f, 0.5f);
 		
