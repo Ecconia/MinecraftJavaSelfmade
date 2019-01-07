@@ -373,7 +373,10 @@ public class Simple3D extends JPanel implements GLEventListener
 		//Set camera position and direction:
 		gl.glRotatef(neck, 1, 0, 0);
 		gl.glRotatef(rotation, 0.0f, 1.0f, 0.0f);
-		gl.glTranslatef(-posX, -posY - 1, -posZ);
+		//Actual player position:
+		gl.glTranslatef(-posX, -posY, -posZ);
+		//World offset to align to player position:
+		gl.glTranslatef(0.5f, -1.04f, 0.5f);
 		
 		//Print chunks:
 		Iterator<ChunkRenderer> it = chunks.iterator();
