@@ -18,7 +18,7 @@ import de.ecconia.mc.jclient.tools.CIntUntils;
 import de.ecconia.mc.jclient.tools.IntBytes;
 import old.reading.DirtyIOException;
 
-public class Connector
+public class Connector implements Sender
 {
 	private final BlockingQueue<ByteArray> sendQueue = new LinkedBlockingQueue<>();
 	

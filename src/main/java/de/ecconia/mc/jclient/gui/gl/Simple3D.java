@@ -146,7 +146,7 @@ public class Simple3D extends JPanel implements GLEventListener
 	
 	public Simple3D(PrimitiveDataDude dataDude)
 	{
-		dataDude.setChunkPosHandler((x, z) -> {
+		dataDude.getCurrentServer().getMainPlayer().setChunkPosHandler((x, z) -> {
 			//TODO: Threadsafe!
 			new Thread(() -> {
 				try
@@ -174,7 +174,7 @@ public class Simple3D extends JPanel implements GLEventListener
 			}, "Chunk processor # " + chunkProcessor++).start();
 		});
 		
-		dataDude.setPlayerPositionHandler((x, y, z) -> {
+		dataDude.getCurrentServer().getMainPlayer().setPlayerPositionHandler((x, y, z) -> {
 			posX = x;
 			posY = y;
 			posZ = z;
@@ -297,33 +297,33 @@ public class Simple3D extends JPanel implements GLEventListener
 				//TODO: Fix directions, forward/backward/left/right
 				if(keyChar == 'a')
 				{
-					posX += 0.1f;
-					dataDude.walkTo(posX, posY, posZ);
+					posX += 0.8f;
+					dataDude.getCurrentServer().getMainPlayer().clientLocation(posX, posY, posZ);
 				}
 				else if(keyChar == 'd')
 				{
-					posX -= 0.1f;
-					dataDude.walkTo(posX, posY, posZ);
+					posX -= 0.8f;
+					dataDude.getCurrentServer().getMainPlayer().clientLocation(posX, posY, posZ);
 				}
 				else if(keyChar == 'w')
 				{
-					posZ += 0.1f;
-					dataDude.walkTo(posX, posY, posZ);
+					posZ += 0.8f;
+					dataDude.getCurrentServer().getMainPlayer().clientLocation(posX, posY, posZ);
 				}
 				else if(keyChar == 's')
 				{
-					posZ -= 0.1f;
-					dataDude.walkTo(posX, posY, posZ);
+					posZ -= 0.8f;
+					dataDude.getCurrentServer().getMainPlayer().clientLocation(posX, posY, posZ);
 				}
 				else if(keyChar == 'q')
 				{
-					posY += 0.1f;
-					dataDude.walkTo(posX, posY, posZ);
+					posY += 0.8f;
+					dataDude.getCurrentServer().getMainPlayer().clientLocation(posX, posY, posZ);
 				}
 				else if(keyChar == 'e')
 				{
-					posY -= 0.1f;
-					dataDude.walkTo(posX, posY, posZ);
+					posY -= 0.8f;
+					dataDude.getCurrentServer().getMainPlayer().clientLocation(posX, posY, posZ);
 				}
 			}
 		}));

@@ -5,8 +5,6 @@ import de.ecconia.mc.jclient.data.ServerData;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.gui.tabs.ChatPane;
 import de.ecconia.mc.jclient.network.connector.Connector;
-import de.ecconia.mc.jclient.tools.McMathHelper;
-import de.ecconia.mc.jclient.tools.PrintUtils;
 import old.packet.MessageBuilder;
 
 public class PrimitiveDataDude
@@ -16,15 +14,11 @@ public class PrimitiveDataDude
 	private final Connector con;
 	private ChatPane chatWindow;
 	
-	private double x;
-	private double y;
-	private double z;
-	
 	public PrimitiveDataDude(Connector con)
 	{
 		this.con = con;
 		
-		currentServer = new ServerData();
+		currentServer = new ServerData(con);
 	}
 	
 	public ServerData getCurrentServer()
@@ -87,65 +81,6 @@ public class PrimitiveDataDude
 	}
 	
 	//#########################################################################
-	//Position handler:
-	
-	private int chunkX = Integer.MAX_VALUE;
-	private int chunkZ = Integer.MAX_VALUE;
-	
-	private UpdateChunkPos worldHandler;
-	private UpdatePlayerPos playerPosHandler;
-	
-	public void setChunkPosHandler(UpdateChunkPos handler)
-	{
-		this.worldHandler = handler;
-	}
-	
-	public void setPlayerPositionHandler(UpdatePlayerPos playerPosHandler)
-	{
-		this.playerPosHandler = playerPosHandler;
-	}
-	
-	public void newPosition(double x, double y, double z)
-	{
-		playerPosHandler.updatePlayerCoords(x, y, z);
-		
-		int newChunkX = McMathHelper.toChunkPos(McMathHelper.toBlockPos(x));
-		int newChunkZ = McMathHelper.toChunkPos(McMathHelper.toBlockPos(z));
-		
-		if(newChunkX != chunkX || newChunkZ != chunkZ)
-		{
-			chunkX = newChunkX;
-			chunkZ = newChunkZ;
-			
-			L.writeLineOnChannel("3D-Text", "New chunk location: " + chunkX + " " + chunkZ);
-			
-			//Event:
-			worldHandler.updateChunkCoords(newChunkX, newChunkZ);
-		}
-	}
-	
-	public static interface UpdateChunkPos
-	{
-		public void updateChunkCoords(int x, int z);
-	}
-	
-	public static interface UpdatePlayerPos
-	{
-		public void updatePlayerCoords(double x, double y, double z);
-	}
-	
-	public void setPosition(double x, double y, double z)
-	{
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		
-		//TODO: Crop to relevant length:
-		L.writeLineOnChannel("3D-Text", "Recieved position: (" + x + ", " + y + ", " + z + ")");
-		newPosition(x, y, z);
-	}
-	
-	//#########################################################################
 	
 	public void sendChat(String text)
 	{
@@ -153,23 +88,17 @@ public class PrimitiveDataDude
 		{
 			if(text.equals("%move"))
 			{
+				double x = currentServer.getMainPlayer().getLocationX();
+				double y = currentServer.getMainPlayer().getLocationY();
+				double z = currentServer.getMainPlayer().getLocationZ();
+				
 				System.out.println("Sending Position: (" + x + ", " + y + ", " + z + ")");
-				MessageBuilder mb = new MessageBuilder();
-				
-				x += 4;
-				
-				mb.addDouble(x);
-				mb.addDouble(y);
-				mb.addDouble(z);
-				mb.addBoolean(true);
-				mb.prependCInt(0x10);
-				PrintUtils.printBytes(mb.asBytes());
-				con.sendPacket(mb.asBytes());
+				currentServer.getMainPlayer().clientLocation(x + 4, y, z);
 			}
-			else if(text.equals("%3"))
-			{
-				worldHandler.updateChunkCoords(chunkX, chunkZ);
-			}
+//			else if(text.equals("%3"))
+//			{
+//				worldHandler.updateChunkCoords(chunkX, chunkZ);
+//			}
 		}
 		else
 		{
@@ -188,21 +117,5 @@ public class PrimitiveDataDude
 	public Connector getCon()
 	{
 		return con;
-	}
-	
-	public void walkTo(double posX, double posY, double posZ)
-	{
-		MessageBuilder mb = new MessageBuilder();
-		//TODO: Crop to relevant length:
-		L.writeLineOnChannel("3D-Text", "Walking to: (" + posX + ", " + posY + ", " + posZ + ")");
-		
-		mb.addDouble(posX);
-		mb.addDouble(posY);
-		mb.addDouble(posZ);
-		mb.addBoolean(true);
-		mb.prependCInt(0x10);
-		con.sendPacket(mb.asBytes());
-		
-		newPosition(posX, posY, posZ);
 	}
 }

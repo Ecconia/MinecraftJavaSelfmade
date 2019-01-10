@@ -8,7 +8,6 @@ import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
 import de.ecconia.mc.jclient.tools.json.JSONException;
-import old.packet.MessageBuilder;
 
 public class GenericPacketProcessor extends PacketThread
 {
@@ -26,29 +25,6 @@ public class GenericPacketProcessor extends PacketThread
 		if(id == 0x23)
 		{
 			logPacket("Effect");
-		}
-		else if(id == 0x32)
-		{
-			logPacket("Player teleport");
-			
-			double x = reader.readDouble();
-			double y = reader.readDouble();
-			double z = reader.readDouble();
-			float yaw = reader.readFloat();
-			float pitch = reader.readFloat();
-			
-			int flags = reader.readByte();
-			
-			int tpID = reader.readCInt();
-			
-			logData("Player Teleport: (" + x + ", " + y + ", " + z + " | " + yaw + ", " + pitch + ") Masq: " + Integer.toBinaryString(flags) + " ID: " + tpID);
-			
-			dataDude.setPosition(x, y, z);
-			
-			MessageBuilder mb = new MessageBuilder();
-			mb.addCInt(tpID);
-			mb.prependCInt(0x00); //Teleport confirm packet.
-			dataDude.getCon().sendPacket(mb.asBytes());
 		}
 		else if(id == 0x28)
 		{
@@ -166,13 +142,6 @@ public class GenericPacketProcessor extends PacketThread
 			logPacket("Server difficulty");
 			//UByte -> difficulty
 		}
-		else if(id == 0x2e)
-		{
-			logPacket("Player abilities");
-			//Byte -> Invunerable/Flying/AllowFlying/InstaBreak
-			//Float -> Fly speed
-			//Float -> FOV (movement speed)
-		}
 		else if(id == 0x3d)
 		{
 			logPacket("Inventory Slot selected");
@@ -217,14 +186,6 @@ public class GenericPacketProcessor extends PacketThread
 			//Double -> y
 			//Double -> z
 		}
-		else if(id == 0x44)
-		{
-			logPacket("Update health");
-		}
-		else if(id == 0x43)
-		{
-			logPacket("Set XP");
-		}
 		else if(id == 25)
 		{
 			logPacket("\"Plugin\" Message");
@@ -258,6 +219,7 @@ public class GenericPacketProcessor extends PacketThread
 		}
 		else if(id == 37)
 		{
+			//TBI: here or in the player one?
 			logPacket("JoinPlayerState");
 			//Int -> ID
 			reader.readInt();
