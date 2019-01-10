@@ -1,6 +1,7 @@
 package de.ecconia.mc.jclient.network.connector;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
@@ -61,7 +62,28 @@ public class Connector implements Sender
 		}
 		catch(UnknownHostException e)
 		{
-			Logger.ex("connecting to server", e);
+			if(e.getMessage().equals(domain))
+			{
+				System.err.println("Could not connect to " + domain + ", connected to internet?");
+			}
+			else
+			{
+				Logger.ex("connecting to server", e);
+			}
+			
+			return;
+		}
+		catch(ConnectException e)
+		{
+			if(e.getMessage().equals("Connection refused (Connection refused)"))
+			{
+				System.err.println("Could not connect to " + domain + ", wrong port?");
+			}
+			else
+			{
+				Logger.ex("connecting to server", e);
+			}
+			
 			return;
 		}
 		catch(IOException e)
