@@ -38,15 +38,11 @@ public class PlayerList
 			Logger.perr("New playerentry, but " + (nameErr ? "playername " : "") + (nameErr && uuidErr ? "and " : "") + (uuidErr ? "uuid " : "") + "still was registered.");
 			
 			screen.removeKey("player." + uuid);
-			screen.removeKey("playerping." + uuid);
-			screen.removeKey("playergm." + uuid);
-			screen.removeKey("playerdisplay." + uuid);
+			screen.removeKey("playerdetails." + uuid);
 		}
 		
-		screen.addKey("player." + uuid, "", uuid + " - " + username);
-		screen.addKey("playergm." + uuid, "GM: ", gamemode);
-		screen.addKey("playerping." + uuid, "Ping: ", ping);
-		screen.addKey("playerdisplay." + uuid, "Name: ", displayname);
+		screen.addKey("player." + uuid, "", username + " (" + uuid + ")");
+		screen.addKey("playerdetails." + uuid, "-> ", "GM: " + gamemode + ", Ping: " + ping + ", DName: " + displayname);
 	}
 	
 	public void updatePlayerGamemode(UUID uuid, int gamemode)
@@ -59,7 +55,7 @@ public class PlayerList
 		}
 		entry.setGamemode(gamemode);
 		
-		screen.updateKey("playergm." + uuid, gamemode);
+		screen.updateKey("playerdetails." + entry.uuid, "GM: " + entry.gamemode + ", Ping: " + entry.ping + ", DName: " + entry.displayname);
 	}
 	
 	public void updatePlayerPing(UUID uuid, int ping)
@@ -72,7 +68,7 @@ public class PlayerList
 		}
 		entry.setPing(ping);
 		
-		screen.updateKey("playerping." + uuid, ping);
+		screen.updateKey("playerdetails." + entry.uuid, "GM: " + entry.gamemode + ", Ping: " + entry.ping + ", DName: " + entry.displayname);
 	}
 	
 	public void updatePlayerDisplayName(UUID uuid, String displayname)
@@ -85,7 +81,7 @@ public class PlayerList
 		}
 		entry.setDisplayname(displayname);
 		
-		screen.updateKey("playerdisplay." + uuid, displayname);
+		screen.updateKey("playerdetails." + entry.uuid, "GM: " + entry.gamemode + ", Ping: " + entry.ping + ", DName: " + entry.displayname);
 	}
 	
 	public void removePlayerEntry(UUID uuid)
@@ -100,9 +96,7 @@ public class PlayerList
 		
 		//Remove.
 		screen.removeKey("player." + uuid);
-		screen.removeKey("playerping." + uuid);
-		screen.removeKey("playergm." + uuid);
-		screen.removeKey("playerdisplay." + uuid);
+		screen.removeKey("playerdetails." + uuid);
 	}
 	
 	public void setHeaderFooter(String header, String footer)
