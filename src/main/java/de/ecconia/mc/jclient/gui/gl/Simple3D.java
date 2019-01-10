@@ -37,6 +37,8 @@ import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
 @SuppressWarnings("serial")
 public class Simple3D extends JPanel implements GLEventListener
 {
+	private final PrimitiveDataDude dataDude;
+	
 	//????????????
 	private GLU glu;
 	
@@ -146,6 +148,8 @@ public class Simple3D extends JPanel implements GLEventListener
 	
 	public Simple3D(PrimitiveDataDude dataDude)
 	{
+		this.dataDude = dataDude;
+		
 		dataDude.getCurrentServer().getMainPlayer().setChunkPosHandler((x, z) -> {
 			//TODO: Threadsafe!
 			new Thread(() -> {
@@ -294,26 +298,21 @@ public class Simple3D extends JPanel implements GLEventListener
 			@Override
 			public void pressed(int keyCode, char keyChar)
 			{
-				//TODO: Fix directions, forward/backward/left/right
 				if(keyChar == 'a')
 				{
-					posX += 0.8f;
-					dataDude.getCurrentServer().getMainPlayer().clientLocation(posX, posY, posZ);
+					walkIntoDirection(-90);
 				}
 				else if(keyChar == 'd')
 				{
-					posX -= 0.8f;
-					dataDude.getCurrentServer().getMainPlayer().clientLocation(posX, posY, posZ);
+					walkIntoDirection(90);
 				}
 				else if(keyChar == 'w')
 				{
-					posZ += 0.8f;
-					dataDude.getCurrentServer().getMainPlayer().clientLocation(posX, posY, posZ);
+					walkIntoDirection(0);
 				}
 				else if(keyChar == 's')
 				{
-					posZ -= 0.8f;
-					dataDude.getCurrentServer().getMainPlayer().clientLocation(posX, posY, posZ);
+					walkIntoDirection(180);
 				}
 				else if(keyChar == 'q')
 				{
@@ -334,6 +333,24 @@ public class Simple3D extends JPanel implements GLEventListener
 		
 		final FPSAnimator animator = new FPSAnimator(glcanvas, 30, true);
 		animator.start();
+	}
+	
+	private final float conv = (float) (Math.PI / 180f);
+	
+	//TODO: Should use the Players rotation value, instead of the one from here. Accordingly move it away from this file.
+	private void walkIntoDirection(float direction)
+	{
+		float dir = rotation + direction;
+		float distance = 1;
+		
+		float offsetZ = (float) -(distance * Math.cos(conv * dir));
+		float offsetX = (float) (distance * Math.sin(conv * dir));
+		
+		double x = dataDude.getCurrentServer().getMainPlayer().getLocationX();
+		double y = dataDude.getCurrentServer().getMainPlayer().getLocationY();
+		double z = dataDude.getCurrentServer().getMainPlayer().getLocationZ();
+		
+		dataDude.getCurrentServer().getMainPlayer().clientLocation(x + offsetX, y, z + offsetZ);
 	}
 	
 	@Override
