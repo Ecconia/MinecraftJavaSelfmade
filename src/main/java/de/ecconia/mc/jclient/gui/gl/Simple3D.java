@@ -1,17 +1,6 @@
 package de.ecconia.mc.jclient.gui.gl;
 
-import java.awt.AWTException;
 import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.Robot;
-import java.awt.Toolkit;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.util.Iterator;
 
 import javax.swing.JPanel;
@@ -27,6 +16,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.data.world.Chunk;
+import de.ecconia.mc.jclient.gui.gl.PrimitiveMouseHandler.MouseAdapter;
 import de.ecconia.mc.jclient.gui.gl.chunkrenderer.ChunkRenderer;
 import de.ecconia.mc.jclient.gui.gl.chunkrenderer.FaceReducedChunkRenderer;
 import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
@@ -35,7 +25,7 @@ import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
 
 @SuppressWarnings("serial")
-public class Simple3D extends JPanel implements GLEventListener
+public class Simple3D extends JPanel implements GLEventListener, MouseAdapter
 {
 	private final PrimitiveDataDude dataDude;
 	
@@ -60,59 +50,10 @@ public class Simple3D extends JPanel implements GLEventListener
 	//////////////////////////////////////
 	//Mouse capture stuff:
 	
-	private boolean isCaptured = false;
-	private int mouseClickPosX = 0;
-	private int mouseClickPosY = 0;
-	private int lastAbsMousePosX;
-	private int lastAbsMousePosY;
+	private final PrimitiveMouseHandler mouseHandler;
 	
-	private Robot robot;
-	
-	//////////////////////////////////////
-	//### Mouse ### ### ### ### ### ###
-	
-	private void freeMouse()
-	{
-		isCaptured = false;
-		
-		setCursor(Cursor.getDefaultCursor());
-	}
-	
-	private void captureMouse(int x, int y)
-	{
-		isCaptured = true;
-		mouseClickPosX = x;
-		mouseClickPosY = y;
-		
-		lastAbsMousePosX = x;
-		lastAbsMousePosY = y;
-		
-		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
-		setCursor(blankCursor);
-	}
-	
-	public void checkForMouseChanges()
-	{
-		Point currentMousePos = MouseInfo.getPointerInfo().getLocation();
-		int currentX = currentMousePos.x;
-		int currentY = currentMousePos.y;
-		
-		int diffX = lastAbsMousePosX - currentX;
-		int diffY = lastAbsMousePosY - currentY;
-		
-		if(diffX != 0 || diffY != 0)
-		{
-			robot.mouseMove(mouseClickPosX, mouseClickPosY);
-			lastAbsMousePosX = mouseClickPosX;
-			lastAbsMousePosY = mouseClickPosY;
-			
-			updateNeck(diffY);
-			updateRotation(diffX);
-		}
-	}
-	
-	public void updateNeck(int d)
+	//Neck
+	public void updateY(int d)
 	{
 		neck -= (float) d / 10f;
 		
@@ -127,7 +68,8 @@ public class Simple3D extends JPanel implements GLEventListener
 		}
 	}
 	
-	public void updateRotation(int d)
+	//Rotation
+	public void updateX(int d)
 	{
 		rotation -= (float) d / 10f;
 		
@@ -184,15 +126,6 @@ public class Simple3D extends JPanel implements GLEventListener
 			posZ = z;
 		});
 		
-		try
-		{
-			robot = new Robot();
-		}
-		catch(AWTException e1)
-		{
-			e1.printStackTrace();
-		}
-		
 		//getting the capabilities object of GL2 profile        
 		final GLProfile profile = GLProfile.get(GLProfile.GL2);
 		GLCapabilities capabilities = new GLCapabilities(profile);
@@ -203,84 +136,10 @@ public class Simple3D extends JPanel implements GLEventListener
 		glcanvas.setFocusable(false);
 		glcanvas.setSize(400, 400);
 		
-		glcanvas.addMouseListener(new MouseListener()
-		{
-			@Override
-			public void mouseReleased(MouseEvent e)
-			{
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent e)
-			{
-				//TODO: Fix this issue, the other one should capture the mouse.
-				L.writeLineOnChannel("3D-Text", "Pressed canvas.");
-				captureMouse(e.getXOnScreen(), e.getYOnScreen());
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e)
-			{
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e)
-			{
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-			}
-		});
-		
-		addMouseListener(new MouseListener()
-		{
-			@Override
-			public void mouseReleased(MouseEvent e)
-			{
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent e)
-			{
-				L.writeLineOnChannel("3D-Text", "Pressed panel.");
-				captureMouse(e.getXOnScreen(), e.getYOnScreen());
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e)
-			{
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e)
-			{
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-			}
-		});
-		
-		addFocusListener(new FocusListener()
-		{
-			@Override
-			public void focusLost(FocusEvent e)
-			{
-				if(isCaptured)
-				{
-					L.writeLineOnChannel("3D-Text", "Focus lost -> free mouse.");
-					freeMouse();
-				}
-			}
-			
-			@Override
-			public void focusGained(FocusEvent e)
-			{
-			}
-		});
+		mouseHandler = new PrimitiveMouseHandler(this, this);
+		glcanvas.addMouseListener(mouseHandler);
+		addMouseListener(mouseHandler);
+		addFocusListener(mouseHandler);
 		
 		addKeyListener(new KeyDebouncer(new KeyDebouncer.KeyPress()
 		{
@@ -290,8 +149,7 @@ public class Simple3D extends JPanel implements GLEventListener
 				if(keyCode == 18)
 				{
 					//Free mouse, if captured.
-					L.writeLineOnChannel("3D-Text", "Alt pressed -> free mouse.");
-					freeMouse();
+					mouseHandler.leaveKey();
 				}
 			}
 			
@@ -377,10 +235,7 @@ public class Simple3D extends JPanel implements GLEventListener
 	public void display(GLAutoDrawable drawable)
 	{
 		//Process mouse input:
-		if(isCaptured)
-		{
-			checkForMouseChanges();
-		}
+		mouseHandler.updatePos();
 		
 		//Setup GL stuff for this frame:
 		final GL2 gl = drawable.getGL().getGL2();
@@ -411,11 +266,7 @@ public class Simple3D extends JPanel implements GLEventListener
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height)
 	{
-		if(isCaptured)
-		{
-			System.out.println("Resized, free mouse.");
-			freeMouse();
-		}
+		mouseHandler.resize();
 		
 		final GL2 gl = drawable.getGL().getGL2();
 		
