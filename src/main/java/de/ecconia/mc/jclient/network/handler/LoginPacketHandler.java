@@ -105,6 +105,28 @@ public class LoginPacketHandler implements PacketHandler
 				dataDude.connectedToServer();
 				con.setHandler(new PlayPacketHandler(dataDude));
 			}
+			else if(id == 4)
+			{
+				int messageID = reader.readCInt();
+				String identifier = reader.readString();
+				byte[] data = reader.readBytes(reader.remaining());
+				
+				StringBuilder builder = new StringBuilder();
+				for(byte b : data)
+				{
+					builder.append(' ');
+					builder.append(b & 255);
+				}
+				
+				System.out.println("Plugin login request: " + messageID + " " + identifier + " Data (" + data.length + "):" + builder.toString());
+				
+				MessageBuilder mb = new MessageBuilder();
+				mb.addCInt(messageID);
+				mb.addBoolean(false);
+
+				mb.prependByte(2);
+				con.sendPacket(mb.asBytes());
+			}
 		}
 		catch(Exception e)
 		{
