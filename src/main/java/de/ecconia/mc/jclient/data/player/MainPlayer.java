@@ -101,19 +101,19 @@ public class MainPlayer
 			L.writeLineOnChannel("3D-Text", "New chunk location: " + currentChunkX + " " + currentChunkZ);
 			
 			//Event:
-			worldHandler.updateChunkCoords(currentChunkX, currentChunkZ);
+//			worldHandler.updateChunkCoords(currentChunkX, currentChunkZ);
 		}
 	}
 	
 	//#########################################################################
 	
-	private UpdateChunkPos worldHandler;
+//	private UpdateChunkPos worldHandler;
 	private UpdatePlayerPos playerPosHandler;
 	
-	public void setChunkPosHandler(UpdateChunkPos handler)
-	{
-		this.worldHandler = handler;
-	}
+//	public void setChunkPosHandler(UpdateChunkPos handler)
+//	{
+//		this.worldHandler = handler;
+//	}
 	
 	public void setPlayerPositionHandler(UpdatePlayerPos playerPosHandler)
 	{

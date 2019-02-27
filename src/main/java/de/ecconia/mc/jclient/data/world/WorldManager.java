@@ -42,6 +42,11 @@ public class WorldManager
 			Logger.warn("Switched world, dumping old world data!");
 		}
 		
+		if(world3DHandler != null)
+		{
+			world3DHandler.reset();
+		}
+		
 		playerWorld = new WorldStorage();
 	}
 	
@@ -54,6 +59,11 @@ public class WorldManager
 		{
 			Logger.perr("Received load chunk packet before a respawn packet.");
 			return; //Ignore
+		}
+		
+		if(world3DHandler != null)
+		{
+			world3DHandler.loadChunk(chunk);
 		}
 		
 		playerWorld.loadChunk(chunk);
@@ -85,5 +95,19 @@ public class WorldManager
 		}
 		
 		playerWorld.unloadChunk(x, z);
+	}
+
+	//3D handler:
+	private World3DHandler world3DHandler;
+	
+	public interface World3DHandler
+	{
+		void reset();
+		void loadChunk(Chunk chunk);
+	}
+	
+	public void addNew3DHandler(World3DHandler handler)
+	{
+		world3DHandler = handler;
 	}
 }

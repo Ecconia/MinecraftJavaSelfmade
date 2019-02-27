@@ -3,29 +3,32 @@ package de.ecconia.mc.jclient.gui.gl.chunkrenderer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 
+import de.ecconia.mc.jclient.gui.gl.helper.BufferWrapper;
 import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
 
-public class FaceReducedAdvancedRenderer extends ChunkRenderer
+public class FaceReducedAdvancedRenderer extends AdvancedChunkRenderer
 {
-	public List<Face> xpFaces = new ArrayList<>();
-	public List<Face> ypFaces = new ArrayList<>();
-	public List<Face> zpFaces = new ArrayList<>();
+//	public static final boolean printGrid = true;
 	
-	public List<Face> xmFaces = new ArrayList<>();
-	public List<Face> ymFaces = new ArrayList<>();
-	public List<Face> zmFaces = new ArrayList<>();
+	private final static float blockRadius = 0.5f;
+//	private final static float gridOffset = 0.01f;
 	
-	public static final boolean printGrid = true;
-	
-	private final BlockLib lib;
+	private float[] dataArray;
+	private int[] indicesArray;
 	
 	public FaceReducedAdvancedRenderer(int cx, int cy, int[][][] blocks, BlockLib blockModels)
 	{
 		super(cx, cy);
 		
-		this.lib = blockModels;
+		List<Face> xpFaces = new ArrayList<>();
+		List<Face> ypFaces = new ArrayList<>();
+		List<Face> zpFaces = new ArrayList<>();
+		
+		List<Face> xmFaces = new ArrayList<>();
+		List<Face> ymFaces = new ArrayList<>();
+		List<Face> zmFaces = new ArrayList<>();
 		
 		for(int x = 0; x < 16; x++)
 		{
@@ -107,254 +110,152 @@ public class FaceReducedAdvancedRenderer extends ChunkRenderer
 				}
 			}
 		}
-	}
-	
-	@Override
-	public void render(GL2 gl)
-	{
-		gl.glTranslated(offsetX, 0, offsetZ);
+		
+		int faceAmount = ymFaces.size() + ypFaces.size() + xmFaces.size() + xpFaces.size() + zmFaces.size() + zpFaces.size();
+		dataArray = new float[faceAmount * 6 * 4];
+		indicesArray = new int[faceAmount * 6];
+		
+		int pd = 0;
+		int pi = 0;
+		
+		int oi = 0;
 		
 		for(Face f : ymFaces)
 		{
-			gl.glPushMatrix();
+			float[] color = blockModels.get(f.type).getColor();
+			float[] data = {
+				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
+				//x, y, z, r, g, b
+				f.x + blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], //0
+				f.x + blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], //1
+				f.x - blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], //2
+				f.x - blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], //3
+			};
+			int[] indices = {
+				oi + 0, oi + 1, oi + 2,
+				oi + 0, oi + 3, oi + 2
+			};
+			oi += 4;
 			
-			lib.get(f.type).draw(gl, 0, 0, 0);
-			gl.glTranslated(f.x, f.y - 0.5f, f.z);
-			
-			drawFaceYM(gl);
-			
-			gl.glPopMatrix();
+			System.arraycopy(data, 0, dataArray, pd, 6 * 4);
+			pd += 6 * 4;
+			System.arraycopy(indices, 0, indicesArray, pi, 6);
+			pi += 6;
 		}
 		
 		for(Face f : xmFaces)
 		{
-			gl.glPushMatrix();
+			float[] color = blockModels.get(f.type).getColor();
+			float[] data = {
+				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
+				//x, y, z, r, g, b
+				f.x - 0.5f, f.y + blockRadius, f.z + blockRadius, color[0], color[1], color[2], //0
+				f.x - 0.5f, f.y + blockRadius, f.z - blockRadius, color[0], color[1], color[2], //1
+				f.x - 0.5f, f.y - blockRadius, f.z - blockRadius, color[0], color[1], color[2], //2
+				f.x - 0.5f, f.y - blockRadius, f.z + blockRadius, color[0], color[1], color[2], //3
+			};
+			int[] indices = {
+				oi + 0, oi + 1, oi + 2,
+				oi + 0, oi + 3, oi + 2
+			};
+			oi += 4;
 			
-			lib.get(f.type).draw(gl, 0, 0, 0);
-			gl.glTranslated(f.x - 0.5f, f.y, f.z);
-			
-			drawFaceXM(gl);
-			
-			gl.glPopMatrix();
+			System.arraycopy(data, 0, dataArray, pd, 6 * 4);
+			pd += 6 * 4;
+			System.arraycopy(indices, 0, indicesArray, pi, 6);
+			pi += 6;
 		}
 		
 		for(Face f : zmFaces)
 		{
-			gl.glPushMatrix();
+			float[] color = blockModels.get(f.type).getColor();
+			float[] data = {
+				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
+				//x, y, z, r, g, b
+				f.x + blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], //0
+				f.x + blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], //1
+				f.x - blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], //2
+				f.x - blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], //3
+			};
+			int[] indices = {
+				oi + 0, oi + 1, oi + 2,
+				oi + 0, oi + 3, oi + 2
+			};
+			oi += 4;
 			
-			lib.get(f.type).draw(gl, 0, 0, 0);
-			gl.glTranslated(f.x, f.y, f.z - 0.5f);
-			
-			drawFaceZM(gl);
-			
-			gl.glPopMatrix();
+			System.arraycopy(data, 0, dataArray, pd, 6 * 4);
+			pd += 6 * 4;
+			System.arraycopy(indices, 0, indicesArray, pi, 6);
+			pi += 6;
 		}
 		
 		for(Face f : ypFaces)
 		{
-			gl.glPushMatrix();
+			float[] color = blockModels.get(f.type).getColor();
+			float[] data = {
+				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
+				//x, y, z, r, g, b
+				f.x + blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], //0
+				f.x + blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], //1
+				f.x - blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], //2
+				f.x - blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], //3
+			};
+			int[] indices = {
+				oi + 0, oi + 1, oi + 2,
+				oi + 0, oi + 3, oi + 2
+			};
+			oi += 4;
 			
-			lib.get(f.type).draw(gl, 0, 0, 0);
-			gl.glTranslated(f.x, f.y - 0.5f, f.z);
-			
-			drawFaceYP(gl);
-			
-			gl.glPopMatrix();
+			System.arraycopy(data, 0, dataArray, pd, 6 * 4);
+			pd += 6 * 4;
+			System.arraycopy(indices, 0, indicesArray, pi, 6);
+			pi += 6;
 		}
 		
 		for(Face f : xpFaces)
 		{
-			gl.glPushMatrix();
+			float[] color = blockModels.get(f.type).getColor();
+			float[] data = {
+				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
+				//x, y, z, r, g, b
+				f.x - 0.5f, f.y + blockRadius, f.z + blockRadius, color[0], color[1], color[2], //0
+				f.x - 0.5f, f.y + blockRadius, f.z - blockRadius, color[0], color[1], color[2], //1
+				f.x - 0.5f, f.y - blockRadius, f.z - blockRadius, color[0], color[1], color[2], //2
+				f.x - 0.5f, f.y - blockRadius, f.z + blockRadius, color[0], color[1], color[2], //3
+			};
+			int[] indices = {
+				oi + 0, oi + 1, oi + 2,
+				oi + 0, oi + 3, oi + 2
+			};
+			oi += 4;
 			
-			lib.get(f.type).draw(gl, 0, 0, 0);
-			gl.glTranslated(f.x - 0.5f, f.y, f.z);
-			
-			drawFaceXP(gl);
-			
-			gl.glPopMatrix();
+			System.arraycopy(data, 0, dataArray, pd, 6 * 4);
+			pd += 6 * 4;
+			System.arraycopy(indices, 0, indicesArray, pi, 6);
+			pi += 6;
 		}
 		
 		for(Face f : zpFaces)
 		{
-			gl.glPushMatrix();
+			float[] color = blockModels.get(f.type).getColor();
+			float[] data = {
+				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
+				//x, y, z, r, g, b
+				f.x + blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], //0
+				f.x + blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], //1
+				f.x - blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], //2
+				f.x - blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], //3
+			};
+			int[] indices = {
+				oi + 0, oi + 1, oi + 2,
+				oi + 0, oi + 3, oi + 2
+			};
+			oi += 4;
 			
-			lib.get(f.type).draw(gl, 0, 0, 0);
-			gl.glTranslated(f.x, f.y, f.z - 0.5f);
-			
-			drawFaceZP(gl);
-			
-			gl.glPopMatrix();
-		}
-	}
-	
-	private final static double blockRadius = 0.5;
-	private final static double gridOffset = 0.01;
-	
-	private void drawFaceYM(GL2 gl)
-	{
-		gl.glBegin(GL2.GL_QUADS);
-		gl.glVertex3d(blockRadius, 0, blockRadius);
-		gl.glVertex3d(blockRadius, 0, -blockRadius);
-		gl.glVertex3d(-blockRadius, 0, -blockRadius);
-		gl.glVertex3d(-blockRadius, 0, blockRadius);
-		gl.glEnd();
-		
-		if(printGrid)
-		{
-			gl.glColor3f(0, 0, 0);
-			gl.glBegin(GL2.GL_LINES);
-			gl.glVertex3d(blockRadius, -gridOffset, blockRadius);
-			gl.glVertex3d(-blockRadius, -gridOffset, -blockRadius);
-			gl.glVertex3d(-blockRadius, -gridOffset, blockRadius);
-			gl.glVertex3d(blockRadius, -gridOffset, -blockRadius);
-			gl.glEnd();
-			
-			gl.glBegin(GL2.GL_LINE_LOOP);
-			gl.glVertex3d(blockRadius, -gridOffset, blockRadius);
-			gl.glVertex3d(blockRadius, -gridOffset, -blockRadius);
-			gl.glVertex3d(-blockRadius, -gridOffset, -blockRadius);
-			gl.glVertex3d(-blockRadius, -gridOffset, blockRadius);
-			gl.glEnd();
-		}
-	}
-	
-	private void drawFaceXM(GL2 gl)
-	{
-		gl.glBegin(GL2.GL_QUADS);
-		gl.glVertex3d(0, blockRadius, blockRadius);
-		gl.glVertex3d(0, blockRadius, -blockRadius);
-		gl.glVertex3d(0, -blockRadius, -blockRadius);
-		gl.glVertex3d(0, -blockRadius, blockRadius);
-		gl.glEnd();
-		
-		if(printGrid)
-		{
-			gl.glColor3f(0, 0, 0);
-			gl.glBegin(GL2.GL_LINES);
-			gl.glVertex3d(-gridOffset, blockRadius, blockRadius);
-			gl.glVertex3d(-gridOffset, -blockRadius, -blockRadius);
-			gl.glVertex3d(-gridOffset, -blockRadius, blockRadius);
-			gl.glVertex3d(-gridOffset, blockRadius, -blockRadius);
-			gl.glEnd();
-			
-			gl.glBegin(GL2.GL_LINE_LOOP);
-			gl.glVertex3d(-gridOffset, blockRadius, blockRadius);
-			gl.glVertex3d(-gridOffset, blockRadius, -blockRadius);
-			gl.glVertex3d(-gridOffset, -blockRadius, -blockRadius);
-			gl.glVertex3d(-gridOffset, -blockRadius, blockRadius);
-			gl.glEnd();
-		}
-	}
-	
-	private void drawFaceZM(GL2 gl)
-	{
-		gl.glBegin(GL2.GL_QUADS);
-		gl.glVertex3d(blockRadius, blockRadius, 0);
-		gl.glVertex3d(blockRadius, -blockRadius, 0);
-		gl.glVertex3d(-blockRadius, -blockRadius, 0);
-		gl.glVertex3d(-blockRadius, blockRadius, 0);
-		gl.glEnd();
-		
-		if(printGrid)
-		{
-			gl.glColor3f(0, 0, 0);
-			gl.glBegin(GL2.GL_LINES);
-			gl.glVertex3d(blockRadius, blockRadius, -gridOffset);
-			gl.glVertex3d(-blockRadius, -blockRadius, -gridOffset);
-			gl.glVertex3d(-blockRadius, blockRadius, -gridOffset);
-			gl.glVertex3d(blockRadius, -blockRadius, -gridOffset);
-			gl.glEnd();
-			
-			gl.glBegin(GL2.GL_LINE_LOOP);
-			gl.glVertex3d(blockRadius, blockRadius, -gridOffset);
-			gl.glVertex3d(blockRadius, -blockRadius, -gridOffset);
-			gl.glVertex3d(-blockRadius, -blockRadius, -gridOffset);
-			gl.glVertex3d(-blockRadius, blockRadius, -gridOffset);
-			gl.glEnd();
-		}
-	}
-	
-	private void drawFaceYP(GL2 gl)
-	{
-		gl.glBegin(GL2.GL_QUADS);
-		gl.glVertex3d(blockRadius, 0, blockRadius);
-		gl.glVertex3d(blockRadius, 0, -blockRadius);
-		gl.glVertex3d(-blockRadius, 0, -blockRadius);
-		gl.glVertex3d(-blockRadius, 0, blockRadius);
-		gl.glEnd();
-		
-		if(printGrid)
-		{
-			gl.glColor3f(0, 0, 0);
-			gl.glBegin(GL2.GL_LINES);
-			gl.glVertex3d(blockRadius, gridOffset, blockRadius);
-			gl.glVertex3d(-blockRadius, gridOffset, -blockRadius);
-			gl.glVertex3d(-blockRadius, gridOffset, blockRadius);
-			gl.glVertex3d(blockRadius, gridOffset, -blockRadius);
-			gl.glEnd();
-			
-			gl.glBegin(GL2.GL_LINE_LOOP);
-			gl.glVertex3d(blockRadius, gridOffset, blockRadius);
-			gl.glVertex3d(blockRadius, gridOffset, -blockRadius);
-			gl.glVertex3d(-blockRadius, gridOffset, -blockRadius);
-			gl.glVertex3d(-blockRadius, gridOffset, blockRadius);
-			gl.glEnd();
-		}
-	}
-	
-	private void drawFaceXP(GL2 gl)
-	{
-		gl.glBegin(GL2.GL_QUADS);
-		gl.glVertex3d(0, blockRadius, blockRadius);
-		gl.glVertex3d(0, blockRadius, -blockRadius);
-		gl.glVertex3d(0, -blockRadius, -blockRadius);
-		gl.glVertex3d(0, -blockRadius, blockRadius);
-		gl.glEnd();
-		
-		if(printGrid)
-		{
-			gl.glColor3f(0, 0, 0);
-			gl.glBegin(GL2.GL_LINES);
-			gl.glVertex3d(gridOffset, blockRadius, blockRadius);
-			gl.glVertex3d(gridOffset, -blockRadius, -blockRadius);
-			gl.glVertex3d(gridOffset, -blockRadius, blockRadius);
-			gl.glVertex3d(gridOffset, blockRadius, -blockRadius);
-			gl.glEnd();
-			
-			gl.glBegin(GL2.GL_LINE_LOOP);
-			gl.glVertex3d(gridOffset, blockRadius, blockRadius);
-			gl.glVertex3d(gridOffset, blockRadius, -blockRadius);
-			gl.glVertex3d(gridOffset, -blockRadius, -blockRadius);
-			gl.glVertex3d(gridOffset, -blockRadius, blockRadius);
-			gl.glEnd();
-		}
-	}
-	
-	private void drawFaceZP(GL2 gl)
-	{
-		gl.glBegin(GL2.GL_QUADS);
-		gl.glVertex3d(blockRadius, blockRadius, 0);
-		gl.glVertex3d(blockRadius, -blockRadius, 0);
-		gl.glVertex3d(-blockRadius, -blockRadius, 0);
-		gl.glVertex3d(-blockRadius, blockRadius, 0);
-		gl.glEnd();
-		
-		if(printGrid)
-		{
-			gl.glColor3f(0, 0, 0);
-			gl.glBegin(GL2.GL_LINES);
-			gl.glVertex3d(blockRadius, blockRadius, gridOffset);
-			gl.glVertex3d(-blockRadius, -blockRadius, gridOffset);
-			gl.glVertex3d(-blockRadius, blockRadius, gridOffset);
-			gl.glVertex3d(blockRadius, -blockRadius, gridOffset);
-			gl.glEnd();
-			
-			gl.glBegin(GL2.GL_LINE_LOOP);
-			gl.glVertex3d(blockRadius, blockRadius, gridOffset);
-			gl.glVertex3d(blockRadius, -blockRadius, gridOffset);
-			gl.glVertex3d(-blockRadius, -blockRadius, gridOffset);
-			gl.glVertex3d(-blockRadius, blockRadius, gridOffset);
-			gl.glEnd();
+			System.arraycopy(data, 0, dataArray, pd, 6 * 4);
+			pd += 6 * 4;
+			System.arraycopy(indices, 0, indicesArray, pi, 6);
+			pi += 6;
 		}
 	}
 	
@@ -372,5 +273,28 @@ public class FaceReducedAdvancedRenderer extends ChunkRenderer
 			this.y = y;
 			this.z = z;
 		}
+	}
+	
+	private BufferWrapper buffer;
+	
+	@Override
+	public void load(GL3 gl)
+	{
+		buffer = new BufferWrapper(gl, dataArray, indicesArray);
+		dataArray = null;
+		indicesArray = null;
+	}
+	
+	@Override
+	public void draw(GL3 gl)
+	{
+		buffer.use(gl);
+		buffer.draw(gl);
+	}
+	
+	@Override
+	public void delete(GL3 gl)
+	{
+		buffer.delete(gl);
 	}
 }

@@ -1,51 +1,57 @@
 package de.ecconia.mc.jclient.gui.gl;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.JPanel;
 
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLJPanel;
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.data.world.Chunk;
+import de.ecconia.mc.jclient.data.world.WorldManager;
 import de.ecconia.mc.jclient.gui.gl.PrimitiveMouseHandler.MouseAdapter;
-import de.ecconia.mc.jclient.gui.gl.chunkrenderer.ChunkRenderer;
-import de.ecconia.mc.jclient.gui.gl.chunkrenderer.FaceReducedChunkRenderer;
+import de.ecconia.mc.jclient.gui.gl.chunkrenderer.AdvancedChunkRenderer;
+import de.ecconia.mc.jclient.gui.gl.chunkrenderer.FaceReducedAdvancedRenderer;
+import de.ecconia.mc.jclient.gui.gl.helper.Deleteable;
+import de.ecconia.mc.jclient.gui.gl.helper.Matrix;
+import de.ecconia.mc.jclient.gui.gl.helper.ShaderProgram;
 import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
 import de.ecconia.mc.jclient.gui.input.KeyDebouncer;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
 
 @SuppressWarnings("serial")
-public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter
+public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter, WorldManager.World3DHandler
 {
 	private final PrimitiveDataDude dataDude;
-	
-	//????????????
-	private GLU glu;
 	
 	//////////////////////////////////////
 	//Camera position:
 	private float rotation = 30;
 	private float neck = 20f;
 	
-	private double posX = 0D;
-	private double posY = 0D;
-	private double posZ = 0D;
+	private float posX = 0f;
+	private float posY = 0f;
+	private float posZ = 0f;
 	
 	//////////////////////////////////////
 	//World data:
 	
 	private BlockLib blockModels = new BlockLib();
-	private final XYStorage<ChunkRenderer> chunks = new XYStorage<>();
+	
+	private final Queue<AdvancedChunkRenderer> toBeLoadedChunks = new ConcurrentLinkedQueue<>();
+	private final XYStorage<AdvancedChunkRenderer> chunks = new XYStorage<>();
 	
 	//////////////////////////////////////
 	//Mouse capture stuff:
@@ -92,46 +98,49 @@ public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter
 	{
 		this.dataDude = dataDude;
 		
-		dataDude.getCurrentServer().getMainPlayer().setChunkPosHandler((x, z) -> {
-			//TODO: Threadsafe!
-			new Thread(() -> {
-				try
-				{
-					Thread.sleep(500);
-				}
-				catch(InterruptedException e1)
-				{
-					e1.printStackTrace();
-				}
-				
-				Chunk chunk = dataDude.getCurrentServer().getWorldManager().getChunk(x, z);
-				if(chunk != null)
-				{
-					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") will now be processed to display it.");
-					int[][][] blocks = chunk.toBlockArray();
-					//TBI: Maybe only put, if not there?
-					chunks.put(x, z, new FaceReducedChunkRenderer(x, z, blocks, blockModels));
-				}
-				else
-				{
-					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
-					System.out.println("Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
-				}
-			}, "Chunk processor # " + chunkProcessor++).start();
-		});
+		dataDude.getCurrentServer().getWorldManager().addNew3DHandler(this);
+//		dataDude.getCurrentServer().getMainPlayer().setChunkPosHandler((x, z) -> {
+//			//TODO: Threadsafe!
+//			new Thread(() -> {
+//				try
+//				{
+//					//TODO: NOOOOOB Code, no delay! Make deterministic
+//					Thread.sleep(500);
+//				}
+//				catch(InterruptedException e1)
+//				{
+//					e1.printStackTrace();
+//				}
+//				
+//				Chunk chunk = dataDude.getCurrentServer().getWorldManager().getChunk(x, z);
+//				if(chunk != null)
+//				{
+//					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") will now be processed to display it.");
+//					int[][][] blocks = chunk.toBlockArray();
+//					//TBI: Maybe only put, if not there?
+//					toBeLoadedChunks.add(new FaceReducedAdvancedRenderer(x, z, blocks, blockModels));
+//				}
+//				else
+//				{
+//					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
+//					System.out.println("Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
+//				}
+//			}, "Chunk processor # " + chunkProcessor++).start();
+//		});
 		
 		dataDude.getCurrentServer().getMainPlayer().setPlayerPositionHandler((x, y, z) -> {
-			posX = x;
-			posY = y;
-			posZ = z;
+			posX = (float) x;
+			posY = (float) y;
+			posZ = (float) z;
 		});
 		
-		//getting the capabilities object of GL2 profile        
-		final GLProfile profile = GLProfile.get(GLProfile.GL2);
-		GLCapabilities capabilities = new GLCapabilities(profile);
+		//getting the capabilities object of GL3 profile        
+		final GLCapabilities capabilities = new GLCapabilities(GLProfile.get(GLProfile.GL3));
 		capabilities.setBitmap(true);
+//		capabilities.setBackgroundOpaque(true);
 		
 		// The canvas
+//		final GLWindow glcanvas = GLWindow.create(capabilities);
 		final GLJPanel glcanvas = new GLJPanel(capabilities);
 		glcanvas.addGLEventListener(this);
 		glcanvas.setFocusable(false);
@@ -190,6 +199,8 @@ public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter
 		setFocusable(true);
 		add(glcanvas);
 		
+//		glcanvas.setVisible(true);
+		
 		final FPSAnimator animator = new FPSAnimator(glcanvas, 30, true);
 		animator.start();
 	}
@@ -212,56 +223,83 @@ public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter
 		dataDude.getCurrentServer().getMainPlayer().clientLocation(x + offsetX, y, z + offsetZ);
 	}
 	
+	//### 3D Stuff:
+	
+	private ShaderProgram faceRenderer;
+	
+	private final Matrix projection = new Matrix();
+	private final Matrix view = new Matrix();
+	private final Matrix model = new Matrix();
+	
+	private final List<Deleteable> stuffToDelete = new ArrayList<>();
+	
 	@Override
 	public void init(GLAutoDrawable drawable)
 	{
-		final GL2 gl = drawable.getGL().getGL2();
-		
-		glu = new GLU();
-		
-		gl.glShadeModel(GL2.GL_SMOOTH);
+		final GL3 gl = drawable.getGL().getGL3();
+		gl.glEnable(GL3.GL_DEPTH_TEST);
 		gl.glClearColor(0.973f, 0.973f, 0.973f, 1.0f);
-		gl.glClearDepth(1.0f);
-		gl.glEnable(GL2.GL_DEPTH_TEST);
-		gl.glDepthFunc(GL2.GL_LEQUAL);
-		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
+		
+		faceRenderer = new ShaderProgram(gl, "face");
 	}
 	
 	@Override
 	public void dispose(GLAutoDrawable drawable)
 	{
+		final GL3 gl = drawable.getGL().getGL3();
+		
+		for(Deleteable del : stuffToDelete)
+		{
+			del.delete(gl);
+		}
 	}
 	
 	@Override
 	public void display(GLAutoDrawable drawable)
 	{
+		final GL3 gl = drawable.getGL().getGL3();
+		
+		{
+			AdvancedChunkRenderer chunk = toBeLoadedChunks.poll();
+			if(chunk != null)
+			{
+				chunk.load(gl);
+				System.out.println("Loaded chunk: " + chunk.getPosX() + "|" + chunk.getPosZ());
+				chunks.put(chunk.getPosX(), chunk.getPosZ(), chunk);
+				stuffToDelete.add(chunk);
+			}
+		}
+		
 		//Process mouse input:
 		mouseHandler.updatePos();
 		
 		//Setup GL stuff for this frame:
-		final GL2 gl = drawable.getGL().getGL2();
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		gl.glLoadIdentity();
+		gl.glClear(GL3.GL_COLOR_BUFFER_BIT | GL3.GL_DEPTH_BUFFER_BIT);
 		
-		//Set camera position and direction:
-		gl.glRotatef(neck, 1, 0, 0);
-		gl.glRotatef(rotation, 0.0f, 1.0f, 0.0f);
-		//Actual player position:
-		gl.glTranslated(-posX, -posY, -posZ);
-		//World offset to align to player position:
-		gl.glTranslatef(0.5f, -1.04f, 0.5f);
+		//Camera:
+		view.identity();
+		view.rotate(neck, 1, 0, 0);
+		view.rotate(rotation, 0, 1, 0);
+		view.translate(-posX, -posY, -posZ);
+		view.translate(0.5f, -1.04f, 0.5f);
+		
+		faceRenderer.use(gl);
+		//TODO: Check order! (Shader has not been written yet)
+		faceRenderer.setUniform(gl, 2, projection.getMat());
+		faceRenderer.setUniform(gl, 1, view.getMat());
 		
 		//Print chunks:
-		Iterator<ChunkRenderer> it = chunks.iterator();
+		Iterator<AdvancedChunkRenderer> it = chunks.iterator();
 		while(it.hasNext())
 		{
-			gl.glPushMatrix();
-			it.next().render(gl);
-			gl.glPopMatrix();
+			AdvancedChunkRenderer chunk = it.next();
+			
+			model.identity();
+			model.translate(chunk.getOffsetX(), 0, chunk.getOffsetZ());
+			faceRenderer.setUniform(gl, 0, model.getMat());
+			
+			chunk.draw(gl);
 		}
-		
-		//Flush!?
-		gl.glFlush();
 	}
 	
 	@Override
@@ -269,22 +307,54 @@ public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter
 	{
 		mouseHandler.resize();
 		
-		final GL2 gl = drawable.getGL().getGL2();
+		final GL3 gl = drawable.getGL().getGL3();
 		
 		if(height <= 0)
 		{
 			height = 1;
 		}
 		
-		final float aspectRatio = (float) width / (float) height;
-		
 		gl.glViewport(0, 0, width, height);
-		
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadIdentity();
-		glu.gluPerspective(45.0f, aspectRatio, 0.1, 5000.0);
-		
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
+		projection.perspective(45f, (float) width / (float) height, 0.1f, 100000f);
+	}
+
+	@Override
+	public void reset()
+	{
+		//TODO: different thread
+		toBeLoadedChunks.clear();
+		chunks.clear();
+	}
+
+	@Override
+	public void loadChunk(Chunk chunk)
+	{
+		new Thread(() -> {
+			int x = chunk.getX();
+			int z = chunk.getZ();
+			
+//			try
+//			{
+//				//TODO: NOOOOOB Code, no delay! Make deterministic
+//				Thread.sleep(500);
+//			}
+//			catch(InterruptedException e1)
+//			{
+//				e1.printStackTrace();
+//			}
+			
+//			if(chunk != null)
+//			{
+			L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") will now be processed to display it.");
+			int[][][] blocks = chunk.toBlockArray();
+			//TBI: Maybe only put, if not there?
+			toBeLoadedChunks.add(new FaceReducedAdvancedRenderer(x, z, blocks, blockModels));
+//			}
+//			else
+//			{
+//				L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
+//				System.out.println("Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
+//			}
+		}, "Chunk processor # " + chunkProcessor++).start();
 	}
 }
