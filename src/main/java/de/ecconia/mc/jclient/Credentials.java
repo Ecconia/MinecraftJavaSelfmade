@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map.Entry;
 
 import de.ecconia.mc.jclient.tools.json.JSONNode;
@@ -27,6 +28,7 @@ public class Credentials
 			{
 				FileWriter fw = new FileWriter(userfile);
 				fw.write("{\n");
+				fw.write("\t\"_getByCommand\": \"Each argument can be replaced by the return value of a system command. Set the first char in the string to #, the rest will be executed as command.\",\n");
 				fw.write("\t\"uuid\": \"\",\n");
 				fw.write("\t\"username\": \"\",\n");
 				fw.write("\t\"accessToken\": \"\"\n");
@@ -98,11 +100,20 @@ public class Credentials
 					System.exit(1);
 				}
 				
-				String uuid = ((String) value).toLowerCase();
+				String uuid = (String) value;
+				
+				boolean byCommand = false;
+				if(!uuid.isEmpty() && uuid.charAt(0) == '#')
+				{
+					byCommand = true;
+					uuid = runCommand(uuid.substring(1));
+				}
+				
+				uuid = ((String) value).toLowerCase();
 				
 				if(!uuid.matches("^[a-f0-9]{32}$|^[a-f0-9]{8}\\-[a-f0-9]{4}\\-[a-f0-9]{4}\\-[a-f0-9]{4}\\-[a-f0-9]{12}$"))
 				{
-					System.out.println("Invalid UUID in user.json");
+					System.out.println("Invalid UUID " + (byCommand ? "returned by command" : "in user.json"));
 					System.exit(1);
 				}
 				
@@ -111,13 +122,28 @@ public class Credentials
 			else if("username".equals(key))
 			{
 				Object value = entry.getValue();
-				if(!(value instanceof String) || !((String) value).matches("^[A-Za-z0-9_]{3,16}$"))
+				if(!(value instanceof String))
 				{
 					System.out.println("The username in user.json has to be a String with length 3 to 16. No invalid characters.");
 					System.exit(1);
 				}
 				
-				Credentials.username = (String) value;
+				String username = (String) value;
+				
+				boolean byCommand = false;
+				if(!username.isEmpty() && username.charAt(0) == '#')
+				{
+					byCommand = true;
+					username = runCommand(username.substring(1));
+				}
+				
+				if(!username.matches("^[a-z_A-Z0-9]{3,16}$"))
+				{
+					System.out.println("Invalid username " + (byCommand ? "returned by command" : "in user.json"));
+					System.exit(1);
+				}
+				
+				Credentials.username = username;
 			}
 			else if("accessToken".equals(key))
 			{
@@ -128,11 +154,20 @@ public class Credentials
 					System.exit(1);
 				}
 				
-				String accessToken = ((String) value).toLowerCase();
+				String accessToken = ((String) value);
+				
+				boolean byCommand = false;
+				if(!accessToken.isEmpty() && accessToken.charAt(0) == '#')
+				{
+					byCommand = true;
+					accessToken = runCommand(accessToken.substring(1));
+				}
+				
+				accessToken = accessToken.toLowerCase();
 				
 				if(!accessToken.matches("^[a-f0-9]{32}$|^[a-f0-9]{8}\\-[a-f0-9]{4}\\-[a-f0-9]{4}\\-[a-f0-9]{4}\\-[a-f0-9]{12}$"))
 				{
-					System.out.println("Invalid accessToken in user.json");
+					System.out.println("Invalid accessToken " + (byCommand ? "returned by command" : "in user.json"));
 					System.exit(1);
 				}
 				
@@ -145,6 +180,55 @@ public class Credentials
 		{
 			System.out.println("user.json does not contain username/accessToken/uuid please add or delete the file for a new copy.");
 			System.exit(1);
+		}
+	}
+	
+	private static String runCommand(String command)
+	{
+		try
+		{
+			Process commandProcess = Runtime.getRuntime().exec(new String[] {"/bin/bash", "-c", command});
+			
+			try
+			{
+				commandProcess.waitFor();
+			}
+			catch(InterruptedException e)
+			{
+			}
+			
+			boolean failed = commandProcess.exitValue() != 0;
+			InputStream is = failed ? commandProcess.getErrorStream() : commandProcess.getInputStream();
+			
+			int in;
+			String value = "";
+			while((in = is.read()) != -1)
+			{
+				if(in == '\n')
+				{
+					break;
+				}
+				
+				value += (char) in;
+			}
+			
+			is.close();
+			
+			if(failed)
+			{
+				System.out.println("Command returned error: " + command);
+				System.out.println("Message: " + value);
+				System.exit(0);
+			}
+			
+			return value;
+		}
+		catch(IOException e)
+		{
+			System.out.println("Could not execute command >" + command + "<.");
+			System.out.println("Exception: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+			System.exit(0);
+			return null;
 		}
 	}
 }
