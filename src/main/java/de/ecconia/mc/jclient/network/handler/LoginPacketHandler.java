@@ -6,6 +6,7 @@ import javax.crypto.SecretKey;
 
 import de.ecconia.mc.jclient.Logger;
 import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.network.connector.PacketHandler;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
@@ -37,7 +38,7 @@ public class LoginPacketHandler implements PacketHandler
 			//State for login packets
 			if(id == 0)
 			{
-				//Error packet!
+				//Disconnection packet!
 				System.out.println("Disconnection packet while logging in:");
 				System.out.println("Message: " + reader.readString());
 				
@@ -46,8 +47,6 @@ public class LoginPacketHandler implements PacketHandler
 			else if(id == 1)
 			{
 				//Encryption request packet!
-//				System.out.println("Packet: Encryption request");
-				
 				String serverCode;
 				byte[] pubkeyBytes;
 				byte[] verifyToken;
@@ -58,17 +57,12 @@ public class LoginPacketHandler implements PacketHandler
 						Logger.important("The server ID was not empty! >" + serverCode + "<");
 						PrintUtils.printBytes(serverCode.getBytes());
 					}
-//					System.out.println("> ServerID: >" + serverCode + "<");
 					
 					int lengthPubKey = reader.readCInt();
-//					System.out.println("> Pubkey (" + lengthPubKey + "):");
 					pubkeyBytes = reader.readBytes(lengthPubKey);
-//					PrintUtils.printBytes(pubkeyBytes);
 					
 					int lengthVerifyToken = reader.readCInt();
-//					System.out.println("> Verify token (" + lengthVerifyToken + "):");
 					verifyToken = reader.readBytes(lengthVerifyToken);
-//					PrintUtils.printBytes(verifyToken);
 				}
 				
 				SecretKey sharedKey = SyncCryptUnit.generateKey();
@@ -76,10 +70,7 @@ public class LoginPacketHandler implements PacketHandler
 				String serverHash = AsyncCryptTools.generateHashFromBytes(serverCode, sharedKey.getEncoded(), serverPublicKey.getEncoded());
 				
 				//Auth-Server request.
-//				System.out.println();
-//				System.out.println(">>Contacting auth server...");
 				AuthServer.join(serverHash);
-//				System.out.println(">>Done.");
 				
 				byte[] sharedSecret = AsyncCryptTools.encryptBytes(serverPublicKey, sharedKey.getEncoded());
 				byte[] clientVerifyToken = AsyncCryptTools.encryptBytes(serverPublicKey, verifyToken);
@@ -96,14 +87,25 @@ public class LoginPacketHandler implements PacketHandler
 				con.sendPacket(mb.asBytes());
 				
 				con.enableEncryption(sharedKey);
+			}
+			else if(id == 0x03)
+			{
+				logPacket("Compression request");
+				int compressionLevel = reader.readCInt();
+				logData("> Compression above " + compressionLevel + " bytes.");
+				if(reader.remaining() > 0)
+				{
+					Logger.warn("Compression package had more content.");
+				}
 				
-//				System.out.println();
-				System.out.println("Established connection, logged in.");
-//				System.out.println("Now switching to Play protocol.");
-//				System.out.println();
+				con.setCompression(compressionLevel);
+				
+				//The compression packet will always be sent, before the server switches to "joined" state.
+				System.out.println("Established connection, joining.");
 				System.out.println("-----------------------------------------");
 				
-				con.setHandler(new JoinPacketWrapper(dataDude));
+				dataDude.connectedToServer();
+				con.setHandler(new PlayPacketHandler(dataDude));
 			}
 			else if(id == 4)
 			{
@@ -132,5 +134,15 @@ public class LoginPacketHandler implements PacketHandler
 		{
 			Logger.ex("while reading packet", e);
 		}
+	}
+	
+	private void logPacket(String name)
+	{
+		L.writeLineOnChannel("Packets", name);
+	}
+	
+	private void logData(String message)
+	{
+		L.writeLineOnChannel("Content", message);
 	}
 }

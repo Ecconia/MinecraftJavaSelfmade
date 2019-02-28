@@ -143,6 +143,7 @@ public class Connector implements Sender
 	 */
 	public void setCompression(Integer maxPacketSize)
 	{
+		//The compression will only be set once, but all changes are supported here.
 		if(maxPacketSize == null)
 		{
 			compressor = null;

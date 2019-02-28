@@ -2,11 +2,8 @@ package de.ecconia.mc.jclient.network.handler;
 
 import de.ecconia.mc.jclient.Logger;
 import de.ecconia.mc.jclient.PrimitiveDataDude;
-import de.ecconia.mc.jclient.gui.monitor.L;
-import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.network.connector.PacketHandler;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
-import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
 import de.ecconia.mc.jclient.network.processor.GenericPacketProcessor;
 import de.ecconia.mc.jclient.network.processor.MainPlayerPacketProcessor;
@@ -23,11 +20,9 @@ public class PlayPacketHandler implements PacketHandler
 	private final PacketThread playerThread;
 	private final PacketThread worldThread;
 	private final PacketThread pingThread;
-	private final Connector con;
 	
 	public PlayPacketHandler(PrimitiveDataDude dataDude)
 	{
-		this.con = dataDude.getCon();
 		this.pingThread = new PingPacketProcessor(dataDude);
 		this.worldThread = new WorldPacketProcessor(dataDude);
 		this.playersThread = new PlayersPacketProcessor(dataDude);
@@ -46,20 +41,7 @@ public class PlayPacketHandler implements PacketHandler
 			
 			GenericPacket packet = new GenericPacket(id, bytes);
 			
-			if(id == 0x03)
-			{
-				PacketReader reader = new PacketReader(bytes);
-				logPacket("Compression request");
-				int compressionLevel = reader.readCInt();
-				logData("> Compression above " + compressionLevel + " bytes.");
-				if(reader.remaining() > 0)
-				{
-					logData("> WARNING: Compression package had more content.");
-				}
-				
-				con.setCompression(compressionLevel);
-			}
-			else if(id == 0x21)
+			if(id == 0x21)
 			{
 				//Priority packet, has to be handled as fast as possible without anything in the way.
 				pingThread.handle(packet);
@@ -88,15 +70,5 @@ public class PlayPacketHandler implements PacketHandler
 		{
 			Logger.ex("while reading/enqueuing packet", e);
 		}
-	}
-	
-	private void logPacket(String name)
-	{
-		L.writeLineOnChannel("Packets", name);
-	}
-	
-	private void logData(String message)
-	{
-		L.writeLineOnChannel("Content", message);
 	}
 }
