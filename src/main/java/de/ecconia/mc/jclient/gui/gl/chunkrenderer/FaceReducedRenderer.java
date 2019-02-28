@@ -8,7 +8,7 @@ import com.jogamp.opengl.GL3;
 import de.ecconia.mc.jclient.gui.gl.helper.BufferWrapper;
 import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
 
-public class FaceReducedAdvancedRenderer extends AdvancedChunkRenderer
+public class FaceReducedRenderer extends ChunkRenderer
 {
 //	public static final boolean printGrid = true;
 	
@@ -18,7 +18,7 @@ public class FaceReducedAdvancedRenderer extends AdvancedChunkRenderer
 	private float[] dataArray;
 	private int[] indicesArray;
 	
-	public FaceReducedAdvancedRenderer(int cx, int cy, int[][][] blocks, BlockLib blockModels)
+	public FaceReducedRenderer(int cx, int cy, int[][][] blocks, BlockLib blockModels)
 	{
 		super(cx, cy);
 		

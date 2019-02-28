@@ -21,8 +21,8 @@ import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.data.world.Chunk;
 import de.ecconia.mc.jclient.data.world.WorldManager;
 import de.ecconia.mc.jclient.gui.gl.PrimitiveMouseHandler.MouseAdapter;
-import de.ecconia.mc.jclient.gui.gl.chunkrenderer.AdvancedChunkRenderer;
-import de.ecconia.mc.jclient.gui.gl.chunkrenderer.FaceReducedAdvancedRenderer;
+import de.ecconia.mc.jclient.gui.gl.chunkrenderer.ChunkRenderer;
+import de.ecconia.mc.jclient.gui.gl.chunkrenderer.FaceReducedRenderer;
 import de.ecconia.mc.jclient.gui.gl.helper.Deleteable;
 import de.ecconia.mc.jclient.gui.gl.helper.Matrix;
 import de.ecconia.mc.jclient.gui.gl.helper.ShaderProgram;
@@ -32,7 +32,7 @@ import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
 
 @SuppressWarnings("serial")
-public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter, WorldManager.World3DHandler
+public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, WorldManager.World3DHandler
 {
 	private final PrimitiveDataDude dataDude;
 	
@@ -50,8 +50,8 @@ public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter,
 	
 	private BlockLib blockModels = new BlockLib();
 	
-	private final Queue<AdvancedChunkRenderer> toBeLoadedChunks = new ConcurrentLinkedQueue<>();
-	private final XYStorage<AdvancedChunkRenderer> chunks = new XYStorage<>();
+	private final Queue<ChunkRenderer> toBeLoadedChunks = new ConcurrentLinkedQueue<>();
+	private final XYStorage<ChunkRenderer> chunks = new XYStorage<>();
 	
 	//////////////////////////////////////
 	//Mouse capture stuff:
@@ -94,7 +94,7 @@ public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter,
 	
 	private static int chunkProcessor = 1;
 	
-	public Advanced3D(PrimitiveDataDude dataDude)
+	public Simple3D(PrimitiveDataDude dataDude)
 	{
 		this.dataDude = dataDude;
 		//Create here, to prevent issues....
@@ -262,7 +262,7 @@ public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter,
 		final GL3 gl = drawable.getGL().getGL3();
 		
 		{
-			AdvancedChunkRenderer chunk = toBeLoadedChunks.poll();
+			ChunkRenderer chunk = toBeLoadedChunks.poll();
 			if(chunk != null)
 			{
 				chunk.load(gl);
@@ -291,10 +291,10 @@ public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter,
 		faceRenderer.setUniform(gl, 1, view.getMat());
 		
 		//Print chunks:
-		Iterator<AdvancedChunkRenderer> it = chunks.iterator();
+		Iterator<ChunkRenderer> it = chunks.iterator();
 		while(it.hasNext())
 		{
-			AdvancedChunkRenderer chunk = it.next();
+			ChunkRenderer chunk = it.next();
 			
 			model.identity();
 			model.translate(chunk.getOffsetX(), 0, chunk.getOffsetZ());
@@ -350,7 +350,7 @@ public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter,
 			L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") will now be processed to display it.");
 			int[][][] blocks = chunk.toBlockArray();
 			//TBI: Maybe only put, if not there?
-			toBeLoadedChunks.add(new FaceReducedAdvancedRenderer(x, z, blocks, blockModels));
+			toBeLoadedChunks.add(new FaceReducedRenderer(x, z, blocks, blockModels));
 //			}
 //			else
 //			{

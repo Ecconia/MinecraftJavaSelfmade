@@ -3,7 +3,7 @@ package de.ecconia.mc.jclient.network.processor;
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.data.world.Chunk;
 import de.ecconia.mc.jclient.data.world.SubChunk;
-import de.ecconia.mc.jclient.gui.gl.Advanced3D;
+import de.ecconia.mc.jclient.gui.gl.Simple3D;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.gui.tabs.ChunkMap;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
@@ -20,7 +20,7 @@ public class WorldPacketProcessor extends PacketThread
 		
 		cMap = new ChunkMap();
 		L.addCustomPanel("Chunks", cMap);
-		L.addCustomPanel("3D", new Advanced3D(dataDude));
+		L.addCustomPanel("3D", new Simple3D(dataDude));
 	}
 	
 	@Override
