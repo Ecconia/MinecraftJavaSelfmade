@@ -24,7 +24,7 @@ public class StartMCClient
 				MessageBuilder mb = new MessageBuilder();
 				
 				mb.addCInt(cd.version);
-				mb.addString("The-Cake-Is-A-Lie-Or-The-URL-I-Choose");
+				mb.addString(cd.domain);
 				mb.addShort(666);
 				mb.addCInt(2);
 				
