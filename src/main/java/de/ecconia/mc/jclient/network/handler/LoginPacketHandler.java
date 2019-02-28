@@ -33,14 +33,15 @@ public class LoginPacketHandler implements PacketHandler
 		{
 			PacketReader reader = new PacketReader(bytes);
 			int id = reader.readCInt();
-//			System.out.println(">>> Packet with ID:" + id + " Size:" + reader.remaining());
 			
 			//State for login packets
 			if(id == 0)
 			{
 				//Error packet!
-				System.out.println("Error packet while logging in:");
+				System.out.println("Disconnection packet while logging in:");
 				System.out.println("Message: " + reader.readString());
+				
+				//TODO: con.disconnect();
 			}
 			else if(id == 1)
 			{
@@ -102,8 +103,7 @@ public class LoginPacketHandler implements PacketHandler
 //				System.out.println();
 				System.out.println("-----------------------------------------");
 				
-				dataDude.connectedToServer();
-				con.setHandler(new PlayPacketHandler(dataDude));
+				con.setHandler(new JoinPacketWrapper(dataDude));
 			}
 			else if(id == 4)
 			{
