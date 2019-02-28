@@ -97,6 +97,8 @@ public class Advanced3D extends JPanel implements GLEventListener, MouseAdapter,
 	public Advanced3D(PrimitiveDataDude dataDude)
 	{
 		this.dataDude = dataDude;
+		//Create here, to prevent issues....
+		L.writeLineOnChannel("3D-Text", "Creating...");
 		
 		dataDude.getCurrentServer().getWorldManager().addNew3DHandler(this);
 //		dataDude.getCurrentServer().getMainPlayer().setChunkPosHandler((x, z) -> {
