@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.JPanel;
 
+import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
@@ -35,7 +36,10 @@ import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
 @SuppressWarnings("serial")
 public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, WorldManager.World3DHandler
 {
-	private final PrimitiveDataDude dataDude;
+	private PrimitiveDataDude dataDude;
+	//Turn to true on Windows...
+	//TODO: Either move all debugging into a JOGL window, OR find a solution which works on all OS's (maybe GLCanvas)
+	private final static boolean createWindow = false;
 	
 	//////////////////////////////////////
 	//Camera position:
@@ -59,7 +63,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	//////////////////////////////////////
 	//Mouse capture stuff:
 	
-	private final PrimitiveMouseHandler mouseHandler;
+	private PrimitiveMouseHandler mouseHandler;
 	
 	//Neck
 	public void updateY(int d)
@@ -97,65 +101,63 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	
 	private static int chunkProcessor = 1;
 	
-	public Simple3D(PrimitiveDataDude dataDude)
+	public Simple3D()
 	{
-		this.dataDude = dataDude;
+		//Add the 3D panel to the debugging view.
+		L.addCustomPanel("3D", this);
 		//Create here, to prevent issues....
 		L.writeLineOnChannel("3D-Text", "Creating...");
 		
-		dataDude.getCurrentServer().getWorldManager().addNew3DHandler(this);
-//		dataDude.getCurrentServer().getMainPlayer().setChunkPosHandler((x, z) -> {
-//			//TODO: Threadsafe!
-//			new Thread(() -> {
-//				try
-//				{
-//					//TODO: NOOOOOB Code, no delay! Make deterministic
-//					Thread.sleep(500);
-//				}
-//				catch(InterruptedException e1)
-//				{
-//					e1.printStackTrace();
-//				}
-//				
-//				Chunk chunk = dataDude.getCurrentServer().getWorldManager().getChunk(x, z);
-//				if(chunk != null)
-//				{
-//					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") will now be processed to display it.");
-//					int[][][] blocks = chunk.toBlockArray();
-//					//TBI: Maybe only put, if not there?
-//					toBeLoadedChunks.add(new FaceReducedAdvancedRenderer(x, z, blocks, blockModels));
-//				}
-//				else
-//				{
-//					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
-//					System.out.println("Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
-//				}
-//			}, "Chunk processor # " + chunkProcessor++).start();
-//		});
-		
-		dataDude.getCurrentServer().getMainPlayer().setPlayerPositionHandler((x, y, z) -> {
-			posX = (float) x;
-			posY = (float) y;
-			posZ = (float) z;
-		});
-		
-		//getting the capabilities object of GL3 profile        
-		final GLCapabilities capabilities = new GLCapabilities(GLProfile.get(GLProfile.GL3));
-		capabilities.setBitmap(true);
-//		capabilities.setBackgroundOpaque(true);
-		
-		// The canvas
-//		final GLWindow glcanvas = GLWindow.create(capabilities);
-		final GLJPanel glcanvas = new GLJPanel(capabilities);
-		glcanvas.addGLEventListener(this);
-		glcanvas.setFocusable(false);
-		glcanvas.setSize(400, 400);
-		
+		//Setup this TAB:
+		setLayout(new BorderLayout());
+		setFocusable(true);
 		setCursor(null);
+		
+		//Creating mouse handler.
 		mouseHandler = new PrimitiveMouseHandler(this, this);
+		
+		//getting the capabilities object of GL3 profile
+		final GLCapabilities capabilities = new GLCapabilities(GLProfile.get(GLProfile.GL3));
+		
+		GLAutoDrawable canvas = null;
+		
+		if(createWindow)
+		{
+			capabilities.setBackgroundOpaque(true);
+			final GLWindow glWindow = GLWindow.create(capabilities);
+			glWindow.setSize(400, 400);
+			glWindow.setVisible(true);
+			
+			canvas = glWindow;
+		}
+		else
+		{
+			capabilities.setBitmap(true);
+			//TODO: Switch to GLCanvas somehow...
+			final GLJPanel glJPanel = new GLJPanel(capabilities);
+			glJPanel.setFocusable(false);
+			add(glJPanel);
+			revalidate();
+			
+			canvas = glJPanel;
+		}
+		
+		canvas.addGLEventListener(this);
+		
+		//Wait for init():
+		canvas.display();
+		
+		//TODO: Don't let it run amok here.
+		final FPSAnimator animator = new FPSAnimator(canvas, 30, true);
+		animator.start();
+	}
+	
+	public void attachServer(PrimitiveDataDude dataDude)
+	{
+		this.dataDude = dataDude;
 		//TODO: Move registration into the handler. 
 		//TODO: Fix this issue, the other one should capture the mouse.
-		glcanvas.addMouseListener(mouseHandler);
+//		glcanvas.addMouseListener(mouseHandler);
 		addMouseListener(mouseHandler);
 		addFocusListener(mouseHandler);
 		addKeyListener(new KeyDebouncer(new KeyDebouncer.KeyPress()
@@ -200,14 +202,42 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 			}
 		}));
 		
-		setLayout(new BorderLayout());
-		setFocusable(true);
-		add(glcanvas);
+//		dataDude.getCurrentServer().getMainPlayer().setChunkPosHandler((x, z) -> {
+//			//TODO: Threadsafe!
+//			new Thread(() -> {
+//				try
+//				{
+//					//TODO: NOOOOOB Code, no delay! Make deterministic
+//					Thread.sleep(500);
+//				}
+//				catch(InterruptedException e1)
+//				{
+//					e1.printStackTrace();
+//				}
+//				
+//				Chunk chunk = dataDude.getCurrentServer().getWorldManager().getChunk(x, z);
+//				if(chunk != null)
+//				{
+//					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") will now be processed to display it.");
+//					int[][][] blocks = chunk.toBlockArray();
+//					//TBI: Maybe only put, if not there?
+//					toBeLoadedChunks.add(new FaceReducedAdvancedRenderer(x, z, blocks, blockModels));
+//				}
+//				else
+//				{
+//					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
+//					System.out.println("Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
+//				}
+//			}, "Chunk processor # " + chunkProcessor++).start();
+//		});
 		
-//		glcanvas.setVisible(true);
+		dataDude.getCurrentServer().getMainPlayer().setPlayerPositionHandler((x, y, z) -> {
+			posX = (float) x;
+			posY = (float) y;
+			posZ = (float) z;
+		});
 		
-		final FPSAnimator animator = new FPSAnimator(glcanvas, 30, true);
-		animator.start();
+		dataDude.getCurrentServer().getWorldManager().addNew3DHandler(this);
 	}
 	
 	private final float conv = (float) (Math.PI / 180f);
@@ -230,7 +260,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	
 	//### 3D Stuff:
 	
-	private ShaderProgram faceRenderer;
+//	private ShaderProgram faceRenderer;
 	private ShaderProgram faceNewRenderer;
 	private ShaderProgram faceNewRenderer2;
 	
@@ -247,7 +277,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		gl.glEnable(GL3.GL_DEPTH_TEST);
 		gl.glClearColor(0.973f, 0.973f, 0.973f, 1.0f);
 		
-		faceRenderer = new ShaderProgram(gl, "shaders/face");
+//		faceRenderer = new ShaderProgram(gl, "shaders/face");
 		faceNewRenderer = new ShaderProgram(gl, "shaders/faceNew");
 		faceNewRenderer2 = new ShaderProgram(gl, "shaders/faceNew2");
 	}

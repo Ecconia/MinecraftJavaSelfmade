@@ -1,5 +1,6 @@
 package de.ecconia.mc.jclient;
 
+import de.ecconia.mc.jclient.gui.gl.Simple3D;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.network.handler.LoginPacketHandler;
@@ -13,8 +14,12 @@ public class StartMCClient
 	{
 		try
 		{
+			//Load credentials from trusted location.
 			Credentials.load();
+			//Create the debugging window.
 			L.init();
+			//Create the 3D panel, causes the shaders and other things to be loaded earlier.
+			Simple3D simple3D = new Simple3D();
 			
 			cd = new CD("s.redstone-server.info");
 //			cd = new CD("localhost");
@@ -39,6 +44,7 @@ public class StartMCClient
 			});
 			
 			PrimitiveDataDude dataDude = new PrimitiveDataDude(con);
+			simple3D.attachServer(dataDude);
 			
 			con.setHandler(new LoginPacketHandler(dataDude));
 			con.connect();
