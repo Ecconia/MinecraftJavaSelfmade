@@ -9,8 +9,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL2ES2;
 import com.jogamp.opengl.GL3;
 
 public class ShaderProgram
@@ -22,34 +20,64 @@ public class ShaderProgram
 	{
 		//Vertex Shader:
 		String vShaderCode = loadFile(name + ".vs");
-		int vertexShaderID = gl.glCreateShader(GL2.GL_VERTEX_SHADER);
+		if(vShaderCode == null)
+		{
+			throw new RuntimeException("Could not find shader file: " + name + ".vs");
+		}
+		int vertexShaderID = gl.glCreateShader(GL3.GL_VERTEX_SHADER);
 		gl.glShaderSource(vertexShaderID, 1, new String[] {vShaderCode}, new int[] {vShaderCode.length()}, 0);
 		gl.glCompileShader(vertexShaderID);
 		
 		IntBuffer retBuf = IntBuffer.allocate(1);
-		gl.glGetShaderiv(vertexShaderID, GL2.GL_COMPILE_STATUS, retBuf);
+		gl.glGetShaderiv(vertexShaderID, GL3.GL_COMPILE_STATUS, retBuf);
 		if(retBuf.get(0) == 0)
 		{
 			int[] logLength = new int[1];
-			gl.glGetShaderiv(vertexShaderID, GL2ES2.GL_INFO_LOG_LENGTH, logLength, 0);
+			gl.glGetShaderiv(vertexShaderID, GL3.GL_INFO_LOG_LENGTH, logLength, 0);
 			ByteBuffer bBuf = ByteBuffer.allocate(logLength[0]);
 			gl.glGetShaderInfoLog(vertexShaderID, bBuf.limit(), null, bBuf);
 			
 			throw new RuntimeException("Error loading Vertex shader: >" + new String(bBuf.array()) + "<");
 		}
 		
+		//Geometry shader:
+		String gShaderCode = loadFile(name + ".gs");
+		int geometryShaderID = 0;
+		if(gShaderCode != null)
+		{
+			geometryShaderID = gl.glCreateShader(GL3.GL_GEOMETRY_SHADER);
+			gl.glShaderSource(geometryShaderID, 1, new String[] {gShaderCode}, new int[] {gShaderCode.length()}, 0);
+			gl.glCompileShader(geometryShaderID);
+			
+			retBuf = IntBuffer.allocate(1);
+			gl.glGetShaderiv(geometryShaderID, GL3.GL_COMPILE_STATUS, retBuf);
+			if(retBuf.get(0) == 0)
+			{
+				int[] logLength = new int[1];
+				gl.glGetShaderiv(geometryShaderID, GL3.GL_INFO_LOG_LENGTH, logLength, 0);
+				ByteBuffer bBuf = ByteBuffer.allocate(logLength[0]);
+				gl.glGetShaderInfoLog(geometryShaderID, bBuf.limit(), null, bBuf);
+				
+				throw new RuntimeException("Error loading Geometry shader: >" + new String(bBuf.array()) + "<");
+			}
+		}
+		
 		//Fragment Shader:
 		String fShaderCode = loadFile(name + ".fs");
-		int fragmentShaderID = gl.glCreateShader(GL2.GL_FRAGMENT_SHADER);
+		if(fShaderCode == null)
+		{
+			throw new RuntimeException("Could not find shader file: " + name + ".fs");
+		}
+		int fragmentShaderID = gl.glCreateShader(GL3.GL_FRAGMENT_SHADER);
 		gl.glShaderSource(fragmentShaderID, 1, new String[] {fShaderCode}, new int[] {fShaderCode.length()}, 0);
 		gl.glCompileShader(fragmentShaderID);
 		
 		retBuf = IntBuffer.allocate(1);
-		gl.glGetShaderiv(fragmentShaderID, GL2.GL_COMPILE_STATUS, retBuf);
+		gl.glGetShaderiv(fragmentShaderID, GL3.GL_COMPILE_STATUS, retBuf);
 		if(retBuf.get(0) == 0)
 		{
 			int[] logLength = new int[1];
-			gl.glGetShaderiv(fragmentShaderID, GL2ES2.GL_INFO_LOG_LENGTH, logLength, 0);
+			gl.glGetShaderiv(fragmentShaderID, GL3.GL_INFO_LOG_LENGTH, logLength, 0);
 			ByteBuffer bBuf = ByteBuffer.allocate(logLength[0]);
 			gl.glGetShaderInfoLog(fragmentShaderID, bBuf.limit(), null, bBuf);
 			
@@ -59,15 +87,19 @@ public class ShaderProgram
 		//Program:
 		id = gl.glCreateProgram();
 		gl.glAttachShader(id, vertexShaderID);
+		if(gShaderCode != null)
+		{
+			gl.glAttachShader(id, geometryShaderID);
+		}
 		gl.glAttachShader(id, fragmentShaderID);
 		gl.glLinkProgram(id);
 		
 		retBuf = IntBuffer.allocate(1);
-		gl.glGetProgramiv(id, GL2.GL_LINK_STATUS, retBuf);
+		gl.glGetProgramiv(id, GL3.GL_LINK_STATUS, retBuf);
 		if(retBuf.get(0) == 0)
 		{
 			int[] logLength = new int[1];
-			gl.glGetProgramiv(id, GL2ES2.GL_INFO_LOG_LENGTH, logLength, 0);
+			gl.glGetProgramiv(id, GL3.GL_INFO_LOG_LENGTH, logLength, 0);
 			ByteBuffer bBuf = ByteBuffer.allocate(logLength[0]);
 			gl.glGetProgramInfoLog(id, bBuf.limit(), null, bBuf);
 			
@@ -128,8 +160,14 @@ public class ShaderProgram
 	{
 		try
 		{
-			System.out.println("Looking at: " + new File(path).getAbsolutePath());
-			List<String> lines = Files.readAllLines(new File(path).toPath());
+			File file = new File(path);
+			System.out.println("Looking at: " + file.getAbsolutePath());
+			if(!file.exists())
+			{
+				return null;
+			}
+			
+			List<String> lines = Files.readAllLines(file.toPath());
 			
 			String ret = "";
 			for(String line : lines)

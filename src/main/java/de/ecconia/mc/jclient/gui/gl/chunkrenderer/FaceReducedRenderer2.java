@@ -8,17 +8,12 @@ import com.jogamp.opengl.GL3;
 import de.ecconia.mc.jclient.gui.gl.helper.FaceBufferWrapper;
 import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
 
-public class FaceReducedRenderer extends ChunkRenderer
+public class FaceReducedRenderer2 extends ChunkRenderer
 {
-//	public static final boolean printGrid = true;
-	
-	private final static float blockRadius = 0.5f;
-//	private final static float gridOffset = 0.01f;
-	
 	private float[] dataArray;
 	private int[] indicesArray;
 	
-	public FaceReducedRenderer(int cx, int cy, int[][][] blocks, BlockLib blockModels)
+	public FaceReducedRenderer2(int cx, int cy, int[][][] blocks, BlockLib blockModels)
 	{
 		super(cx, cy);
 		
@@ -112,7 +107,7 @@ public class FaceReducedRenderer extends ChunkRenderer
 		}
 		
 		int floatsPerVertex = 9;
-		int vertexPerFace = 4;
+		int vertexPerFace = 1;
 		
 		int faceAmount = ymFaces.size() + ypFaces.size() + xmFaces.size() + xpFaces.size() + zmFaces.size() + zpFaces.size();
 		dataArray = new float[faceAmount * floatsPerVertex * vertexPerFace];
@@ -127,138 +122,102 @@ public class FaceReducedRenderer extends ChunkRenderer
 		{
 			float[] color = blockModels.get(f.type).getColor();
 			float[] data = {
-				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
-				//x, y, z, r, g, b
-				f.x + blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], 0, -1, 0, //0
-				f.x + blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], 0, -1, 0, //1
-				f.x - blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], 0, -1, 0, //2
-				f.x - blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], 0, -1, 0, //3
+				f.x, f.y - 0.5f, f.z, color[0], color[1], color[2], 0, -1, 0,
 			};
 			int[] indices = {
-				oi + 0, oi + 1, oi + 2,
-				oi + 0, oi + 3, oi + 2
+				oi + 0,
 			};
 			oi += vertexPerFace;
 			
 			System.arraycopy(data, 0, dataArray, pd, floatsPerVertex * vertexPerFace);
 			pd += floatsPerVertex * vertexPerFace;
-			System.arraycopy(indices, 0, indicesArray, pi, 6);
-			pi += 6;
+			System.arraycopy(indices, 0, indicesArray, pi, 1);
+			pi += 1;
 		}
 		
 		for(Face f : xmFaces)
 		{
 			float[] color = blockModels.get(f.type).getColor();
 			float[] data = {
-				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
-				//x, y, z, r, g, b
-				f.x - 0.5f, f.y + blockRadius, f.z + blockRadius, color[0], color[1], color[2], -1, 0, 0, //0
-				f.x - 0.5f, f.y + blockRadius, f.z - blockRadius, color[0], color[1], color[2], -1, 0, 0, //1
-				f.x - 0.5f, f.y - blockRadius, f.z - blockRadius, color[0], color[1], color[2], -1, 0, 0, //2
-				f.x - 0.5f, f.y - blockRadius, f.z + blockRadius, color[0], color[1], color[2], -1, 0, 0, //3
+				f.x - 0.5f, f.y, f.z, color[0], color[1], color[2], -1, 0, 0,
 			};
 			int[] indices = {
-				oi + 0, oi + 1, oi + 2,
-				oi + 0, oi + 3, oi + 2
+				oi + 0,
 			};
 			oi += vertexPerFace;
 			
 			System.arraycopy(data, 0, dataArray, pd, floatsPerVertex * vertexPerFace);
 			pd += floatsPerVertex * vertexPerFace;
-			System.arraycopy(indices, 0, indicesArray, pi, 6);
-			pi += 6;
+			System.arraycopy(indices, 0, indicesArray, pi, 1);
+			pi += 1;
 		}
 		
 		for(Face f : zmFaces)
 		{
 			float[] color = blockModels.get(f.type).getColor();
 			float[] data = {
-				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
-				//x, y, z, r, g, b
-				f.x + blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, -1, //0
-				f.x + blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, -1, //1
-				f.x - blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, -1, //2
-				f.x - blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, -1, //3
+				f.x, f.y, f.z - 0.5f, color[0], color[1], color[2], 0, 0, -1,
 			};
 			int[] indices = {
-				oi + 0, oi + 1, oi + 2,
-				oi + 0, oi + 3, oi + 2
+				oi + 0,
 			};
 			oi += vertexPerFace;
 			
 			System.arraycopy(data, 0, dataArray, pd, floatsPerVertex * vertexPerFace);
 			pd += floatsPerVertex * vertexPerFace;
-			System.arraycopy(indices, 0, indicesArray, pi, 6);
-			pi += 6;
+			System.arraycopy(indices, 0, indicesArray, pi, 1);
+			pi += 1;
 		}
 		
 		for(Face f : ypFaces)
 		{
 			float[] color = blockModels.get(f.type).getColor();
 			float[] data = {
-				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
-				//x, y, z, r, g, b
-				f.x + blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], 0, 1, 0, //0
-				f.x + blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], 0, 1, 0, //1
-				f.x - blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], 0, 1, 0, //2
-				f.x - blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], 0, 1, 0, //3
+				f.x, f.y - 0.5f, f.z, color[0], color[1], color[2], 0, 1, 0,
 			};
 			int[] indices = {
-				oi + 0, oi + 1, oi + 2,
-				oi + 0, oi + 3, oi + 2
+				oi + 0,
 			};
 			oi += vertexPerFace;
 			
 			System.arraycopy(data, 0, dataArray, pd, floatsPerVertex * vertexPerFace);
 			pd += floatsPerVertex * vertexPerFace;
-			System.arraycopy(indices, 0, indicesArray, pi, 6);
-			pi += 6;
+			System.arraycopy(indices, 0, indicesArray, pi, 1);
+			pi += 1;
 		}
 		
 		for(Face f : xpFaces)
 		{
 			float[] color = blockModels.get(f.type).getColor();
 			float[] data = {
-				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
-				//x, y, z, r, g, b
-				f.x - 0.5f, f.y + blockRadius, f.z + blockRadius, color[0], color[1], color[2], 1, 0, 0, //0
-				f.x - 0.5f, f.y + blockRadius, f.z - blockRadius, color[0], color[1], color[2], 1, 0, 0, //1
-				f.x - 0.5f, f.y - blockRadius, f.z - blockRadius, color[0], color[1], color[2], 1, 0, 0, //2
-				f.x - 0.5f, f.y - blockRadius, f.z + blockRadius, color[0], color[1], color[2], 1, 0, 0, //3
+				f.x - 0.5f, f.y, f.z, color[0], color[1], color[2], 1, 0, 0,
 			};
 			int[] indices = {
-				oi + 0, oi + 1, oi + 2,
-				oi + 0, oi + 3, oi + 2
+				oi + 0,
 			};
 			oi += vertexPerFace;
 			
 			System.arraycopy(data, 0, dataArray, pd, floatsPerVertex * vertexPerFace);
 			pd += floatsPerVertex * vertexPerFace;
-			System.arraycopy(indices, 0, indicesArray, pi, 6);
-			pi += 6;
+			System.arraycopy(indices, 0, indicesArray, pi, 1);
+			pi += 1;
 		}
 		
 		for(Face f : zpFaces)
 		{
 			float[] color = blockModels.get(f.type).getColor();
 			float[] data = {
-				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
-				//x, y, z, r, g, b
-				f.x + blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, 1, //0
-				f.x + blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, 1, //1
-				f.x - blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, 1, //2
-				f.x - blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, 1, //3
+				f.x, f.y, f.z - 0.5f, color[0], color[1], color[2], 0, 0, 1,
 			};
 			int[] indices = {
-				oi + 0, oi + 1, oi + 2,
-				oi + 0, oi + 3, oi + 2
+				oi + 0,
 			};
 			oi += vertexPerFace;
 			
 			System.arraycopy(data, 0, dataArray, pd, floatsPerVertex * vertexPerFace);
 			pd += floatsPerVertex * vertexPerFace;
-			System.arraycopy(indices, 0, indicesArray, pi, 6);
-			pi += 6;
+			System.arraycopy(indices, 0, indicesArray, pi, 1);
+			pi += 1;
 		}
 	}
 	
@@ -279,11 +238,13 @@ public class FaceReducedRenderer extends ChunkRenderer
 	}
 	
 	private FaceBufferWrapper buffer;
+	private int amount;
 	
 	@Override
 	public void load(GL3 gl)
 	{
 		buffer = new FaceBufferWrapper(gl, dataArray, indicesArray);
+		amount = indicesArray.length;
 		dataArray = null;
 		indicesArray = null;
 	}
@@ -292,7 +253,7 @@ public class FaceReducedRenderer extends ChunkRenderer
 	public void draw(GL3 gl)
 	{
 		buffer.use(gl);
-		buffer.draw(gl);
+		gl.glDrawElements(GL3.GL_POINTS, amount, GL3.GL_UNSIGNED_INT, 0);
 	}
 	
 	@Override
