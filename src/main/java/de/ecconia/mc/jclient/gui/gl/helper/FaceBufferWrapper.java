@@ -46,14 +46,17 @@ public class FaceBufferWrapper implements Deleteable
 		
 		//Define, how the values should be used in the shader:
 		//Position data: <x> <y> <z> - - -
-		gl.glVertexAttribPointer(0, 3, GL3.GL_FLOAT, false, 9 * Float.BYTES, 0);
+		gl.glVertexAttribPointer(0, 3, GL3.GL_FLOAT, false, 11 * Float.BYTES, 0);
 		gl.glEnableVertexAttribArray(0);
 		//Color data: - - - <r> <g> <b>
-		gl.glVertexAttribPointer(1, 3, GL3.GL_FLOAT, false, 9 * Float.BYTES, 3 * Float.BYTES);
+		gl.glVertexAttribPointer(1, 3, GL3.GL_FLOAT, false, 11 * Float.BYTES, 3 * Float.BYTES);
 		gl.glEnableVertexAttribArray(1);
 		//Normal vector: - - - <r> <g> <b>
-		gl.glVertexAttribPointer(2, 3, GL3.GL_FLOAT, false, 9 * Float.BYTES, 6 * Float.BYTES);
+		gl.glVertexAttribPointer(2, 3, GL3.GL_FLOAT, false, 11 * Float.BYTES, 6 * Float.BYTES);
 		gl.glEnableVertexAttribArray(2);
+		//Tex vector: - - - <r> <g> <b>
+		gl.glVertexAttribPointer(3, 2, GL3.GL_FLOAT, false, 11 * Float.BYTES, 9 * Float.BYTES);
+		gl.glEnableVertexAttribArray(3);
 		
 		//Cleanup:
 		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, 0);
