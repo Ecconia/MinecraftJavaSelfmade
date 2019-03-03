@@ -84,28 +84,31 @@ public class PrimitiveDataDude
 	
 	public void sendChat(String text)
 	{
-		if(text.charAt(0) == '%')
+		if(!text.isEmpty())
 		{
-			if(text.equals("%move"))
+			if(text.charAt(0) == '%')
 			{
-				double x = currentServer.getMainPlayer().getLocationX();
-				double y = currentServer.getMainPlayer().getLocationY();
-				double z = currentServer.getMainPlayer().getLocationZ();
-				
-				System.out.println("Sending Position: (" + x + ", " + y + ", " + z + ")");
-				currentServer.getMainPlayer().clientLocation(x + 4, y, z);
+				if(text.equals("%move"))
+				{
+					double x = currentServer.getMainPlayer().getLocationX();
+					double y = currentServer.getMainPlayer().getLocationY();
+					double z = currentServer.getMainPlayer().getLocationZ();
+					
+					System.out.println("Sending Position: (" + x + ", " + y + ", " + z + ")");
+					currentServer.getMainPlayer().clientLocation(x + 4, y, z);
+				}
+				//else if(text.equals("%3"))
+				//{
+				//	worldHandler.updateChunkCoords(chunkX, chunkZ);
+				//}
 			}
-//			else if(text.equals("%3"))
-//			{
-//				worldHandler.updateChunkCoords(chunkX, chunkZ);
-//			}
-		}
-		else
-		{
-			MessageBuilder mb = new MessageBuilder();
-			mb.addString(text);
-			mb.prependCInt(2);
-			con.sendPacket(mb.asBytes());
+			else
+			{
+				MessageBuilder mb = new MessageBuilder();
+				mb.addString(text);
+				mb.prependCInt(2);
+				con.sendPacket(mb.asBytes());
+			}
 		}
 	}
 	
