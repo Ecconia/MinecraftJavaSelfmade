@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import javax.swing.JPanel;
 
@@ -40,6 +42,9 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	//Turn to true on Windows...
 	//TODO: Either move all debugging into a JOGL window, OR find a solution which works on all OS's (maybe GLCanvas)
 	private final static boolean createWindow = false;
+	
+	//TODO: Find better way to let the main-thread wait for the graphic to be done.
+	private BlockingQueue<Object> initDone = new LinkedBlockingDeque<>(1);
 	
 	//////////////////////////////////////
 	//Camera position:
@@ -146,6 +151,15 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		
 		//Wait for init():
 		canvas.display();
+		try
+		{
+			initDone.take();
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		initDone = null;
 		
 		//TODO: Don't let it run amok here.
 		final FPSAnimator animator = new FPSAnimator(canvas, 30, true);
@@ -280,6 +294,15 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 //		faceRenderer = new ShaderProgram(gl, "shaders/face");
 		faceNewRenderer = new ShaderProgram(gl, "shaders/faceNew");
 		faceNewRenderer2 = new ShaderProgram(gl, "shaders/faceNew2");
+		
+		try
+		{
+			initDone.put(new Object());
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
