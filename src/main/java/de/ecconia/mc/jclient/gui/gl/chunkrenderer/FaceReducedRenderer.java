@@ -6,21 +6,21 @@ import java.util.List;
 import com.jogamp.opengl.GL3;
 
 import de.ecconia.mc.jclient.gui.gl.helper.FaceBufferWrapper;
-import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
+import de.ecconia.mc.jclient.gui.gl.models.BlockDataLib;
 
 public class FaceReducedRenderer extends ChunkRenderer
 {
-//	public static final boolean printGrid = true;
-	
 	private final static float blockRadius = 0.5f;
-//	private final static float gridOffset = 0.01f;
 	
 	private float[] dataArray;
 	private int[] indicesArray;
 	
-	public FaceReducedRenderer(int cx, int cy, int[][][] blocks, BlockLib blockModels)
+	public FaceReducedRenderer(int cx, int cz, int[][][] blocks, BlockDataLib bdLib)
 	{
-		super(cx, cy);
+		super(cx, cz);
+		
+		//This color could be used later to set e.g. grass and redstone color.
+		float[] color = new float[] {0.0f, 0.0f, 0.0f, 0.0f};
 		
 		List<Face> xpFaces = new ArrayList<>();
 		List<Face> ypFaces = new ArrayList<>();
@@ -111,7 +111,7 @@ public class FaceReducedRenderer extends ChunkRenderer
 			}
 		}
 		
-		int floatsPerVertex = 9;
+		int floatsPerVertex = 11;
 		int vertexPerFace = 4;
 		
 		int faceAmount = ymFaces.size() + ypFaces.size() + xmFaces.size() + xpFaces.size() + zmFaces.size() + zpFaces.size();
@@ -125,14 +125,16 @@ public class FaceReducedRenderer extends ChunkRenderer
 		
 		for(Face f : ymFaces)
 		{
-			float[] color = blockModels.get(f.type).getColor();
+			float texMinX = bdLib.getOffsetX(f.type);
+			float texMinY = bdLib.getOffsetY(f.type);
+			float texMaxX = texMinX + BlockDataLib.LENGTH;
+			float texMaxY = texMinY + BlockDataLib.LENGTH;
+			
 			float[] data = {
-				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
-				//x, y, z, r, g, b
-				f.x + blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], 0, -1, 0, //0
-				f.x + blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], 0, -1, 0, //1
-				f.x - blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], 0, -1, 0, //2
-				f.x - blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], 0, -1, 0, //3
+				f.x + blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], color[3], texMinX, texMinY, //0
+				f.x + blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], color[3], texMaxX, texMinY, //1
+				f.x - blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], color[3], texMaxX, texMaxY, //2
+				f.x - blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], color[3], texMinX, texMaxY, //3
 			};
 			int[] indices = {
 				oi + 0, oi + 1, oi + 2,
@@ -148,14 +150,16 @@ public class FaceReducedRenderer extends ChunkRenderer
 		
 		for(Face f : xmFaces)
 		{
-			float[] color = blockModels.get(f.type).getColor();
+			float texMinX = bdLib.getOffsetX(f.type);
+			float texMinY = bdLib.getOffsetY(f.type);
+			float texMaxX = texMinX + BlockDataLib.LENGTH;
+			float texMaxY = texMinY + BlockDataLib.LENGTH;
+			
 			float[] data = {
-				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
-				//x, y, z, r, g, b
-				f.x - 0.5f, f.y + blockRadius, f.z + blockRadius, color[0], color[1], color[2], -1, 0, 0, //0
-				f.x - 0.5f, f.y + blockRadius, f.z - blockRadius, color[0], color[1], color[2], -1, 0, 0, //1
-				f.x - 0.5f, f.y - blockRadius, f.z - blockRadius, color[0], color[1], color[2], -1, 0, 0, //2
-				f.x - 0.5f, f.y - blockRadius, f.z + blockRadius, color[0], color[1], color[2], -1, 0, 0, //3
+				f.x - 0.5f, f.y + blockRadius, f.z + blockRadius, color[0], color[1], color[2], color[3], texMinX, texMinY, //0
+				f.x - 0.5f, f.y + blockRadius, f.z - blockRadius, color[0], color[1], color[2], color[3], texMaxX, texMinY, //1
+				f.x - 0.5f, f.y - blockRadius, f.z - blockRadius, color[0], color[1], color[2], color[3], texMaxX, texMaxY, //2
+				f.x - 0.5f, f.y - blockRadius, f.z + blockRadius, color[0], color[1], color[2], color[3], texMinX, texMaxY, //3
 			};
 			int[] indices = {
 				oi + 0, oi + 1, oi + 2,
@@ -171,14 +175,16 @@ public class FaceReducedRenderer extends ChunkRenderer
 		
 		for(Face f : zmFaces)
 		{
-			float[] color = blockModels.get(f.type).getColor();
+			float texMinX = bdLib.getOffsetX(f.type);
+			float texMinY = bdLib.getOffsetY(f.type);
+			float texMaxX = texMinX + BlockDataLib.LENGTH;
+			float texMaxY = texMinY + BlockDataLib.LENGTH;
+			
 			float[] data = {
-				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
-				//x, y, z, r, g, b
-				f.x + blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, -1, //0
-				f.x + blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, -1, //1
-				f.x - blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, -1, //2
-				f.x - blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, -1, //3
+				f.x + blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], color[3], texMinX, texMinY, //0
+				f.x + blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], color[3], texMaxX, texMinY, //1
+				f.x - blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], color[3], texMaxX, texMaxY, //2
+				f.x - blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], color[3], texMinX, texMaxY, //3
 			};
 			int[] indices = {
 				oi + 0, oi + 1, oi + 2,
@@ -194,14 +200,16 @@ public class FaceReducedRenderer extends ChunkRenderer
 		
 		for(Face f : ypFaces)
 		{
-			float[] color = blockModels.get(f.type).getColor();
+			float texMinX = bdLib.getOffsetX(f.type);
+			float texMinY = bdLib.getOffsetY(f.type);
+			float texMaxX = texMinX + BlockDataLib.LENGTH;
+			float texMaxY = texMinY + BlockDataLib.LENGTH;
+			
 			float[] data = {
-				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
-				//x, y, z, r, g, b
-				f.x + blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], 0, 1, 0, //0
-				f.x + blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], 0, 1, 0, //1
-				f.x - blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], 0, 1, 0, //2
-				f.x - blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], 0, 1, 0, //3
+				f.x + blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], color[3], texMinX, texMinY, //0
+				f.x + blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], color[3], texMaxX, texMinY, //1
+				f.x - blockRadius, f.y - 0.5f, f.z - blockRadius, color[0], color[1], color[2], color[3], texMaxX, texMaxY, //2
+				f.x - blockRadius, f.y - 0.5f, f.z + blockRadius, color[0], color[1], color[2], color[3], texMinX, texMaxY, //3
 			};
 			int[] indices = {
 				oi + 0, oi + 1, oi + 2,
@@ -217,14 +225,16 @@ public class FaceReducedRenderer extends ChunkRenderer
 		
 		for(Face f : xpFaces)
 		{
-			float[] color = blockModels.get(f.type).getColor();
+			float texMinX = bdLib.getOffsetX(f.type);
+			float texMinY = bdLib.getOffsetY(f.type);
+			float texMaxX = texMinX + BlockDataLib.LENGTH;
+			float texMaxY = texMinY + BlockDataLib.LENGTH;
+			
 			float[] data = {
-				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
-				//x, y, z, r, g, b
-				f.x - 0.5f, f.y + blockRadius, f.z + blockRadius, color[0], color[1], color[2], 1, 0, 0, //0
-				f.x - 0.5f, f.y + blockRadius, f.z - blockRadius, color[0], color[1], color[2], 1, 0, 0, //1
-				f.x - 0.5f, f.y - blockRadius, f.z - blockRadius, color[0], color[1], color[2], 1, 0, 0, //2
-				f.x - 0.5f, f.y - blockRadius, f.z + blockRadius, color[0], color[1], color[2], 1, 0, 0, //3
+				f.x - 0.5f, f.y + blockRadius, f.z + blockRadius, color[0], color[1], color[2], color[3], texMinX, texMinY, //0
+				f.x - 0.5f, f.y + blockRadius, f.z - blockRadius, color[0], color[1], color[2], color[3], texMaxX, texMinY, //1
+				f.x - 0.5f, f.y - blockRadius, f.z - blockRadius, color[0], color[1], color[2], color[3], texMaxX, texMaxY, //2
+				f.x - 0.5f, f.y - blockRadius, f.z + blockRadius, color[0], color[1], color[2], color[3], texMinX, texMaxY, //3
 			};
 			int[] indices = {
 				oi + 0, oi + 1, oi + 2,
@@ -240,14 +250,16 @@ public class FaceReducedRenderer extends ChunkRenderer
 		
 		for(Face f : zpFaces)
 		{
-			float[] color = blockModels.get(f.type).getColor();
+			float texMinX = bdLib.getOffsetX(f.type);
+			float texMinY = bdLib.getOffsetY(f.type);
+			float texMaxX = texMinX + BlockDataLib.LENGTH;
+			float texMaxY = texMinY + BlockDataLib.LENGTH;
+			
 			float[] data = {
-				//TODO: Create geometry shader which can generate a face by using a direction vector and one point + color
-				//x, y, z, r, g, b
-				f.x + blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, 1, //0
-				f.x + blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, 1, //1
-				f.x - blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, 1, //2
-				f.x - blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], 0, 0, 1, //3
+				f.x + blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], color[3], texMinX, texMinY, //0
+				f.x + blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], color[3], texMaxX, texMinY, //1
+				f.x - blockRadius, f.y - blockRadius, f.z - 0.5f, color[0], color[1], color[2], color[3], texMaxX, texMaxY, //2
+				f.x - blockRadius, f.y + blockRadius, f.z - 0.5f, color[0], color[1], color[2], color[3], texMinX, texMaxY, //3
 			};
 			int[] indices = {
 				oi + 0, oi + 1, oi + 2,

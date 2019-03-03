@@ -26,13 +26,10 @@ import de.ecconia.mc.jclient.data.world.WorldManager;
 import de.ecconia.mc.jclient.gui.gl.PrimitiveMouseHandler.MouseAdapter;
 import de.ecconia.mc.jclient.gui.gl.chunkrenderer.ChunkRenderer;
 import de.ecconia.mc.jclient.gui.gl.chunkrenderer.FaceReducedRenderer;
-import de.ecconia.mc.jclient.gui.gl.chunkrenderer.FaceReducedRenderer2;
-import de.ecconia.mc.jclient.gui.gl.chunkrenderer.FaceReducedRenderer3;
 import de.ecconia.mc.jclient.gui.gl.helper.Deleteable;
 import de.ecconia.mc.jclient.gui.gl.helper.Matrix;
 import de.ecconia.mc.jclient.gui.gl.helper.ShaderProgram;
 import de.ecconia.mc.jclient.gui.gl.models.BlockDataLib;
-import de.ecconia.mc.jclient.gui.gl.models.BlockLib;
 import de.ecconia.mc.jclient.gui.input.KeyDebouncer;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
@@ -60,16 +57,10 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	//////////////////////////////////////
 	//World data:
 	
-	private BlockLib blockModels = new BlockLib();
 	private BlockDataLib bdLib;
 	
-	private final Queue<ChunkRenderer> toBeLoadedChunks3 = new ConcurrentLinkedQueue<>();
-	private final XYStorage<ChunkRenderer> chunks3 = new XYStorage<>();
-	
 	private final Queue<ChunkRenderer> toBeLoadedChunks = new ConcurrentLinkedQueue<>();
-	private final Queue<ChunkRenderer> toBeLoadedChunks2 = new ConcurrentLinkedQueue<>();
 	private final XYStorage<ChunkRenderer> chunks = new XYStorage<>();
-	private final XYStorage<ChunkRenderer> chunks2 = new XYStorage<>();
 	
 	//////////////////////////////////////
 	//Mouse capture stuff:
@@ -175,9 +166,6 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	public void attachServer(PrimitiveDataDude dataDude)
 	{
 		this.dataDude = dataDude;
-		//TODO: Move registration into the handler. 
-		//TODO: Fix this issue, the other one should capture the mouse.
-//		glcanvas.addMouseListener(mouseHandler);
 		addMouseListener(mouseHandler);
 		addFocusListener(mouseHandler);
 		addKeyListener(new KeyDebouncer(new KeyDebouncer.KeyPress()
@@ -222,35 +210,6 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 			}
 		}));
 		
-//		dataDude.getCurrentServer().getMainPlayer().setChunkPosHandler((x, z) -> {
-//			//TODO: Threadsafe!
-//			new Thread(() -> {
-//				try
-//				{
-//					//TODO: NOOOOOB Code, no delay! Make deterministic
-//					Thread.sleep(500);
-//				}
-//				catch(InterruptedException e1)
-//				{
-//					e1.printStackTrace();
-//				}
-//				
-//				Chunk chunk = dataDude.getCurrentServer().getWorldManager().getChunk(x, z);
-//				if(chunk != null)
-//				{
-//					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") will now be processed to display it.");
-//					int[][][] blocks = chunk.toBlockArray();
-//					//TBI: Maybe only put, if not there?
-//					toBeLoadedChunks.add(new FaceReducedAdvancedRenderer(x, z, blocks, blockModels));
-//				}
-//				else
-//				{
-//					L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
-//					System.out.println("Chunk (" + x + ", " + z + ") is not loaded yet. Can not display it.");
-//				}
-//			}, "Chunk processor # " + chunkProcessor++).start();
-//		});
-		
 		dataDude.getCurrentServer().getMainPlayer().setPlayerPositionHandler((x, y, z) -> {
 			posX = (float) x;
 			posY = (float) y;
@@ -281,15 +240,12 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	//### 3D Stuff:
 	
 	private ShaderProgram textureShader;
-//	private ShaderProgram faceRenderer;
-	private ShaderProgram faceNewRenderer;
-	private ShaderProgram faceNewRenderer2;
 	
 	private final Matrix projection = new Matrix();
 	private final Matrix view = new Matrix();
 	private final Matrix model = new Matrix();
 	
-	private final List<Deleteable> stuffToDelete = new ArrayList<>();
+	private final List<Deleteable> stuffToDeleteSoon = new ArrayList<>();
 	
 	@Override
 	public void init(GLAutoDrawable drawable)
@@ -298,12 +254,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		gl.glEnable(GL3.GL_DEPTH_TEST);
 		gl.glClearColor(0.973f, 0.973f, 0.973f, 1.0f);
 		
-//		faceRenderer = new ShaderProgram(gl, "shaders/face");
-		faceNewRenderer = new ShaderProgram(gl, "shaders/faceNew");
-		faceNewRenderer2 = new ShaderProgram(gl, "shaders/faceNew2");
 		textureShader = new ShaderProgram(gl, "shaders/textureFaceSimple");
-		
-		//TODO: Load all textures.
 		bdLib = new BlockDataLib(gl);
 		
 		try
@@ -321,10 +272,21 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	{
 		final GL3 gl = drawable.getGL().getGL3();
 		
-		for(Deleteable del : stuffToDelete)
+		deleteLoadedChunks();
+		for(Deleteable del : stuffToDeleteSoon)
 		{
 			del.delete(gl);
 		}
+	}
+	
+	private void deleteLoadedChunks()
+	{
+		Iterator<ChunkRenderer> it = chunks.iterator();
+		while(it.hasNext())
+		{
+			stuffToDeleteSoon.add(it.next());
+		}
+		chunks.clear();
 	}
 	
 	@Override
@@ -332,33 +294,23 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	{
 		final GL3 gl = drawable.getGL().getGL3();
 		
-//		{
-//			ChunkRenderer chunk = toBeLoadedChunks.poll();
-//			if(chunk != null)
-//			{
-//				chunk.load(gl);
-//				chunks.put(chunk.getPosX(), chunk.getPosZ(), chunk);
-//				stuffToDelete.add(chunk);
-//			}
-//		}
-//		
-//		{
-//			ChunkRenderer chunk = toBeLoadedChunks2.poll();
-//			if(chunk != null)
-//			{
-//				chunk.load(gl);
-//				chunks2.put(chunk.getPosX(), chunk.getPosZ(), chunk);
-//				stuffToDelete.add(chunk);
-//			}
-//		}
-		
+		//Delete e.g. overwritten chunks:
+		for(Deleteable del : stuffToDeleteSoon)
 		{
-			ChunkRenderer chunk = toBeLoadedChunks3.poll();
+			del.delete(gl);
+		}
+		
+		//Load new chunks:
+		{
+			ChunkRenderer chunk = toBeLoadedChunks.poll();
 			if(chunk != null)
 			{
 				chunk.load(gl);
-				chunks3.put(chunk.getPosX(), chunk.getPosZ(), chunk);
-				stuffToDelete.add(chunk);
+				ChunkRenderer oldone = chunks.put(chunk.getPosX(), chunk.getPosZ(), chunk);
+				if(oldone != null)
+				{
+					oldone.delete(gl);
+				}
 			}
 		}
 		
@@ -375,71 +327,21 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		view.translate(-posX, -posY, -posZ);
 		view.translate(0.5f, -1.04f, 0.5f);
 		
-		Iterator<ChunkRenderer> it;
-		
-//		faceRenderer.use(gl);
-//		faceRenderer.setUniform(gl, 2, projection.getMat());
-//		faceRenderer.setUniform(gl, 1, view.getMat());
-//		
-//		//Print chunks:
-//		it = chunks.iterator();
-//		while(it.hasNext())
-//		{
-//			ChunkRenderer chunk = it.next();
-//			
-//			model.identity();
-//			model.translate(chunk.getOffsetX(), 0, chunk.getOffsetZ());
-//			faceRenderer.setUniform(gl, 0, model.getMat());
-//			
-//			chunk.draw(gl);
-//		}
-		
-//		faceNewRenderer.use(gl);
-//		faceNewRenderer.setUniform(gl, 2, projection.getMat());
-//		faceNewRenderer.setUniform(gl, 1, view.getMat());
-//		
-//		//Print chunks:
-//		it = chunks2.iterator();
-//		while(it.hasNext())
-//		{
-//			ChunkRenderer chunk = it.next();
-//			
-//			model.identity();
-//			model.translate(chunk.getOffsetX(), 0, chunk.getOffsetZ());
-//			faceNewRenderer.setUniform(gl, 0, model.getMat());
-//			
-//			chunk.draw(gl);
-//		}
-		
-//		faceNewRenderer2.use(gl);
-//		faceNewRenderer2.setUniform(gl, 2, projection.getMat());
-//		faceNewRenderer2.setUniform(gl, 1, view.getMat());
-//		
-//		//Print chunks:
-//		it = chunks2.iterator();
-//		while(it.hasNext())
-//		{
-//			ChunkRenderer chunk = it.next();
-//			
-//			model.identity();
-//			model.translate(chunk.getOffsetX(), 0, chunk.getOffsetZ());
-//			faceNewRenderer2.setUniform(gl, 0, model.getMat());
-//			
-//			chunk.draw(gl);
-//		}
-		
+		//Use the big texture map:
 		gl.glBindTexture(GL3.GL_TEXTURE_2D, bdLib.getID());
 		
+		//Set shader and the variables:
 		textureShader.use(gl);
 		textureShader.setUniform(gl, 2, projection.getMat());
 		textureShader.setUniform(gl, 1, view.getMat());
 		
 		//Print chunks:
-		it = chunks3.iterator();
+		Iterator<ChunkRenderer> it = chunks.iterator();
 		while(it.hasNext())
 		{
 			ChunkRenderer chunk = it.next();
 			
+			//Set the model matrix for this chunk:
 			model.identity();
 			model.translate(chunk.getOffsetX(), 0, chunk.getOffsetZ());
 			textureShader.setUniform(gl, 0, model.getMat());
@@ -469,11 +371,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	{
 		//TODO: different thread
 		toBeLoadedChunks.clear();
-		toBeLoadedChunks2.clear();
-		toBeLoadedChunks3.clear();
-		chunks.clear();
-		chunks2.clear();
-		chunks3.clear();
+		deleteLoadedChunks();
 	}
 	
 	@Override
@@ -483,12 +381,8 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 			int x = chunk.getX();
 			int z = chunk.getZ();
 			
-			L.writeLineOnChannel("3D-Text", "Chunk (" + x + ", " + z + ") will now be processed to display it.");
 			int[][][] blocks = chunk.toBlockArray();
-			//TBI: Maybe only put, if not there? <- FOR SURE! TODO: Dispose old models!
-			toBeLoadedChunks.add(new FaceReducedRenderer(x, z, blocks, blockModels));
-			toBeLoadedChunks2.add(new FaceReducedRenderer2(x, z, blocks, blockModels));
-			toBeLoadedChunks3.add(new FaceReducedRenderer3(x, z, blocks, bdLib));
+			toBeLoadedChunks.add(new FaceReducedRenderer(x, z, blocks, bdLib));
 		}, "Chunk processor # " + chunkProcessor++).start();
 	}
 }
