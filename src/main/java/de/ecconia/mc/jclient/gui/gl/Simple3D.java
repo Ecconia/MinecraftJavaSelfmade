@@ -463,7 +463,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		gl.glViewport(0, 0, width, height);
 		projection.perspective(45f, (float) width / (float) height, 0.1f, 100000f);
 	}
-
+	
 	@Override
 	public void reset()
 	{
@@ -475,7 +475,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		chunks2.clear();
 		chunks3.clear();
 	}
-
+	
 	@Override
 	public void loadChunk(Chunk chunk)
 	{

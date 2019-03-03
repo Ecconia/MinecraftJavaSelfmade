@@ -96,13 +96,14 @@ public class WorldManager
 		
 		playerWorld.unloadChunk(x, z);
 	}
-
+	
 	//3D handler:
 	private World3DHandler world3DHandler;
 	
 	public interface World3DHandler
 	{
 		void reset();
+		
 		void loadChunk(Chunk chunk);
 	}
 	

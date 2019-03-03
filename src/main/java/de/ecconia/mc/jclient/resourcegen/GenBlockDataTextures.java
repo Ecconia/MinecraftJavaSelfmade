@@ -6,11 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -44,7 +41,7 @@ public class GenBlockDataTextures
 			int i = 0;
 			loop: for(int y = SIDE - 1; y >= 0; y--)
 			{
-				for(int x = 0; x < SIDE; x++)ssh
+				for(int x = 0; x < SIDE; x++)
 				{
 					BufferedImage bufferedImage;
 					String name = String.valueOf(i) + ".png";

@@ -272,7 +272,7 @@ public class FaceReducedRenderer3 extends ChunkRenderer
 			pi += 6;
 		}
 	}
-
+	
 	private static class Face
 	{
 		public final int x;

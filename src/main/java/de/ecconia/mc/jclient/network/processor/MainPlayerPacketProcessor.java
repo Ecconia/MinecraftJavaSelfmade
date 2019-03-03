@@ -13,7 +13,7 @@ public class MainPlayerPacketProcessor extends PacketThread
 	{
 		super("MainPlayerPacketThread", dataDude);
 	}
-
+	
 	@Override
 	protected void process(GenericPacket packet)
 	{

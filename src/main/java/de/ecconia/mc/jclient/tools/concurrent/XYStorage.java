@@ -110,7 +110,7 @@ public class XYStorage<T>
 			}
 		};
 	}
-
+	
 	public void clear()
 	{
 		lock.lock();
