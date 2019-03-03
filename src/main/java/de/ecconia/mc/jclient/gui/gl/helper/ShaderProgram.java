@@ -124,7 +124,7 @@ public class ShaderProgram
 				String variable = parts[2];
 				variable = variable.substring(0, variable.indexOf(';'));
 				
-				System.out.println("Shader " + name + " has uniform variable: " + variable);
+				//System.out.println("Shader " + name + " has uniform variable: " + variable);
 				uniforms.add(variable);
 			}
 		}
@@ -161,7 +161,6 @@ public class ShaderProgram
 		try
 		{
 			File file = new File(path);
-			System.out.println("Looking at: " + file.getAbsolutePath());
 			if(!file.exists())
 			{
 				return null;
