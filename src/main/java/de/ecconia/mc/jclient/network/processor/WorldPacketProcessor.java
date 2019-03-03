@@ -2,12 +2,15 @@ package de.ecconia.mc.jclient.network.processor;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.data.world.Chunk;
+import de.ecconia.mc.jclient.data.world.MultiBlockChange;
+import de.ecconia.mc.jclient.data.world.MultiBlockChange.BlockChange;
 import de.ecconia.mc.jclient.data.world.SubChunk;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.gui.tabs.ChunkMap;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
+import de.ecconia.mc.jclient.tools.McMathHelper;
 
 public class WorldPacketProcessor extends PacketThread
 {
@@ -38,26 +41,6 @@ public class WorldPacketProcessor extends PacketThread
 			
 			boolean wholeChunk = reader.readBoolean();
 			logData("> Whole chunk: " + wholeChunk);
-			
-//			if(x == -168 && y == 168)
-//			{
-//				byte[] bytes = reader.readBytes(reader.remaining());
-//				
-//				try(FileOutputStream fos = new FileOutputStream("exportedChunk"))
-//				{
-//					fos.write(bytes);
-//				}
-//				catch(FileNotFoundException e)
-//				{
-//					System.out.println("FNF: " + e);
-//				}
-//				catch(IOException e)
-//				{
-//					System.out.println("IOE: " + e);
-//				}
-//				
-//				return;
-//			}
 			
 			int subChunkBitMap = reader.readCInt();
 			logData("> Subchunk map: " + asBin(subChunkBitMap, 16));
@@ -182,10 +165,50 @@ public class WorldPacketProcessor extends PacketThread
 		else if(id == 0x0B)
 		{
 			logPacket("Block changed");
+			
+			long positionData = reader.readLong();
+			
+			int x = (int) (positionData >> 38);
+			int y = (int) ((positionData >> 26) & 0xFFF);
+			int z = (int) (positionData << 38 >> 38);
+			
+			int data = reader.readCInt();
+			
+			logData("Block change @(" + x + ", " + y + ", " + z + ") -> " + data);
+			
+			int cx = McMathHelper.toChunkPos(x);
+			int cz = McMathHelper.toChunkPos(z);
+			
+			dataDude.getCurrentServer().getWorldManager().updateBlock(cx, cz, x - McMathHelper.toStartPos(cx), y, z - McMathHelper.toStartPos(cz), data);
 		}
 		else if(id == 0x0F)
 		{
 			logPacket("Block change multi");
+			
+			int cx = reader.readInt();
+			int cz = reader.readInt();
+			
+			int amount = reader.readCInt();
+			
+			MultiBlockChange mbc = new MultiBlockChange(cx, cz, amount);
+			
+			logData("MultiBlock change (" + amount + "):");
+			for(int i = 0; i < amount; i++)
+			{
+				int posXZ = reader.readByte();
+				int posX = (0xF0 & posXZ) >> 4;
+				int x = posX + McMathHelper.toStartPos(cx);
+				int y = reader.readByte();
+				int posZ = posXZ & 0x0F;
+				int z = posZ + McMathHelper.toStartPos(cz);
+				int data = reader.readCInt();
+				
+				logData("- @(" + x + ", " + y + ", " + z + ") -> " + data);
+				
+				mbc.add(new BlockChange(posX, y, posZ, data));
+			}
+			
+			dataDude.getCurrentServer().getWorldManager().updateBlock(mbc);
 		}
 		else
 		{

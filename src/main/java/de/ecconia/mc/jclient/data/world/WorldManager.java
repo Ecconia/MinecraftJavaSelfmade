@@ -1,10 +1,16 @@
 package de.ecconia.mc.jclient.data.world;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.ecconia.mc.jclient.Logger;
+import de.ecconia.mc.jclient.data.world.MultiBlockChange.BlockChange;
 
 public class WorldManager
 {
 	private WorldStorage playerWorld;
+	
+	private final List<WorldObserver> observers = new ArrayList<>();
 	
 	public WorldManager()
 	{
@@ -36,18 +42,19 @@ public class WorldManager
 	public void respawn(int dimension)
 	{
 		//TBI: How does multiverse handle ID's? Is it just the world type, or can it be (ab)used as identifier? What do vanilla clients do with other values?
+		Logger.important("World ID is: " + dimension);
 		if(playerWorld != null)
 		{
 			//TODO: Implement saving of worlds, or - well dump them
 			Logger.warn("Switched world, dumping old world data!");
 		}
 		
-		if(world3DHandler != null)
-		{
-			world3DHandler.reset();
-		}
-		
 		playerWorld = new WorldStorage();
+		
+		for(WorldObserver observer : observers)
+		{
+			observer.switchWorld();
+		}
 	}
 	
 	/**
@@ -61,12 +68,13 @@ public class WorldManager
 			return; //Ignore
 		}
 		
-		if(world3DHandler != null)
-		{
-			world3DHandler.loadChunk(chunk);
-		}
-		
 		playerWorld.loadChunk(chunk);
+		
+		//Continue even if it was already loaded, cause chunk is overwritten now.
+		for(WorldObserver observer : observers)
+		{
+			observer.loadChunk(chunk);
+		}
 	}
 	
 	/**
@@ -80,7 +88,14 @@ public class WorldManager
 			return; //Ignore
 		}
 		
-		playerWorld.updateChunk(chunk);
+		Chunk realChunk = playerWorld.updateChunk(chunk);
+		if(realChunk != null)
+		{
+			for(WorldObserver observer : observers)
+			{
+				observer.dirtyChunk(realChunk);
+			}
+		}
 	}
 	
 	/**
@@ -94,21 +109,53 @@ public class WorldManager
 			return; //Ignore
 		}
 		
-		playerWorld.unloadChunk(x, z);
+		if(playerWorld.unloadChunk(x, z))
+		{
+			for(WorldObserver observer : observers)
+			{
+				observer.unloadChunk(x, z);
+			}
+		}
 	}
 	
-	//3D handler:
-	private World3DHandler world3DHandler;
-	
-	public interface World3DHandler
+	public void updateBlock(int chunkX, int chunkZ, int x, int y, int z, int blockdata)
 	{
-		void reset();
+		Chunk chunk = getChunk(chunkX, chunkZ);
+		if(chunk == null || !chunk.isLoaded())
+		{
+			Logger.perr("Received block change packet but chunk was not loaded: " + chunkX + " " + chunkZ);
+			return; //Ignore
+		}
 		
-		void loadChunk(Chunk chunk);
+		chunk.updateBlock(x, y, z, blockdata);
+		for(WorldObserver observer : observers)
+		{
+			observer.dirtyChunk(chunk);
+		}
 	}
 	
-	public void addNew3DHandler(World3DHandler handler)
+	public void updateBlock(MultiBlockChange mbc)
 	{
-		world3DHandler = handler;
+		Chunk chunk = getChunk(mbc.getX(), mbc.getZ());
+		if(chunk == null || !chunk.isLoaded())
+		{
+			Logger.perr("Received multi block change packet but chunk was not loaded: " + mbc.getX() + " " + mbc.getZ());
+			return; //Ignore
+		}
+		
+		for(BlockChange change : mbc.getChanges())
+		{
+			chunk.updateBlock(change.getX(), change.getY(), change.getZ(), change.getData());
+		}
+		
+		for(WorldObserver observer : observers)
+		{
+			observer.dirtyChunk(chunk);
+		}
+	}
+	
+	public void observe(WorldObserver observer)
+	{
+		observers.add(observer);
 	}
 }

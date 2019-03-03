@@ -29,7 +29,7 @@ public class WorldStorage
 		}
 	}
 	
-	public void updateChunk(Chunk chunk)
+	public Chunk updateChunk(Chunk chunk)
 	{
 		int x = chunk.getX();
 		int z = chunk.getZ();
@@ -39,29 +39,41 @@ public class WorldStorage
 		if(oldChunk == null || !oldChunk.isLoaded())
 		{
 			Logger.perr("Received update chunk packet, but the old chunk was not loaded. (" + x + ", " + z + ")");
+			return null;
 		}
 		
-		System.out.println("(TODO): Updating chunk: " + x + " " + z);
-		//TODO: Update the chunk!
+		//TBI: Is this working? Does it ever happen????
+		System.out.println("(TODO): Validate updated chunk!!: " + x + " " + z);
+		for(int i = 0; i < 16; i++)
+		{
+			SubChunk subChunk = chunk.getChunkMap()[i];
+			if(subChunk != null)
+			{
+				oldChunk.getChunkMap()[i] = subChunk;
+			}
+		}
+		
+		return oldChunk;
 	}
 	
-	public void unloadChunk(int x, int z)
+	public boolean unloadChunk(int x, int z)
 	{
 		Chunk chunk = chunks.get(x, z);
 		
 		if(chunk == null)
 		{
 			Logger.perr("Received chunk unload packet, but chunk was never loaded. (" + x + ", " + z + ")");
-			return;
+			return false;
 		}
 		
 		if(!chunk.isLoaded())
 		{
 			Logger.perr("Received chunk unload packet, but chunk was already unloaded. (" + x + ", " + z + ")");
-			return;
+			return false;
 		}
 		
 		chunk.unload();
+		return true;
 	}
 	
 	//TBI: Primitive chunk storage model, optimize? How, why? 

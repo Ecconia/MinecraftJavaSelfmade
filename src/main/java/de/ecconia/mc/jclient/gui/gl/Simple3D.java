@@ -22,7 +22,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 
 import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.data.world.Chunk;
-import de.ecconia.mc.jclient.data.world.WorldManager;
+import de.ecconia.mc.jclient.data.world.WorldObserver;
 import de.ecconia.mc.jclient.gui.gl.PrimitiveMouseHandler.MouseAdapter;
 import de.ecconia.mc.jclient.gui.gl.chunkrenderer.ChunkRenderer;
 import de.ecconia.mc.jclient.gui.gl.chunkrenderer.FaceReducedRenderer;
@@ -35,7 +35,7 @@ import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
 
 @SuppressWarnings("serial")
-public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, WorldManager.World3DHandler
+public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, WorldObserver
 {
 	private PrimitiveDataDude dataDude;
 	//Turn to true on Windows...
@@ -216,7 +216,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 			posZ = (float) z;
 		});
 		
-		dataDude.getCurrentServer().getWorldManager().addNew3DHandler(this);
+		dataDude.getCurrentServer().getWorldManager().observe(this);
 	}
 	
 	private final float conv = (float) (Math.PI / 180f);
@@ -367,14 +367,6 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	}
 	
 	@Override
-	public void reset()
-	{
-		//TODO: different thread
-		toBeLoadedChunks.clear();
-		deleteLoadedChunks();
-	}
-	
-	@Override
 	public void loadChunk(Chunk chunk)
 	{
 		new Thread(() -> {
@@ -384,5 +376,25 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 			int[][][] blocks = chunk.toBlockArray();
 			toBeLoadedChunks.add(new FaceReducedRenderer(x, z, blocks, bdLib));
 		}, "Chunk processor # " + chunkProcessor++).start();
+	}
+
+	@Override
+	public void unloadChunk(int x, int z)
+	{
+		//Nah, lets not do this!
+	}
+
+	@Override
+	public void dirtyChunk(Chunk chunk)
+	{
+		//TODO: Put on some update list, with higher priority.
+	}
+
+	@Override
+	public void switchWorld()
+	{
+		//TODO: different thread
+		toBeLoadedChunks.clear();
+		deleteLoadedChunks();
 	}
 }

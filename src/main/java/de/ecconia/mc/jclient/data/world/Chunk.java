@@ -47,6 +47,16 @@ public class Chunk
 		return loaded;
 	}
 	
+	public void updateBlock(int x2, int y, int z2, int blockdata)
+	{
+		if(!loaded)
+		{
+			return;
+		}
+		
+		//TODO: Update
+	}
+	
 	public int[][][] toBlockArray()
 	{
 		int[][][] blocks = new int[16][16][256];
