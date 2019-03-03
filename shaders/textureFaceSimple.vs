@@ -2,8 +2,7 @@
 
 layout (location = 0) in vec4 vPosition;
 layout (location = 1) in vec3 vColor;
-layout (location = 2) in vec3 nVector; //Unused
-layout (location = 3) in vec2 tVector;
+layout (location = 2) in vec2 tVector;
 
 out vec3 fColor;
 out vec2 fCoord;

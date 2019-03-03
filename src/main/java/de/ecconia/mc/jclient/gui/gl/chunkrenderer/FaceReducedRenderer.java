@@ -111,7 +111,7 @@ public class FaceReducedRenderer extends ChunkRenderer
 			}
 		}
 		
-		int floatsPerVertex = 11;
+		int floatsPerVertex = 9;
 		int vertexPerFace = 4;
 		
 		int faceAmount = ymFaces.size() + ypFaces.size() + xmFaces.size() + xpFaces.size() + zmFaces.size() + zpFaces.size();
