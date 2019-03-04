@@ -59,6 +59,8 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	
 	private BlockDataLib bdLib;
 	
+	private final Queue<ChunkRenderer> toBeLoadedChunksPriority = new ConcurrentLinkedQueue<>();
+	
 	private final Queue<ChunkRenderer> toBeLoadedChunks = new ConcurrentLinkedQueue<>();
 	private final XYStorage<ChunkRenderer> chunks = new XYStorage<>();
 	
@@ -300,6 +302,28 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 			del.delete(gl);
 		}
 		
+		//Load priority chunks:
+		{
+			for(int i = 0; i < 5; i++)
+			{
+				ChunkRenderer chunk = toBeLoadedChunksPriority.poll();
+				if(chunk != null)
+				{
+					chunk.load(gl);
+					ChunkRenderer oldone = chunks.put(chunk.getPosX(), chunk.getPosZ(), chunk);
+					if(oldone != null)
+					{
+						oldone.delete(gl);
+					}
+				}
+				else
+				{
+					//Stop attempting to load nothing.
+					break;
+				}
+			}
+		}
+		
 		//Load new chunks:
 		{
 			ChunkRenderer chunk = toBeLoadedChunks.poll();
@@ -388,6 +412,15 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	public void dirtyChunk(Chunk chunk)
 	{
 		//TODO: Put on some update list, with higher priority.
+		
+		new Thread(() -> {
+			int x = chunk.getX();
+			int z = chunk.getZ();
+			
+			int[][][] blocks = chunk.toBlockArray();
+			//TODO: Don't just add them, replace the old chunks, else all will have to be parsed over multiple frames.
+			toBeLoadedChunksPriority.add(new FaceReducedRenderer(x, z, blocks, bdLib));
+		}, "Chunk processor # " + chunkProcessor++).start();
 	}
 
 	@Override

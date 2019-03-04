@@ -47,7 +47,7 @@ public class WorldStorage
 		for(int i = 0; i < 16; i++)
 		{
 			SubChunk subChunk = chunk.getChunkMap()[i];
-			if(subChunk != null)
+			if(!subChunk.isEmpty())
 			{
 				oldChunk.getChunkMap()[i] = subChunk;
 			}

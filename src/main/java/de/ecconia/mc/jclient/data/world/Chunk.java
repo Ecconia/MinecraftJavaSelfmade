@@ -47,14 +47,15 @@ public class Chunk
 		return loaded;
 	}
 	
-	public void updateBlock(int x2, int y, int z2, int blockdata)
+	public void updateBlock(int x, int y, int z, int blockdata)
 	{
 		if(!loaded)
 		{
 			return;
 		}
 		
-		//TODO: Update
+		int subchunk = y / 16;
+		chunkMap[subchunk].update(x, y % 16, z, blockdata);
 	}
 	
 	public int[][][] toBlockArray()
@@ -66,7 +67,7 @@ public class Chunk
 			int yOffset = i * 16;
 			
 			SubChunk subChunk = getChunkMap()[i];
-			if(subChunk.getBitsPerBlock() == 0)
+			if(subChunk.isEmpty())
 			{
 				for(int y = 0; y < 16; y++)
 				{
