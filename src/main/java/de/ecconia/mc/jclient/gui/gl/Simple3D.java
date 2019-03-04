@@ -197,19 +197,19 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 			{
 				if(keyChar == 'a')
 				{
-					walkIntoDirection(-90);
+					walkIntoDirection(90);
 				}
 				else if(keyChar == 'd')
 				{
-					walkIntoDirection(90);
+					walkIntoDirection(-90);
 				}
 				else if(keyChar == 'w')
 				{
-					walkIntoDirection(0);
+					walkIntoDirection(180);
 				}
 				else if(keyChar == 's')
 				{
-					walkIntoDirection(180);
+					walkIntoDirection(0);
 				}
 				else if(keyChar == 'q')
 				{
@@ -358,7 +358,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		//Camera:
 		view.identity();
 		view.rotate(player.getNeck(), 1, 0, 0);
-		view.rotate(player.getRotation(), 0, 1, 0);
+		view.rotate(player.getRotation() - 180, 0, 1, 0);
 		view.translate(
 			-player.getLocationX(),
 			-player.getLocationY(),

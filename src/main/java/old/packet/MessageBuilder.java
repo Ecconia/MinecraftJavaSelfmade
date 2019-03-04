@@ -200,4 +200,10 @@ public class MessageBuilder
 		}
 		while(value != 0);
 	}
+
+	public void addFloat(float f)
+	{
+		int bits = Float.floatToRawIntBits(f);
+		addInt(bits);
+	}
 }

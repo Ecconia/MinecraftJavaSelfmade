@@ -1,9 +1,9 @@
 package de.ecconia.mc.jclient.data.player;
 
 import de.ecconia.mc.jclient.gui.monitor.L;
+import de.ecconia.mc.jclient.network.SendHelper;
 import de.ecconia.mc.jclient.network.connector.Sender;
 import de.ecconia.mc.jclient.tools.McMathHelper;
-import old.packet.MessageBuilder;
 
 public class MainPlayer
 {
@@ -49,13 +49,7 @@ public class MainPlayer
 		//TODO: Crop to relevant length:
 		L.writeLineOnChannel("3D-Text", "Walking to: (" + x + ", " + y + ", " + z + ")");
 		
-		MessageBuilder mb = new MessageBuilder();
-		mb.addDouble(locationX);
-		mb.addDouble(locationY);
-		mb.addDouble(locationZ);
-		mb.addBoolean(true);
-		mb.prependCInt(0x10);
-		sender.sendPacket(mb.asBytes());
+		SendHelper.sendPlayerPosition(sender, true, locationX, locationY, locationZ);
 		
 		newPosition(x, y, z);
 	}
@@ -118,11 +112,13 @@ public class MainPlayer
 	
 	public void setNeck(float neck)
 	{
+		SendHelper.sendPlayerPosition(sender, true, neck, rotation);
 		this.neck = neck;
 	}
 
 	public void setRotation(float rotation)
 	{
+		SendHelper.sendPlayerPosition(sender, true, neck, rotation);
 		this.rotation = rotation;
 	}
 }
