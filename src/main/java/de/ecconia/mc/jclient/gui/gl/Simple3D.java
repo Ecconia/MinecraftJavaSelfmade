@@ -20,7 +20,9 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 
+import de.ecconia.mc.jclient.Logger;
 import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.data.player.MainPlayer;
 import de.ecconia.mc.jclient.data.world.Chunk;
 import de.ecconia.mc.jclient.data.world.WorldObserver;
 import de.ecconia.mc.jclient.gui.gl.PrimitiveMouseHandler.MouseAdapter;
@@ -37,7 +39,6 @@ import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
 @SuppressWarnings("serial")
 public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, WorldObserver
 {
-	private PrimitiveDataDude dataDude;
 	//Turn to true on Windows...
 	//TODO: Either move all debugging into a JOGL window, OR find a solution which works on all OS's (maybe GLCanvas)
 	private final static boolean createWindow = false;
@@ -45,14 +46,14 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	//TODO: Find better way to let the main-thread wait for the graphic to be done.
 	private BlockingQueue<Object> initDone = new LinkedBlockingDeque<>(1);
 	
-	//////////////////////////////////////
-	//Camera position:
-	private float rotation = 30;
-	private float neck = 20f;
-	
-	private float posX = 0f;
-	private float posY = 0f;
-	private float posZ = 0f;
+//	//////////////////////////////////////
+//	//Camera position:
+//	private float rotation = 30;
+//	private float neck = 20f;
+//	
+//	private float posX = 0f;
+//	private float posY = 0f;
+//	private float posZ = 0f;
 	
 	//////////////////////////////////////
 	//World data:
@@ -72,7 +73,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 	//Neck
 	public void updateY(int d)
 	{
-		neck -= (float) d / 10f;
+		float neck = player.getNeck() - (float) d / 10f;
 		
 		if(neck < -90)
 		{
@@ -83,12 +84,14 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		{
 			neck = 90;
 		}
+		
+		player.setNeck(neck);
 	}
 	
 	//Rotation
 	public void updateX(int d)
 	{
-		rotation -= (float) d / 10f;
+		float rotation = player.getRotation() - (float) d / 10f;
 		
 		if(rotation > 180)
 		{
@@ -99,14 +102,21 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		{
 			rotation += 360;
 		}
+		
+		player.setRotation(rotation);
 	}
 	
 	//### ### ### ### ### ### ###
 	
 	private static int chunkProcessor = 1;
+	private final FPSAnimator animator;
+	private MainPlayer player;
 	
 	public Simple3D()
 	{
+		//Dummy player...
+		//TODO: Improve. (get rid of)
+		player = new MainPlayer(null);
 		//Add the 3D panel to the debugging view.
 		L.addCustomPanel("3D", this);
 		//Create here, to prevent issues....
@@ -161,13 +171,13 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		initDone = null;
 		
 		//TODO: Don't let it run amok here.
-		final FPSAnimator animator = new FPSAnimator(canvas, 60, true);
-		animator.start();
+		animator = new FPSAnimator(canvas, 60, true);
 	}
 	
 	public void attachServer(PrimitiveDataDude dataDude)
 	{
-		this.dataDude = dataDude;
+		this.player = dataDude.getCurrentServer().getMainPlayer();
+		
 		addMouseListener(mouseHandler);
 		addFocusListener(mouseHandler);
 		addKeyListener(new KeyDebouncer(new KeyDebouncer.KeyPress()
@@ -203,40 +213,41 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 				}
 				else if(keyChar == 'q')
 				{
-					dataDude.getCurrentServer().getMainPlayer().clientLocation(posX, posY + 0.8f, posZ);
+					player.clientLocation(
+						player.getLocationX(),
+						player.getLocationY() + 0.8f,
+						player.getLocationZ());
 				}
 				else if(keyChar == 'e')
 				{
-					dataDude.getCurrentServer().getMainPlayer().clientLocation(posX, posY - 0.8f, posZ);
+					player.clientLocation(
+						player.getLocationX(),
+						player.getLocationY() - 0.8f,
+						player.getLocationZ());
 				}
 			}
 		}));
 		
-		dataDude.getCurrentServer().getMainPlayer().setPlayerPositionHandler((x, y, z) -> {
-			posX = (float) x;
-			posY = (float) y;
-			posZ = (float) z;
-		});
-		
 		dataDude.getCurrentServer().getWorldManager().observe(this);
+		
+		animator.start();
 	}
 	
-	private final float conv = (float) (Math.PI / 180f);
+	private static final float grad2rad = (float) (Math.PI / 180D);
 	
-	//TODO: Should use the Players rotation value, instead of the one from here. Accordingly move it away from this file.
 	private void walkIntoDirection(float direction)
 	{
-		float dir = rotation + direction;
+		float dir = player.getRotation() + direction;
 		float distance = 1;
 		
-		float offsetZ = (float) -(distance * Math.cos(conv * dir));
-		float offsetX = (float) (distance * Math.sin(conv * dir));
+		float offsetZ = (float) -(distance * Math.cos(grad2rad * dir));
+		float offsetX = (float) (distance * Math.sin(grad2rad * dir));
 		
-		double x = dataDude.getCurrentServer().getMainPlayer().getLocationX();
-		double y = dataDude.getCurrentServer().getMainPlayer().getLocationY();
-		double z = dataDude.getCurrentServer().getMainPlayer().getLocationZ();
+		double x = player.getLocationX();
+		double y = player.getLocationY();
+		double z = player.getLocationZ();
 		
-		dataDude.getCurrentServer().getMainPlayer().clientLocation(x + offsetX, y, z + offsetZ);
+		player.clientLocation(x + offsetX, y, z + offsetZ);
 	}
 	
 	//### 3D Stuff:
@@ -346,9 +357,12 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		
 		//Camera:
 		view.identity();
-		view.rotate(neck, 1, 0, 0);
-		view.rotate(rotation, 0, 1, 0);
-		view.translate(-posX, -posY, -posZ);
+		view.rotate(player.getNeck(), 1, 0, 0);
+		view.rotate(player.getRotation(), 0, 1, 0);
+		view.translate(
+			-player.getLocationX(),
+			-player.getLocationY(),
+			-player.getLocationZ());
 		view.translate(0.5f, -1.04f, 0.5f);
 		
 		//Use the big texture map:
@@ -401,13 +415,13 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 			toBeLoadedChunks.add(new FaceReducedRenderer(x, z, blocks, bdLib));
 		}, "Chunk processor # " + chunkProcessor++).start();
 	}
-
+	
 	@Override
 	public void unloadChunk(int x, int z)
 	{
 		//Nah, lets not do this!
 	}
-
+	
 	@Override
 	public void dirtyChunk(Chunk chunk)
 	{
@@ -422,7 +436,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 			toBeLoadedChunksPriority.add(new FaceReducedRenderer(x, z, blocks, bdLib));
 		}, "Chunk processor # " + chunkProcessor++).start();
 	}
-
+	
 	@Override
 	public void switchWorld()
 	{

@@ -11,9 +11,11 @@ public class MainPlayer
 	private int currentChunkZ = Integer.MAX_VALUE;
 	
 	//TODO: Location object
-	private double locationX = 0;
-	private double locationY = 0;
-	private double locationZ = 0;
+	private float locationX = 0;
+	private float locationY = 0;
+	private float locationZ = 0;
+	private float neck = 0;
+	private float rotation = 0;
 	
 	private int xp = 0;
 	private int health = 0;
@@ -28,9 +30,9 @@ public class MainPlayer
 	
 	public void serverLocation(double x, double y, double z, float yaw, float pitch)
 	{
-		locationX = x;
-		locationY = y;
-		locationZ = z;
+		locationX = (float) x;
+		locationY = (float) y;
+		locationZ = (float) z;
 		
 		//TODO: Crop to relevant length:
 		L.writeLineOnChannel("3D-Text", "Recieved position: (" + x + ", " + y + ", " + z + ")");
@@ -40,9 +42,9 @@ public class MainPlayer
 	
 	public void clientLocation(double x, double y, double z)
 	{
-		locationX = x;
-		locationY = y;
-		locationZ = z;
+		locationX = (float) x;
+		locationY = (float) y;
+		locationZ = (float) z;
 		
 		//TODO: Crop to relevant length:
 		L.writeLineOnChannel("3D-Text", "Walking to: (" + x + ", " + y + ", " + z + ")");
@@ -58,19 +60,29 @@ public class MainPlayer
 		newPosition(x, y, z);
 	}
 	
-	public double getLocationX()
+	public float getLocationX()
 	{
 		return locationX;
 	}
 	
-	public double getLocationY()
+	public float getLocationY()
 	{
 		return locationY;
 	}
 	
-	public double getLocationZ()
+	public float getLocationZ()
 	{
 		return locationZ;
+	}
+	
+	public float getNeck()
+	{
+		return neck;
+	}
+	
+	public float getRotation()
+	{
+		return rotation;
 	}
 	
 	public int getHealth()
@@ -88,8 +100,6 @@ public class MainPlayer
 	//TBI: Here or elsewhere?
 	private void newPosition(double x, double y, double z)
 	{
-		playerPosHandler.updatePlayerCoords(x, y, z);
-		
 		int newChunkX = McMathHelper.toChunkPos(McMathHelper.toBlockPos(x));
 		int newChunkZ = McMathHelper.toChunkPos(McMathHelper.toBlockPos(z));
 		
@@ -100,33 +110,19 @@ public class MainPlayer
 			
 			L.writeLineOnChannel("3D-Text", "New chunk location: " + currentChunkX + " " + currentChunkZ);
 			
-			//Event:
-//			worldHandler.updateChunkCoords(currentChunkX, currentChunkZ);
+			//TBI: This method doesn't even matter anymore...
 		}
 	}
 	
 	//#########################################################################
 	
-//	private UpdateChunkPos worldHandler;
-	private UpdatePlayerPos playerPosHandler;
-	
-//	public void setChunkPosHandler(UpdateChunkPos handler)
-//	{
-//		this.worldHandler = handler;
-//	}
-	
-	public void setPlayerPositionHandler(UpdatePlayerPos playerPosHandler)
+	public void setNeck(float neck)
 	{
-		this.playerPosHandler = playerPosHandler;
+		this.neck = neck;
 	}
-	
-	public static interface UpdateChunkPos
+
+	public void setRotation(float rotation)
 	{
-		public void updateChunkCoords(int x, int z);
-	}
-	
-	public static interface UpdatePlayerPos
-	{
-		public void updatePlayerCoords(double x, double y, double z);
+		this.rotation = rotation;
 	}
 }
