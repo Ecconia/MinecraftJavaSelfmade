@@ -10,7 +10,7 @@ import de.ecconia.mc.jclient.gui.tabs.ChunkMap;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;
-import de.ecconia.mc.jclient.tools.McMathHelper;
+import de.ecconia.mc.jclient.tools.math.McMathHelper;
 
 public class WorldPacketProcessor extends PacketThread
 {

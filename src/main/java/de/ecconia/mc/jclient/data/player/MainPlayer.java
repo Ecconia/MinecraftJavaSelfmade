@@ -3,7 +3,7 @@ package de.ecconia.mc.jclient.data.player;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.SendHelper;
 import de.ecconia.mc.jclient.network.connector.Sender;
-import de.ecconia.mc.jclient.tools.McMathHelper;
+import de.ecconia.mc.jclient.tools.math.McMathHelper;
 
 public class MainPlayer
 {

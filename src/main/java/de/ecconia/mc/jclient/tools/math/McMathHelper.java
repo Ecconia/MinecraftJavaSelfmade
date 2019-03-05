@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient.tools;
+package de.ecconia.mc.jclient.tools.math;
 
 public class McMathHelper
 {

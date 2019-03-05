@@ -3,7 +3,7 @@ package de.ecconia.mc.jclient.gui.gl.chunkrenderer;
 import com.jogamp.opengl.GL3;
 
 import de.ecconia.mc.jclient.gui.gl.helper.Deleteable;
-import de.ecconia.mc.jclient.tools.McMathHelper;
+import de.ecconia.mc.jclient.tools.math.McMathHelper;
 
 public abstract class ChunkRenderer implements Deleteable
 {
