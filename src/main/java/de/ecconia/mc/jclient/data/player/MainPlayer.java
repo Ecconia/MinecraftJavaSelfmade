@@ -121,4 +121,32 @@ public class MainPlayer
 		SendHelper.playerPosition(sender, true, neck, rotation);
 		this.rotation = rotation;
 	}
+	
+	//#########################################################################
+	
+	//### Player's Entity ID ###
+	private int playerEntityID;
+	
+	public void setEntityID(int eid)
+	{
+		playerEntityID = eid;
+	}
+	
+	public int getPlayerEntityID()
+	{
+		return playerEntityID;
+	}
+	
+	//### Player's Entity ID ###
+	private int playerGamemode;
+	
+	public void setGameMode(int gm)
+	{
+		playerGamemode = gm;
+	}
+	
+	public int getPlayerGamemode()
+	{
+		return playerGamemode;
+	}
 }

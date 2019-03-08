@@ -221,13 +221,20 @@ public class GenericPacketProcessor extends PacketThread
 		{
 			//TBI: here or in the player one?
 			logPacket("JoinPlayerState");
+			
 			//Int -> ID
-			reader.readInt();
+			int eid = reader.readInt();
+			System.out.println("EID = " + eid);
+			dataDude.getCurrentServer().getMainPlayer().setEntityID(eid);
+
 			//UByte -> Gamemode
-			reader.readUByte();
+			int gamemode = reader.readUByte();
+			dataDude.getCurrentServer().getMainPlayer().setGameMode(gamemode);
+			
 			//Int -> Dimension Type
 			int dimension = reader.readInt();
 			dataDude.getCurrentServer().getWorldManager().respawn(dimension);
+			
 			//UByte -> Difficulty
 			//UByte -> Max players (ignored)
 			//String -> Map type...?
