@@ -88,24 +88,25 @@ public class LoginPacketHandler implements PacketHandler
 				
 				con.enableEncryption(sharedKey);
 			}
-			else if(id == 0x03)
+			else if(id == 2)
 			{
-				logPacket("Compression request");
-				int compressionLevel = reader.readCInt();
-				logData("> Compression above " + compressionLevel + " bytes.");
-				if(reader.remaining() > 0)
-				{
-					Logger.warn("Compression package had more content.");
-				}
+				//TODO: Validate that these two values are correct:
+				//UUID uuid = UUID.fromString(reader.readString());
+				//String username = reader.readString();
 				
-				con.setCompression(compressionLevel);
-				
-				//The compression packet will always be sent, before the server switches to "joined" state.
 				System.out.println("Established connection, joining.");
 				System.out.println("-----------------------------------------");
 				
 				dataDude.connectedToServer();
 				con.setHandler(new PlayPacketHandler(dataDude));
+			}
+			else if(id == 3)
+			{
+				logPacket("Compression request");
+				int compressionLevel = reader.readCInt();
+				logData("> Compression above " + compressionLevel + " bytes.");
+				
+				con.setCompression(compressionLevel);
 			}
 			else if(id == 4)
 			{
@@ -128,6 +129,10 @@ public class LoginPacketHandler implements PacketHandler
 
 				mb.prependByte(2);
 				con.sendPacket(mb.asBytes());
+			}
+			else
+			{
+				Logger.warn("Recived unexpected packet while login: " + id);
 			}
 		}
 		catch(Exception e)

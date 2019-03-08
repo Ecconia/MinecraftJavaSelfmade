@@ -17,6 +17,7 @@ public class Credentials
 {
 	public static String accessToken;
 	public static String username;
+	//TODO: Store as UUID
 	public static String uuid;
 	
 	public static void load()
