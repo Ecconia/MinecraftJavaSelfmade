@@ -2,6 +2,8 @@
 
 A Minecraft client written in Java from scratch.
 
+For support, discussions, information exchange, join the Discord-Server: https://discord.gg/tmZVkc You may talk to Ecconia there, about issues which do not belong on Github.
+
 It was one of the days again, when MC pissed me off... Broken chat, weird graphics, well you know what 1.13.2 has to offer.
 
 Well its nicer to use a system where every mistake is the fault of someone you can talk to. A system where one can fix every bug. A system which can be improved on demand.
