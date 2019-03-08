@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.UUID;
 
 import de.ecconia.mc.jclient.network.tools.compression.Compressor;
 import de.ecconia.mc.jclient.tools.IntBytes;
@@ -205,5 +206,16 @@ public class MessageBuilder
 	{
 		int bits = Float.floatToRawIntBits(f);
 		addInt(bits);
+	}
+
+	public void addLocation(int x, int y, int z)
+	{
+		addLong(((x & 0x3FFFFFF) << 38) | ((y & 0xFFF) << 26) | (z & 0x3FFFFFF));
+	}
+
+	public void addUUID(UUID uuid)
+	{
+		addLong(uuid.getMostSignificantBits());
+		addLong(uuid.getLeastSignificantBits());
 	}
 }

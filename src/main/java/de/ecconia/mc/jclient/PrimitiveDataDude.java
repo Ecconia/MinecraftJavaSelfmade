@@ -4,8 +4,8 @@ import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
 import de.ecconia.mc.jclient.data.ServerData;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.gui.tabs.ChatPane;
+import de.ecconia.mc.jclient.network.SendHelper;
 import de.ecconia.mc.jclient.network.connector.Connector;
-import old.packet.MessageBuilder;
 
 public class PrimitiveDataDude
 {
@@ -104,10 +104,7 @@ public class PrimitiveDataDude
 			}
 			else
 			{
-				MessageBuilder mb = new MessageBuilder();
-				mb.addString(text);
-				mb.prependCInt(2);
-				con.sendPacket(mb.asBytes());
+				SendHelper.chat(con, text);
 			}
 		}
 	}

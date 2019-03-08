@@ -25,6 +25,7 @@ public class PingPacketProcessor extends PacketThread
 			logPacket("Ping");
 			byte[] ping = reader.readBytes(8);
 			
+			//TODO: Parse and send as Long using SendHelper
 			MessageBuilder mb = new MessageBuilder();
 			mb.addBytes(ping);
 			mb.prependCInt(14);

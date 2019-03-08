@@ -49,7 +49,7 @@ public class MainPlayer
 		//TODO: Crop to relevant length:
 		L.writeLineOnChannel("3D-Text", "Walking to: (" + x + ", " + y + ", " + z + ")");
 		
-		SendHelper.sendPlayerPosition(sender, true, locationX, locationY, locationZ);
+		SendHelper.playerPosition(sender, true, locationX, locationY, locationZ);
 		
 		newPosition(x, y, z);
 	}
@@ -112,13 +112,13 @@ public class MainPlayer
 	
 	public void setNeck(float neck)
 	{
-		SendHelper.sendPlayerPosition(sender, true, neck, rotation);
+		SendHelper.playerPosition(sender, true, neck, rotation);
 		this.neck = neck;
 	}
 
 	public void setRotation(float rotation)
 	{
-		SendHelper.sendPlayerPosition(sender, true, neck, rotation);
+		SendHelper.playerPosition(sender, true, neck, rotation);
 		this.rotation = rotation;
 	}
 }
