@@ -142,6 +142,25 @@ public class SubChunk
 			}
 			palette = newPalette;
 			
+			//Refactor all values above oldBlockDataIndex (minus 1):
+			for(int cx = 0; cx < 16; cx++)
+			{
+				for(int cy = 0; cy < 16; cy++)
+				{
+					for(int cz = 0; cz < 16; cz++)
+					{
+						int index = blocks[cx][cz][cy];
+						if(index > oldBlockDataIndex)
+						{
+							blocks[cx][cz][cy] = index - 1;
+						}
+					}
+				}
+			}
+			
+			createLongsFromBlockArray(blocks);
+			
+			//Also subtract this index, cause an entry got removed (minus 1)
 			if(oldBlockDataIndex > newBlockDataIndex)
 			{
 				return newBlockDataIndex;
@@ -308,5 +327,38 @@ public class SubChunk
 		}
 		
 		return blocks;
+	}
+	
+	public void printData()
+	{
+		System.out.println("Bits per: " + bitsPerBlock);
+		int p = 0;
+		for(long l : longs)
+		{
+			String tmp = "";
+			String sBits = Long.toBinaryString(l);
+			while(sBits.length() < 64)
+			{
+				sBits = '0' + sBits;
+			}
+			char[] bits = sBits.toCharArray();
+			for(int ii = bits.length-1; ii >= 0; ii--)
+			{
+				char bit  = bits[ii];
+				if(p++ == bitsPerBlock)
+				{
+					p = 1;
+					tmp = ' ' + tmp;
+				}
+				tmp = bit + tmp;
+			}
+			System.out.println(tmp);
+		}
+		
+		System.out.println("Palette:");
+		for(int ii = 0; ii < palette.length; ii++)
+		{
+			System.out.println(ii + ": " + palette[ii]);
+		}
 	}
 }
