@@ -210,9 +210,12 @@ public class MessageBuilder
 
 	public void addLocation(int x, int y, int z)
 	{
-		addLong(((x & 0x3FFFFFF) << 38) | ((y & 0xFFF) << 26) | (z & 0x3FFFFFF));
+		addLong(
+			(((long)x & 0x3FFFFFF) << 38) |
+			(((long)y & 0xFFF) << 26) |
+			((long)z & 0x3FFFFFF));
 	}
-
+	
 	public void addUUID(UUID uuid)
 	{
 		addLong(uuid.getMostSignificantBits());
