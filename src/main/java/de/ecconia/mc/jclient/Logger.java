@@ -1,5 +1,8 @@
 package de.ecconia.mc.jclient;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Logger
 {
 	/**
@@ -26,17 +29,30 @@ public class Logger
 		System.out.println("#######################################");
 	}
 	
-	public static void ex(String when, Throwable e)
+	public static synchronized void ex(String when, Throwable t)
 	{
-		StackTraceElement root = Thread.currentThread().getStackTrace()[2];
-		System.out.println("EXCEPTION " + when + ": " + e.getClass().getSimpleName() + " @(" + root.getClassName() + ":" + root.getLineNumber() + ")");
-		if(e.getMessage() != null)
+		StackTraceElement catchOrigin = Thread.currentThread().getStackTrace()[2];
+		String catcher = " @(" + catchOrigin.getClassName() + ":" + catchOrigin.getLineNumber() + ")";
+		System.out.println("Exception " + when + ": " + (t.getMessage() != null ? t.getMessage() : "") + catcher);
+		
+		List<Throwable> issues = new ArrayList<>();
+		
+		issues.add(t);
+		while(t.getCause() != null)
 		{
-			System.out.println("- Message: " + e.getMessage());
+			issues.add(t);
+			t = t.getCause();
 		}
-		for(StackTraceElement el : e.getStackTrace())
+		
+		for(int i = issues.size() - 1; i >= 0; i--)
 		{
-			System.out.println(" -> " + el.getClassName() + "." + el.getMethodName() + "(" + el.getFileName() + ":" + el.getLineNumber() + ")");
+			t = issues.get(i);
+			
+			System.out.println(" -" + t.getClass().getSimpleName() + ": " + (t.getMessage() != null ? t.getMessage() + " " : ""));
+			for(StackTraceElement el : t.getStackTrace())
+			{
+				System.out.println("-> " + el.getClassName() + "." + el.getMethodName() + "(" + el.getFileName() + ":" + el.getLineNumber() + ")");
+			}
 		}
 	}
 }
