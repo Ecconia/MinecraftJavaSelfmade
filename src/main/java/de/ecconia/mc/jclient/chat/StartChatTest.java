@@ -37,7 +37,7 @@ public class StartChatTest
 			try
 			{
 				JSONObject message = (JSONObject) JSONParser.parse(s);
-				message.print("");
+				message.debugTree("");
 			}
 			catch(JSONException e)
 			{

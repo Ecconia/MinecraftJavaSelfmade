@@ -1,8 +1,12 @@
 package de.ecconia.mc.jclient.tools.json;
 
-import de.ecconia.mc.jclient.tools.json.JSONToken.TokenIterator;
-import de.ecconia.mc.jclient.tools.json.JSONToken.Type;
+import java.math.BigDecimal;
 
+import de.ecconia.mc.jclient.tools.json.token.JSONToken;
+import de.ecconia.mc.jclient.tools.json.token.JSONTokenIterator;
+import de.ecconia.mc.jclient.tools.json.token.JSONType;
+
+//TODO: Support other data types, to prevent fails!
 public class JSONParser
 {
 	enum Scope
@@ -16,18 +20,21 @@ public class JSONParser
 		EXPECT_ENTRY, //Expect a key/value instead of an end.
 	}
 	
-	public static String debug = "";
-	
 	public static JSONNode parse(String s)
 	{
-		TokenIterator i = JSONToken.parse(s);
+		return parse(s, false);
+	}
+	
+	public static JSONNode parse(String s, boolean debug)
+	{
+		JSONTokenIterator i = JSONToken.parse(s, debug);
 		
-		Type type = i.next().getType();
-		if(type == Type.OBJECT_OPEN)
+		JSONType type = i.next().getType();
+		if(type == JSONType.OBJECT_OPEN)
 		{
 			return parseObject(i, Scope.INNER);
 		}
-		else if(type == Type.ARRAY_OPEN)
+		else if(type == JSONType.ARRAY_OPEN)
 		{
 			return parseArray(i, Scope.INNER);
 		}
@@ -37,7 +44,7 @@ public class JSONParser
 		}
 	}
 	
-	private static JSONObject parseObject(TokenIterator i, Scope scope)
+	private static JSONObject parseObject(JSONTokenIterator i, Scope scope)
 	{
 		JSONObject ret = new JSONObject();
 		
@@ -49,30 +56,30 @@ public class JSONParser
 			if(scope == Scope.OUTTER)
 			{
 				// >{}
-				if(currentToken.getType() == Type.SPACE)
+				if(currentToken.getType() == JSONType.SPACE)
 				{
 				}
-				else if(currentToken.getType() == Type.OBJECT_OPEN)
+				else if(currentToken.getType() == JSONType.OBJECT_OPEN)
 				{
 					scope = Scope.INNER;
 				}
 				else
 				{
-					throw new JSONException("Unexpected token. History: " + i.history());
+					throw new JSONException("Unexpected token. " + i.history());
 				}
 			}
 			else if(scope == Scope.INNER)
 			{
 				// {>"":X}
-				if(currentToken.getType() == Type.SPACE)
+				if(currentToken.getType() == JSONType.SPACE)
 				{
 				}
-				else if(currentToken.getType() == Type.OBJECT_CLOSE)
+				else if(currentToken.getType() == JSONType.OBJECT_CLOSE)
 				{
 					//We are done reading the object at this point.
 					break;
 				}
-				else if(currentToken.getType() == Type.QUOTE)
+				else if(currentToken.getType() == JSONType.QUOTE)
 				{
 					//A Key should start here.
 					key = parseString(i, Scope.INNER);
@@ -80,86 +87,86 @@ public class JSONParser
 				}
 				else
 				{
-					throw new JSONException("Unexpected token. History: " + i.history());
+					throw new JSONException("Unexpected token. " + i.history());
 				}
 			}
 			else if(scope == Scope.DOUBLES)
 			{
 				// {"">:X}
-				if(currentToken.getType() == Type.SPACE)
+				if(currentToken.getType() == JSONType.SPACE)
 				{
 				}
-				else if(currentToken.getType() == Type.PAIR_SEPARATOR)
+				else if(currentToken.getType() == JSONType.PAIR_SEPARATOR)
 				{
 					scope = Scope.EXPECT_VALUE;
 				}
 				else
 				{
-					throw new JSONException("Unexpected token. History: " + i.history());
+					throw new JSONException("Unexpected token. " + i.history());
 				}
 			}
 			else if(scope == Scope.EXPECT_VALUE)
 			{
 				// {"":>X}
-				if(currentToken.getType() == Type.SPACE)
+				if(currentToken.getType() == JSONType.SPACE)
 				{
 				}
-				else if(currentToken.getType() == Type.ARRAY_OPEN)
+				else if(currentToken.getType() == JSONType.ARRAY_OPEN)
 				{
 					JSONArray arr = parseArray(i, Scope.INNER);
 					ret.put(key, arr);
 					scope = Scope.NEXT_INNER;
 				}
-				else if(currentToken.getType() == Type.OBJECT_OPEN)
+				else if(currentToken.getType() == JSONType.OBJECT_OPEN)
 				{
 					JSONObject obj = parseObject(i, Scope.INNER);
 					ret.put(key, obj);
 					scope = Scope.NEXT_INNER;
 				}
-				else if(currentToken.getType() == Type.QUOTE)
+				else if(currentToken.getType() == JSONType.QUOTE)
 				{
 					String string = parseString(i, Scope.INNER);
 					ret.put(key, string);
 					scope = Scope.NEXT_INNER;
 				}
-				else if(currentToken.getType() == Type.UNKNOWN)
+				else if(currentToken.getType() == JSONType.UNKNOWN)
 				{
-					String string = parseUnknown(i, currentToken.getContent());
-					ret.put(key, string);
+					Object obj = parseUnknown(i, currentToken.getContent());
+					ret.put(key, obj);
 					scope = Scope.NEXT_INNER;
 				}
 				else
 				{
-					throw new JSONException("Unexpected token. History: " + i.history());
+					throw new JSONException("Unexpected token. " + i.history());
 				}
 			}
 			else if(scope == Scope.NEXT_INNER)
 			{
 				// {"":X>,"":X}
-				if(currentToken.getType() == Type.SPACE)
+				if(currentToken.getType() == JSONType.SPACE)
 				{
 				}
-				else if(currentToken.getType() == Type.SEPARATOR)
+				else if(currentToken.getType() == JSONType.SEPARATOR)
 				{
 					scope = Scope.EXPECT_ENTRY;
 				}
-				else if(currentToken.getType() == Type.OBJECT_CLOSE)
+				else if(currentToken.getType() == JSONType.OBJECT_CLOSE)
 				{
 					//We are done reading the object at this point.
 					break;
 				}
 				else
 				{
-					throw new JSONException("Unexpected token. History: " + i.history());
+					throw new JSONException("Unexpected token. " + i.history());
 				}
 			}
 			else if(scope == Scope.EXPECT_ENTRY)
 			{
 				// {"":X,>"":X}
-				if(currentToken.getType() == Type.SPACE)
+				if(currentToken.getType() == JSONType.SPACE)
 				{
 				}
-				else if(currentToken.getType() == Type.QUOTE)
+				else if(currentToken.getType() == JSONType.QUOTE)
 				{
 					//A Key should start here.
 					key = parseString(i, Scope.INNER);
@@ -167,7 +174,7 @@ public class JSONParser
 				}
 				else
 				{
-					throw new JSONException("Unexpected token. History: " + i.history());
+					throw new JSONException("Unexpected token. " + i.history());
 				}
 			}
 		}
@@ -175,7 +182,7 @@ public class JSONParser
 		return ret;
 	}
 	
-	private static String parseString(TokenIterator i, Scope scope)
+	private static String parseString(JSONTokenIterator i, Scope scope)
 	{
 		String value = "";
 		
@@ -186,33 +193,33 @@ public class JSONParser
 			if(scope == Scope.OUTTER)
 			{
 				// >"X"
-				if(currentToken.getType() == Type.SPACE)
+				if(currentToken.getType() == JSONType.SPACE)
 				{
 				}
-				else if(currentToken.getType() == Type.QUOTE)
+				else if(currentToken.getType() == JSONType.QUOTE)
 				{
 					scope = Scope.INNER;
 				}
 				else
 				{
-					throw new JSONException("Unexpected token. History: " + i.history());
+					throw new JSONException("Unexpected token. " + i.history());
 				}
 			}
 			else if(scope == Scope.INNER)
 			{
 				// ">X"
-				if(currentToken.getType() == Type.TEXT)
+				if(currentToken.getType() == JSONType.TEXT)
 				{
 					value += currentToken.getContent();
 				}
-				else if(currentToken.getType() == Type.QUOTE)
+				else if(currentToken.getType() == JSONType.QUOTE)
 				{
 					//The string has ended.
 					break;
 				}
 				else
 				{
-					throw new JSONException("Unexpected token. History: " + i.history());
+					throw new JSONException("Unexpected token. " + i.history());
 				}
 			}
 		}
@@ -220,7 +227,7 @@ public class JSONParser
 		return value;
 	}
 	
-	private static String parseUnknown(TokenIterator i, char firstChar)
+	private static Object parseUnknown(JSONTokenIterator i, char firstChar)
 	{
 		String value = String.valueOf(firstChar);
 		
@@ -229,7 +236,7 @@ public class JSONParser
 			JSONToken currentToken = i.next();
 			
 			// >"X"
-			if(currentToken.getType() == Type.SPACE || currentToken.getType() == Type.SEPARATOR)
+			if(currentToken.getType() == JSONType.SPACE || currentToken.getType() == JSONType.SEPARATOR)
 			{
 				//A space is in none of the special type regexes.
 				//A comma ends the value.
@@ -238,25 +245,45 @@ public class JSONParser
 				i.undo();
 				break;
 			}
-			else if(currentToken.getType() == Type.UNKNOWN)
+			else if(currentToken.getType() == JSONType.UNKNOWN)
 			{
 				value += currentToken.getContent();
 			}
+			else if(currentToken.getType() == JSONType.ARRAY_CLOSE || currentToken.getType() == JSONType.OBJECT_CLOSE)
+			{
+				i.undo();
+				break;
+			}
 			else
 			{
-				throw new JSONException("Unexpected token. History: " + i.history());
+				throw new JSONException("Unexpected token. " + i.history());
 			}
 		}
 		
-		if(!value.matches("(true|false|-?(0|[1-9][0-9]*)(.[0-9]+)?([eE][\\-+]?[0-9]+))"))
+		if(value.equals("null"))
+		{
+			return null;
+		}
+		else if(value.equals("true"))
+		{
+			return new Boolean(true);
+		}
+		else if(value.equals("false"))
+		{
+			return new Boolean(false);
+		}
+		else if(value.matches("-?(0|[1-9][0-9]*)(.[0-9]+)?([eE][\\-+]?[0-9]+)?"))
+		{
+			//TBI: Is this an okayish solution, or too much overhead?
+			return new BigDecimal(value);
+		}
+		else
 		{
 			throw new JSONException("Value does not match a valid format: >" + value + "< " + i.history());
 		}
-		
-		return value;
 	}
 	
-	private static JSONArray parseArray(TokenIterator i, Scope scope)
+	private static JSONArray parseArray(JSONTokenIterator i, Scope scope)
 	{
 		JSONArray ret = new JSONArray();
 		
@@ -267,111 +294,111 @@ public class JSONParser
 			if(scope == Scope.OUTTER)
 			{
 				// >[]
-				if(currentToken.getType() == Type.SPACE)
+				if(currentToken.getType() == JSONType.SPACE)
 				{
 				}
-				else if(currentToken.getType() == Type.ARRAY_OPEN)
+				else if(currentToken.getType() == JSONType.ARRAY_OPEN)
 				{
 					scope = Scope.INNER;
 				}
 				else
 				{
-					throw new JSONException("Unexpected token. History: " + i.history());
+					throw new JSONException("Unexpected token. " + i.history());
 				}
 			}
 			else if(scope == Scope.INNER)
 			{
 				// [>X,X]
-				if(currentToken.getType() == Type.SPACE)
+				if(currentToken.getType() == JSONType.SPACE)
 				{
 				}
-				else if(currentToken.getType() == Type.ARRAY_CLOSE)
+				else if(currentToken.getType() == JSONType.ARRAY_CLOSE)
 				{
 					//We are done reading the array at this point.
 					break;
 				}
-				else if(currentToken.getType() == Type.ARRAY_OPEN)
+				else if(currentToken.getType() == JSONType.ARRAY_OPEN)
 				{
 					JSONArray arr = parseArray(i, Scope.INNER);
 					ret.add(arr);
 					scope = Scope.NEXT_INNER;
 				}
-				else if(currentToken.getType() == Type.OBJECT_OPEN)
+				else if(currentToken.getType() == JSONType.OBJECT_OPEN)
 				{
 					JSONObject obj = parseObject(i, Scope.INNER);
 					ret.add(obj);
 					scope = Scope.NEXT_INNER;
 				}
-				else if(currentToken.getType() == Type.QUOTE)
+				else if(currentToken.getType() == JSONType.QUOTE)
 				{
 					String string = parseString(i, Scope.INNER);
 					ret.add(string);
 					scope = Scope.NEXT_INNER;
 				}
-				else if(currentToken.getType() == Type.UNKNOWN)
+				else if(currentToken.getType() == JSONType.UNKNOWN)
 				{
-					String string = parseUnknown(i, currentToken.getContent());
-					ret.add(string);
+					Object obj = parseUnknown(i, currentToken.getContent());
+					ret.add(obj);
 					scope = Scope.NEXT_INNER;
 				}
 				else
 				{
-					throw new JSONException("Unexpected token. History: " + i.history());
+					throw new JSONException("Unexpected token. " + i.history());
 				}
 			}
 			else if(scope == Scope.NEXT_INNER)
 			{
 				// [X>,X]
-				if(currentToken.getType() == Type.SPACE)
+				if(currentToken.getType() == JSONType.SPACE)
 				{
 				}
-				else if(currentToken.getType() == Type.SEPARATOR)
+				else if(currentToken.getType() == JSONType.SEPARATOR)
 				{
 					scope = Scope.EXPECT_ENTRY;
 				}
-				else if(currentToken.getType() == Type.ARRAY_CLOSE)
+				else if(currentToken.getType() == JSONType.ARRAY_CLOSE)
 				{
 					//We are done reading the array at this point.
 					break;
 				}
 				else
 				{
-					throw new JSONException("Unexpected token. History: " + i.history());
+					throw new JSONException("Unexpected token. " + i.history());
 				}
 			}
 			else if(scope == Scope.EXPECT_ENTRY)
 			{
 				// [X,>X]
-				if(currentToken.getType() == Type.SPACE)
+				if(currentToken.getType() == JSONType.SPACE)
 				{
 				}
-				else if(currentToken.getType() == Type.ARRAY_OPEN)
+				else if(currentToken.getType() == JSONType.ARRAY_OPEN)
 				{
 					JSONArray arr = parseArray(i, Scope.INNER);
 					ret.add(arr);
 					scope = Scope.NEXT_INNER;
 				}
-				else if(currentToken.getType() == Type.OBJECT_OPEN)
+				else if(currentToken.getType() == JSONType.OBJECT_OPEN)
 				{
 					JSONObject obj = parseObject(i, Scope.INNER);
 					ret.add(obj);
 					scope = Scope.NEXT_INNER;
 				}
-				else if(currentToken.getType() == Type.QUOTE)
+				else if(currentToken.getType() == JSONType.QUOTE)
 				{
 					String string = parseString(i, Scope.INNER);
 					ret.add(string);
 					scope = Scope.NEXT_INNER;
 				}
-				else if(currentToken.getType() == Type.UNKNOWN)
+				else if(currentToken.getType() == JSONType.UNKNOWN)
 				{
-					String string = parseUnknown(i, currentToken.getContent());
-					ret.add(string);
+					Object obj = parseUnknown(i, currentToken.getContent());
+					ret.add(obj);
 					scope = Scope.NEXT_INNER;
 				}
 				else
 				{
-					throw new JSONException("Unexpected token. History: " + i.history());
+					throw new JSONException("Unexpected token. " + i.history());
 				}
 			}
 		}
