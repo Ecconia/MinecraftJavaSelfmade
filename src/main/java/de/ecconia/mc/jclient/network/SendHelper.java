@@ -3,7 +3,7 @@ package de.ecconia.mc.jclient.network;
 import java.util.UUID;
 
 import de.ecconia.mc.jclient.network.connector.Sender;
-import old.packet.MessageBuilder;
+import de.ecconia.mc.jclient.network.packeting.MessageBuilder;
 
 public class SendHelper
 {

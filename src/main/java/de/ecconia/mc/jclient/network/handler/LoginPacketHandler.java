@@ -9,12 +9,12 @@ import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.network.connector.PacketHandler;
+import de.ecconia.mc.jclient.network.packeting.MessageBuilder;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.tools.encryption.AsyncCryptTools;
 import de.ecconia.mc.jclient.network.tools.encryption.SyncCryptUnit;
 import de.ecconia.mc.jclient.network.web.AuthServer;
 import de.ecconia.mc.jclient.tools.PrintUtils;
-import old.packet.MessageBuilder;
 
 public class LoginPacketHandler implements PacketHandler
 {

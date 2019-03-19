@@ -3,8 +3,8 @@ package de.ecconia.mc.jclient.network.connector.inner;
 import java.io.IOException;
 import java.io.InputStream;
 
-import old.reading.DirtyIOException;
-import old.reading.DirtyStreamEndException;
+import de.ecconia.mc.jclient.network.DirtyIOException;
+import de.ecconia.mc.jclient.network.DirtyStreamEndException;
 
 public class NormalReader implements Reader
 {

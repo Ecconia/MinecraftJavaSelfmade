@@ -1,4 +1,4 @@
-package old.packet;
+package de.ecconia.mc.jclient.network.packeting;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -6,9 +6,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.UUID;
 
+import de.ecconia.mc.jclient.network.DirtyIOException;
 import de.ecconia.mc.jclient.network.tools.compression.Compressor;
 import de.ecconia.mc.jclient.tools.IntBytes;
-import old.reading.DirtyIOException;
 
 public class MessageBuilder
 {

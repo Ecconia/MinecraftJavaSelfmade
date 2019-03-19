@@ -1,4 +1,4 @@
-package old.reading;
+package de.ecconia.mc.jclient.network;
 
 import java.io.IOException;
 

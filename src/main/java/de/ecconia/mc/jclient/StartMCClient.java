@@ -4,7 +4,7 @@ import de.ecconia.mc.jclient.gui.gl.Simple3D;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.network.handler.LoginPacketHandler;
-import old.packet.MessageBuilder;
+import de.ecconia.mc.jclient.network.packeting.MessageBuilder;
 
 public class StartMCClient
 {

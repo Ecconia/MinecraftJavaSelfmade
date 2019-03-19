@@ -10,6 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import javax.crypto.SecretKey;
 
 import de.ecconia.mc.jclient.Logger;
+import de.ecconia.mc.jclient.network.DirtyIOException;
 import de.ecconia.mc.jclient.network.connector.inner.DecryptionReader;
 import de.ecconia.mc.jclient.network.connector.inner.NormalReader;
 import de.ecconia.mc.jclient.network.connector.inner.Reader;
@@ -17,7 +18,6 @@ import de.ecconia.mc.jclient.network.tools.compression.Compressor;
 import de.ecconia.mc.jclient.network.tools.encryption.SyncCryptUnit;
 import de.ecconia.mc.jclient.tools.CIntUntils;
 import de.ecconia.mc.jclient.tools.IntBytes;
-import old.reading.DirtyIOException;
 
 public class Connector implements Sender
 {

@@ -1,8 +1,8 @@
 package de.ecconia.mc.jclient;
 
 import de.ecconia.mc.jclient.network.connector.Connector;
+import de.ecconia.mc.jclient.network.packeting.MessageBuilder;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
-import old.packet.MessageBuilder;
 
 public class StartMCPinger
 {

@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import old.packet.MessageBuilder;
+import de.ecconia.mc.jclient.network.packeting.MessageBuilder;
 
 public class StartLegacyPinger
 {
