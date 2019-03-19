@@ -22,7 +22,7 @@ public class Credentials
 	
 	public static void load()
 	{
-		File userfile = new File("user.json");
+		File userfile = new File(Constants.userFile);
 		if(!userfile.exists())
 		{
 			try

@@ -32,6 +32,7 @@ import de.ecconia.mc.jclient.gui.gl.helper.ShaderProgram;
 import de.ecconia.mc.jclient.gui.gl.models.BlockDataLib;
 import de.ecconia.mc.jclient.gui.input.KeyDebouncer;
 import de.ecconia.mc.jclient.gui.monitor.L;
+import de.ecconia.mc.jclient.main.Constants;
 import de.ecconia.mc.jclient.main.Logger;
 import de.ecconia.mc.jclient.main.PrimitiveDataDude;
 import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
@@ -39,10 +40,6 @@ import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
 @SuppressWarnings("serial")
 public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, WorldObserver
 {
-	//Turn to true on Windows...
-	//TODO: Either move all debugging into a JOGL window, OR find a solution which works on all OS's (maybe GLCanvas)
-	private final static boolean createWindow = false;
-	
 	//TODO: Find better way to let the main-thread wait for the graphic to be done.
 	private BlockingQueue<Object> initDone = new LinkedBlockingDeque<>(1);
 	
@@ -135,7 +132,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		
 		GLAutoDrawable canvas = null;
 		
-		if(createWindow)
+		if(Constants.external3DWindow)
 		{
 			capabilities.setBackgroundOpaque(true);
 			final GLWindow glWindow = GLWindow.create(capabilities);
@@ -267,7 +264,7 @@ public class Simple3D extends JPanel implements GLEventListener, MouseAdapter, W
 		gl.glEnable(GL3.GL_DEPTH_TEST);
 		gl.glClearColor(0.973f, 0.973f, 0.973f, 1.0f);
 		
-		textureShader = new ShaderProgram(gl, "shaders/textureFaceSimple");
+		textureShader = new ShaderProgram(gl, Constants.shaderPath + "textureFaceSimple");
 		bdLib = new BlockDataLib(gl);
 		
 		try

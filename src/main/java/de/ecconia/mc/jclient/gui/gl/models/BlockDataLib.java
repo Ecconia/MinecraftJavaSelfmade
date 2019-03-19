@@ -11,25 +11,25 @@ import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 
+import de.ecconia.mc.jclient.main.Constants;
 import de.ecconia.mc.jclient.main.FatalException;
 
 public class BlockDataLib
 {
 	//TODO: Auto update.
-	private static final int AMOUNT = 8599;
-	private static final int PADDING = (int) (Math.log10(AMOUNT) + 1);
-	private static final int SIDE = (int) Math.ceil(Math.sqrt(AMOUNT));
+	private static final int PADDING = (int) (Math.log10(Constants.amountBlockstates) + 1);
+	private static final int SIDE = (int) Math.ceil(Math.sqrt(Constants.amountBlockstates));
 	
 	public static final float LENGTH = 1f / (float) SIDE;
 	
-	private float[] textureOffsetX = new float[AMOUNT];
-	private float[] textureOffsetY = new float[AMOUNT];
+	private float[] textureOffsetX = new float[Constants.amountBlockstates];
+	private float[] textureOffsetY = new float[Constants.amountBlockstates];
 	
 	private int bigTexture;
 	
 	public BlockDataLib(GL3 gl)
 	{
-		File folder = new File("textures/blockdata/");
+		File folder = new File(Constants.textureFolder);
 		if(!folder.exists())
 		{
 			throw new FatalException("TextureFolder does not exist.");
@@ -51,7 +51,7 @@ public class BlockDataLib
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MIN_FILTER, GL3.GL_LINEAR);
 			gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_MAG_FILTER, GL3.GL_LINEAR);
 			
-			File imageFile = new File(folder, "blockdata.png");
+			File imageFile = new File(folder, Constants.textureFile);
 			
 			//TODO: get rid of this weird class.
 			TextureData td = TextureIO.newTextureData(gl.getGLProfile(), imageFile, false, "png");
@@ -82,7 +82,7 @@ public class BlockDataLib
 				
 				vx += LENGTH;
 				
-				if(++i >= AMOUNT)
+				if(++i >= Constants.amountBlockstates)
 				{
 					break loop;
 				}
