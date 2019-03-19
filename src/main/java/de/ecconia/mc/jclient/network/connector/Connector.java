@@ -9,7 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.crypto.SecretKey;
 
-import de.ecconia.mc.jclient.Logger;
+import de.ecconia.mc.jclient.main.Logger;
 import de.ecconia.mc.jclient.network.DirtyIOException;
 import de.ecconia.mc.jclient.network.connector.inner.DecryptionReader;
 import de.ecconia.mc.jclient.network.connector.inner.NormalReader;

@@ -11,7 +11,7 @@ import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-import de.ecconia.mc.jclient.FatalException;
+import de.ecconia.mc.jclient.main.FatalException;
 
 public class BlockDataLib
 {

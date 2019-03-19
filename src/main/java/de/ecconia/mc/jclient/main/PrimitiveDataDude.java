@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient;
+package de.ecconia.mc.jclient.main;
 
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
 import de.ecconia.mc.jclient.data.ServerData;

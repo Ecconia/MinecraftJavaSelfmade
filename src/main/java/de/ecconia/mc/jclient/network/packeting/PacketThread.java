@@ -3,7 +3,7 @@ package de.ecconia.mc.jclient.network.packeting;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.main.PrimitiveDataDude;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.tools.PrintUtils;
 

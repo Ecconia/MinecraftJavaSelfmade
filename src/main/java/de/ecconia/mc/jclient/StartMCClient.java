@@ -2,6 +2,10 @@ package de.ecconia.mc.jclient;
 
 import de.ecconia.mc.jclient.gui.gl.Simple3D;
 import de.ecconia.mc.jclient.gui.monitor.L;
+import de.ecconia.mc.jclient.main.Credentials;
+import de.ecconia.mc.jclient.main.FatalException;
+import de.ecconia.mc.jclient.main.Logger;
+import de.ecconia.mc.jclient.main.PrimitiveDataDude;
 import de.ecconia.mc.jclient.network.connector.Connector;
 import de.ecconia.mc.jclient.network.handler.LoginPacketHandler;
 import de.ecconia.mc.jclient.network.packeting.MessageBuilder;

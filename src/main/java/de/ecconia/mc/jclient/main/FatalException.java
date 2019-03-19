@@ -1,4 +1,4 @@
-package de.ecconia.mc.jclient;
+package de.ecconia.mc.jclient.main;
 
 @SuppressWarnings("serial")
 public class FatalException extends RuntimeException

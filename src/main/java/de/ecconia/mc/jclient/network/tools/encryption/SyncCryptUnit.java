@@ -11,7 +11,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
-import de.ecconia.mc.jclient.FatalException;
+import de.ecconia.mc.jclient.main.FatalException;
 
 public class SyncCryptUnit
 {

@@ -1,12 +1,12 @@
 package de.ecconia.mc.jclient.network.processor;
 
-import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.data.world.Chunk;
 import de.ecconia.mc.jclient.data.world.MultiBlockChange;
 import de.ecconia.mc.jclient.data.world.MultiBlockChange.BlockChange;
 import de.ecconia.mc.jclient.data.world.SubChunk;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.gui.tabs.ChunkMap;
+import de.ecconia.mc.jclient.main.PrimitiveDataDude;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;

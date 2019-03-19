@@ -9,8 +9,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 
-import de.ecconia.mc.jclient.Credentials;
-import de.ecconia.mc.jclient.FatalException;
+import de.ecconia.mc.jclient.main.Credentials;
+import de.ecconia.mc.jclient.main.FatalException;
 
 public class AuthServer
 {

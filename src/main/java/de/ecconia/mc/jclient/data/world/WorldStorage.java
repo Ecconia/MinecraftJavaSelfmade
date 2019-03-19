@@ -3,7 +3,7 @@ package de.ecconia.mc.jclient.data.world;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.ecconia.mc.jclient.Logger;
+import de.ecconia.mc.jclient.main.Logger;
 
 public class WorldStorage
 {

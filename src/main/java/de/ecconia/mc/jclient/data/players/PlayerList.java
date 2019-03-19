@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import de.ecconia.mc.jclient.Logger;
 import de.ecconia.mc.jclient.gui.monitor.L;
 import de.ecconia.mc.jclient.gui.tabs.Statscreen;
+import de.ecconia.mc.jclient.main.Logger;
 
 public class PlayerList
 {

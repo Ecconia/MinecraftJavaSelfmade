@@ -12,12 +12,12 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ScrollBarUI;
 
-import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.chat.ChatFormatException;
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
 import de.ecconia.mc.jclient.chat.parser.ChatSegment;
 import de.ecconia.mc.jclient.gui.elements.ColorTypeArea;
 import de.ecconia.mc.jclient.gui.elements.CustomScrollbarUI;
+import de.ecconia.mc.jclient.main.PrimitiveDataDude;
 import de.ecconia.mc.jclient.tools.json.JSONException;
 
 @SuppressWarnings("serial")

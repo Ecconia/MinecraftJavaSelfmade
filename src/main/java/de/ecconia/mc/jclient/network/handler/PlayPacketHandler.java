@@ -1,7 +1,7 @@
 package de.ecconia.mc.jclient.network.handler;
 
-import de.ecconia.mc.jclient.Logger;
-import de.ecconia.mc.jclient.PrimitiveDataDude;
+import de.ecconia.mc.jclient.main.Logger;
+import de.ecconia.mc.jclient.main.PrimitiveDataDude;
 import de.ecconia.mc.jclient.network.connector.PacketHandler;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;

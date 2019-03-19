@@ -15,7 +15,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import de.ecconia.mc.jclient.FatalException;
+import de.ecconia.mc.jclient.main.FatalException;
 
 public class AsyncCryptTools
 {

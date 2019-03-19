@@ -1,9 +1,9 @@
 package de.ecconia.mc.jclient.network.processor;
 
-import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.chat.ChatFormatException;
 import de.ecconia.mc.jclient.chat.ParsedMessageContainer;
 import de.ecconia.mc.jclient.gui.monitor.L;
+import de.ecconia.mc.jclient.main.PrimitiveDataDude;
 import de.ecconia.mc.jclient.network.packeting.GenericPacket;
 import de.ecconia.mc.jclient.network.packeting.PacketReader;
 import de.ecconia.mc.jclient.network.packeting.PacketThread;

@@ -3,8 +3,8 @@ package de.ecconia.mc.jclient.data.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.ecconia.mc.jclient.Logger;
 import de.ecconia.mc.jclient.data.world.MultiBlockChange.BlockChange;
+import de.ecconia.mc.jclient.main.Logger;
 
 public class WorldManager
 {

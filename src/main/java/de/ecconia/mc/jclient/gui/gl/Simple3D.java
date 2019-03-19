@@ -20,8 +20,6 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.FPSAnimator;
 
-import de.ecconia.mc.jclient.Logger;
-import de.ecconia.mc.jclient.PrimitiveDataDude;
 import de.ecconia.mc.jclient.data.player.MainPlayer;
 import de.ecconia.mc.jclient.data.world.Chunk;
 import de.ecconia.mc.jclient.data.world.WorldObserver;
@@ -34,6 +32,8 @@ import de.ecconia.mc.jclient.gui.gl.helper.ShaderProgram;
 import de.ecconia.mc.jclient.gui.gl.models.BlockDataLib;
 import de.ecconia.mc.jclient.gui.input.KeyDebouncer;
 import de.ecconia.mc.jclient.gui.monitor.L;
+import de.ecconia.mc.jclient.main.Logger;
+import de.ecconia.mc.jclient.main.PrimitiveDataDude;
 import de.ecconia.mc.jclient.tools.concurrent.XYStorage;
 
 @SuppressWarnings("serial")
