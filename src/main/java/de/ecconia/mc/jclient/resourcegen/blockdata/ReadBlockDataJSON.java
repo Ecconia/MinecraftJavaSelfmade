@@ -12,10 +12,10 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.Set;
 
-import de.ecconia.mc.jclient.tools.json.JSONArray;
-import de.ecconia.mc.jclient.tools.json.JSONNode;
-import de.ecconia.mc.jclient.tools.json.JSONObject;
-import de.ecconia.mc.jclient.tools.json.JSONParser;
+import de.ecconia.java.json.JSONArray;
+import de.ecconia.java.json.JSONNode;
+import de.ecconia.java.json.JSONObject;
+import de.ecconia.java.json.JSONParser;
 
 public class ReadBlockDataJSON
 {

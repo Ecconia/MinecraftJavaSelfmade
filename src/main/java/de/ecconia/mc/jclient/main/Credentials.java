@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map.Entry;
 
-import de.ecconia.mc.jclient.tools.json.JSONNode;
-import de.ecconia.mc.jclient.tools.json.JSONObject;
-import de.ecconia.mc.jclient.tools.json.JSONParser;
+import de.ecconia.java.json.JSONNode;
+import de.ecconia.java.json.JSONObject;
+import de.ecconia.java.json.JSONParser;
 
 public class Credentials
 {

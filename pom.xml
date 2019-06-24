@@ -25,7 +25,20 @@
         	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>maven.ecconia.de</id>
+			<url>https://maven.ecconia.de/repo/</url>
+		</repository>
+	</repositories>
+
+
 	<dependencies>
+		<dependency>
+			<groupId>de.ecconia.java.json</groupId>
+			<artifactId>JSON</artifactId>
+			<version>1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.jogamp.gluegen</groupId>
 			<artifactId>gluegen-rt-main</artifactId>

@@ -2,9 +2,9 @@ package de.ecconia.mc.jclient.chat;
 
 import java.util.Map;
 
+import de.ecconia.java.json.JSONArray;
+import de.ecconia.java.json.JSONObject;
 import de.ecconia.mc.jclient.chat.parser.ChatParser;
-import de.ecconia.mc.jclient.tools.json.JSONArray;
-import de.ecconia.mc.jclient.tools.json.JSONObject;
 
 public class SimpleChatParser
 {
